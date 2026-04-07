@@ -1,0 +1,70 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Отдел кадров{% endblock %}
+
+{% block content %}
+<!-- ALPHABET INDEX -->
+<div class="staff-alpha" role="navigation" aria-label="Алфавитный указатель">
+  {% for letter in alphabet %}
+  <a href="{% if selected_letter == letter %}{% url 'staff:list' %}{% else %}?letter={{ letter }}{% endif %}"
+     class="alpha-btn {% if letter in available_letters %}has-entries{% endif %} {% if selected_letter == letter %}active{% endif %}"
+     {% if letter not in available_letters %}aria-disabled="true"{% endif %}>
+    {{ letter|lower }}
+  </a>
+  {% endfor %}
+  {% if selected_letter %}
+  <a href="{% url 'staff:list' %}" class="alpha-btn alpha-reset">✕</a>
+  {% endif %}
+</div>
+
+<!-- SEARCH -->
+<div class="staff-search-row">
+  <form class="staff-search-form" method="get" role="search">
+    <input type="text" name="q" class="staff-search-input"
+           placeholder="поиск по сотрудникам.."
+           value="{{ q }}" aria-label="Поиск по сотрудникам">
+    {% if selected_letter %}<input type="hidden" name="letter" value="{{ selected_letter }}">{% endif %}
+  </form>
+</div>
+
+<!-- STAFF TABLE -->
+<div class="staff-table">
+  {% for member in members %}
+  <a href="{{ member.get_absolute_url }}" class="staff-row">
+    <div class="sr-photo">
+      {% if member.photo %}
+        <img src="{{ member.photo.url }}" alt="{{ member.full_name }}" loading="lazy">
+      {% else %}
+        <div class="sr-photo-empty">нет<br>фото</div>
+      {% endif %}
+    </div>
+    <div class="sr-name">
+      <div class="sr-last">{{ member.last_name }}</div>
+      <div class="sr-first">{{ member.first_name }}{% if member.patronymic %} {{ member.patronymic }}{% endif %}</div>
+      {% if member.years_of_life %}<div class="sr-years">{{ member.years_of_life }}</div>{% endif %}
+    </div>
+    <div class="sr-col">
+      {% if member.role %}
+        <div class="sr-col-value">{{ member.role }}</div>
+        {% if member.role_years %}<div class="sr-col-years">{{ member.role_years }}</div>{% endif %}
+      {% endif %}
+    </div>
+    <div class="sr-col">
+      {% if member.role2 %}
+        <div class="sr-col-value">{{ member.role2 }}</div>
+        {% if member.role2_years %}<div class="sr-col-years">{{ member.role2_years }}</div>{% endif %}
+      {% endif %}
+    </div>
+    <div class="sr-col">
+      {% if member.role3 %}
+        <div class="sr-col-value">{{ member.role3 }}</div>
+        {% if member.role3_years %}<div class="sr-col-years">{{ member.role3_years }}</div>{% endif %}
+      {% endif %}
+    </div>
+  </a>
+  {% empty %}
+  <div class="empty-state"><p>Сотрудники не найдены.</p></div>
+  {% endfor %}
+</div>
+{% endblock %}

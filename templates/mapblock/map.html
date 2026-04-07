@@ -1,0 +1,194 @@
+{% extends "base/base.html" %}
+{% load static l10n %}
+
+{% block title %}Интерактивная карта{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  .map-area {
+    overflow: hidden !important;
+    display: block !important;
+    background: #1a1a18 !important; 
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .map-placeholder {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    
+    background-image: url("{% static 'img/map_aerial.jpg' %}") !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  .map-building {
+    /* Custom buildings styling */
+  }
+  #sat-map { display: none; }
+  .map-detail-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="breadcrumbs">
+  <a href="{% url 'home' %}">Главная</a><span>→</span>
+  <span>Интерактивная карта</span>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="map-wrapper">
+
+  <!-- MAP AREA -->
+  <div class="map-area" id="map-area">
+    <div class="map-placeholder" id="map-placeholder">
+      {% for building in buildings %}
+      {% localize off %}
+      <div class="map-building"
+           data-key="{{ building.slug }}"
+           style="left:{{ building.map_left|floatformat:-2 }}%;top:{{ building.map_top|floatformat:-2 }}%;width:{{ building.map_width|floatformat:-2 }}%;height:{{ building.map_height|floatformat:-2 }}%;transform:rotate({{ building.map_rotation }}deg);{% if building.map_clip_path %}clip-path:polygon({{ building.map_clip_path }});{% endif %}"
+           onclick="showBuilding('{{ building.slug }}')"
+           tabindex="0" role="button" aria-label="{{ building.name }}">
+        <div class="building-label">{{ building.name }}</div>
+        <div class="map-building-dot"></div>
+      </div>
+      {% endlocalize %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="map-sidebar-wrap">
+    <div class="map-sidebar-list" id="map-sidebar-list">
+      <h3>Здания предприятия</h3>
+      {% for building in buildings %}
+      <div class="building-list-item" data-key="{{ building.slug }}"
+           onclick="showBuilding('{{ building.slug }}')">
+        <h4>{{ building.name }}</h4>
+        {% if building.built_years %}<p>{{ building.built_years }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="map-sidebar-detail" id="map-sidebar-detail">
+      <button class="map-detail-back" onclick="closeBuilding()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Все здания
+      </button>
+      <div id="map-detail-content"></div>
+    </div>
+  </div>
+</div>
+
+<div class="map-mobile-sheet" id="map-mobile-sheet">
+  <div class="map-mobile-sheet-bar" onclick="closeMobileSheet()"></div>
+  <div id="map-mobile-sheet-content"></div>
+</div>
+
+<div class="map-buildings-list-mobile" id="map-mobile-list">
+  <div class="map-mobile-list-label">Нажмите на здание для подробной информации</div>
+  {% for building in buildings %}
+  <div class="building-list-item" onclick="showBuilding('{{ building.slug }}')">
+    <h4>{{ building.name }}</h4>
+    {% if building.built_years %}<p>{{ building.built_years }}</p>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{% localize off %}
+<script>
+// Leaflet is removed to use the static satellite image provided by the user.
+// The buildings are positioned via CSS percentages relative to the container.
+
+const buildingData = {
+  {% for b in buildings %}
+  "{{ b.slug }}": {
+    name: "{{ b.name|escapejs }}",
+    built: "{{ b.built_years|escapejs }}",
+    desc: "{{ b.description|escapejs }}",
+    url: "{% url 'mapblock:building' b.slug %}",
+    photoCount: {{ b.photos.count }},
+    mainImage: "{% if b.main_image %}{{ b.main_image.url }}{% endif %}"
+  },
+  {% endfor %}
+};
+
+function buildingDetailHTML(b) {
+  return `
+    <div class="map-detail-name">${b.name}</div>
+    ${b.mainImage ? `<img src="${b.mainImage}" alt="${b.name}" class="map-detail-img">` : ''}
+    <div class="map-detail-meta">${b.built ? 'Построено: ' + b.built : ''}</div>
+    ${b.photoCount > 0 ? `<div class="map-detail-photo">${b.photoCount} фотографий здания</div>` : ''}
+    <div class="map-detail-desc">${b.desc}</div>
+    <a href="${b.url}" class="map-detail-link">→ Подробнее о здании</a>
+  `;
+}
+
+function showBuilding(key) {
+  const b = buildingData[key];
+  if (!b) return;
+  const isMobile = window.innerWidth <= 700;
+  document.querySelectorAll('.map-building, .building-list-item').forEach(el => {
+    el.classList.remove('selected', 'active');
+  });
+  document.querySelectorAll('[data-key="' + key + '"]').forEach(el => {
+    el.classList.add('selected', 'active');
+  });
+  if (isMobile) {
+    const sheet = document.getElementById('map-mobile-sheet');
+    document.getElementById('map-mobile-sheet-content').innerHTML = buildingDetailHTML(b);
+    sheet.style.display = 'block';
+    requestAnimationFrame(() => requestAnimationFrame(() => sheet.classList.add('open')));
+  } else {
+    document.getElementById('map-detail-content').innerHTML = buildingDetailHTML(b);
+    document.getElementById('map-sidebar-list').classList.add('hidden');
+    document.getElementById('map-sidebar-detail').classList.add('open');
+  }
+}
+
+function closeBuilding() {
+  document.getElementById('map-sidebar-list').classList.remove('hidden');
+  document.getElementById('map-sidebar-detail').classList.remove('open');
+  document.querySelectorAll('.map-building, .building-list-item').forEach(el => {
+    el.classList.remove('selected', 'active');
+  });
+}
+
+function closeMobileSheet() {
+  const sheet = document.getElementById('map-mobile-sheet');
+  sheet.classList.remove('open');
+  setTimeout(() => { sheet.style.display = 'none'; }, 300);
+  document.querySelectorAll('.map-building, .building-list-item').forEach(el => {
+    el.classList.remove('selected', 'active');
+  });
+}
+
+document.querySelectorAll('.map-building, .building-list-item').forEach(el => {
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      const key = el.dataset.key;
+      if (key) showBuilding(key);
+    }
+  });
+});
+</script>
+{% endlocalize %}
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Галерея{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="breadcrumbs">
+  <a href="{% url 'home' %}">Главная</a><span>→</span>
+  <span>Галерея</span>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<!-- FILM STRIP -->
+{% if random_photos %}
+<div class="photo-film-strip" aria-label="Случайные фотографии">
+  <div class="film-strip-inner" id="film-strip">
+    {% for photo in random_photos %}
+    <div class="film-photo">
+      {% if photo.image %}<img src="{{ photo.image.url }}" alt="{{ photo.caption }}" loading="lazy">{% endif %}
+    </div>
+    {% endfor %}
+    {% for photo in random_photos %}
+    <div class="film-photo">
+      {% if photo.image %}<img src="{{ photo.image.url }}" alt="{{ photo.caption }}" loading="lazy">{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  <a href="#albums-section" class="film-strip-overlay" onclick="document.getElementById('albums-section').scrollIntoView({behavior:'smooth'}); return false;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    К альбомам
+  </a>
+</div>
+{% endif %}
+
+<!-- ALBUMS BY PERIOD -->
+<div class="albums-section" id="albums-section">
+  {% for period in periods %}
+  <div class="period-block">
+    <p class="period-label">Исторический период</p>
+    <h2 class="period-title">{{ period.label }}</h2>
+    <div class="albums-grid">
+      {% for album in period.albums %}
+      <a href="{{ album.get_absolute_url }}" class="album-card">
+        <div class="album-cover">
+          {% if album.cover %}
+            <img src="{{ album.cover.url }}" alt="{{ album.title }}" loading="lazy">
+          {% else %}
+            <span>Нет обложки</span>
+          {% endif %}
+        </div>
+        <div class="album-info">
+          <h4>{{ album.title }}</h4>
+          <p>{{ album.photos.count }} фотографий</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% empty %}
+  <div class="empty-state"><p>Альбомы пока не добавлены.</p></div>
+  {% endfor %}
+</div>
+
+{% endblock %}
