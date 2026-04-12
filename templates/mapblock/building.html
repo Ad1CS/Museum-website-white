@@ -1,0 +1,60 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{{ building.name }}{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="breadcrumbs">
+  <a href="{% url 'home' %}">Главная</a><span>→</span>
+  <a href="{% url 'mapblock:map' %}">Карта</a><span>→</span>
+  <span>{{ building.name }}</span>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="item-detail-layout">
+    <div class="item-detail-image-col">
+      {% if building.main_image %}
+        <img src="{{ building.main_image.url }}" alt="{{ building.name }}" class="item-detail-photo">
+      {% else %}
+        {% with first_photo=building.photos.first %}
+          {% if first_photo and first_photo.image %}
+            <img src="{{ first_photo.image.url }}" alt="{{ building.name }}" class="item-detail-photo">
+          {% else %}
+            <div class="item-detail-photo-placeholder">Нет фото</div>
+          {% endif %}
+        {% endwith %}
+      {% endif %}
+    </div>
+    <div class="item-detail-info-col">
+      <span class="tag">Здание</span>
+      <h1 class="item-detail-title">{{ building.name }}</h1>
+      {% if building.built_years %}
+      <table class="item-fields-table">
+        <tr><th>Построено</th><td>{{ building.built_years }}</td></tr>
+      </table>
+      {% endif %}
+      <div class="staff-biography">
+        <div class="bio-text">{{ building.description|linebreaks }}</div>
+      </div>
+      <a href="{% url 'mapblock:map' %}" class="btn-secondary">← На карту</a>
+    </div>
+  </div>
+
+  {% if building.photos.exists %}
+  <div class="related-section">
+    <div class="section-header"><h2>Фотографии здания</h2></div>
+    <div class="photo-masonry">
+      {% for photo in building.photos.all %}
+      <div class="photo-thumb-wrap">
+        <div class="photo-thumb">
+          {% if photo.image %}<img src="{{ photo.image.url }}" alt="{{ photo.caption }}" loading="lazy">{% endif %}
+        </div>
+        {% if photo.caption %}<div class="photo-caption-bar"><span>{{ photo.caption }}</span></div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

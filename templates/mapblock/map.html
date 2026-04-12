@@ -1,0 +1,631 @@
+{% extends "base/base.html" %}
+{% load static l10n %}
+
+{% block title %}Интерактивная карта{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+#main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+#leaflet-map {
+  width:100%; height: 100%;
+  background:#2a2722;
+}
+.map-wrapper {
+  display:flex; flex: 1; align-items:stretch;
+}
+.map-area { flex:1; min-width:0; position:relative; }
+
+/* Coordinates display */
+.map-coords {
+  position: absolute; bottom: 10px; left: 10px;
+  background: rgba(0,0,0,0.7); color: #fff;
+  padding: 4px 8px; border-radius: 4px;
+  font-family: monospace; font-size: 11px;
+  pointer-events: none; z-index: 1000;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Building Polygons - Ground Locked */
+.building-polygon {
+  fill: rgba(255, 255, 255, 0.35);
+  stroke: var(--red);
+  stroke-width: 2;
+  cursor: pointer;
+  /* Only transition visual properties, not positioning */
+  transition: fill 0.3s, stroke-width 0.3s, filter 0.3s, opacity 0.4s;
+}
+.building-polygon:hover, .building-polygon.active-polygon {
+  fill: rgba(255, 255, 255, 0.7);
+  stroke-width: 4;
+  filter: drop-shadow(0 0 8px rgba(204,51,51,0.5));
+}
+.building-label-marker {
+  pointer-events: none;
+  transition: opacity 0.4s;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+.building-label-text {
+  font-family: var(--font); font-size: 11px; font-weight: 700;
+  letter-spacing: .01em; text-transform: uppercase;
+  color: #fff; text-align: center;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+  white-space: normal; line-height: 1.05;
+  padding: 2px;
+  width: 100%; height: 100%;
+  word-break: break-word;
+  hyphens: auto;
+  box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Sidebar Dropdown - "Accordion" style */
+.map-sidebar-wrap {
+  width:320px; flex-shrink:0; background:var(--bg2);
+  border-left:1px solid var(--border); overflow-y:auto;
+}
+.map-sidebar-wrap h3 {
+  font-size:12px; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--red);
+  padding:18px 20px 12px; border-bottom:1px solid var(--border);
+  background: var(--bg2); position: sticky; top: 0; z-index: 10;
+}
+.building-list-item {
+  padding: 0; border-bottom: 1px solid var(--border);
+  cursor: default; transition: background .2s;
+  background: var(--bg2);
+}
+.b-list-header {
+  padding: 16px 20px; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  transition: background .2s;
+}
+.b-list-header:hover { background: var(--bg3); }
+.building-list-item.active .b-list-header { background: var(--bg3); }
+
+.b-list-header-text { flex: 1; }
+.b-list-header h4 {
+  font-size: 13px; font-weight: 700; color: #fff; margin: 0;
+  transition: color .2s;
+}
+.building-list-item.active h4 { color: var(--red); }
+.b-list-header p { font-size: 11px; color: rgba(255,255,255,0.6); margin: 2px 0 0; }
+
+.b-list-header::after {
+  content: '→'; font-size: 16px; color: rgba(255,255,255,0.3);
+  margin-left: 12px; transition: transform .3s, color .3s;
+}
+.building-list-item.active .b-list-header::after {
+  transform: rotate(90deg); color: var(--red);
+}
+
+.b-list-content {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--bg);
+}
+.building-list-item.active .b-list-content {
+  max-height: 1500px;
+  border-top: 1px solid var(--border);
+}
+.b-list-inner {
+  padding: 20px;
+}
+
+.b-list-img {
+  width: 100%; border: 1px solid var(--border);
+  margin-bottom: 16px; border-radius: 2px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.b-list-desc {
+  font-size: 13px; color: #fff; line-height: 1.6; margin-bottom: 18px;
+  font-family: var(--serif); opacity: 0.95;
+}
+.b-list-photos {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  margin-bottom: 18px;
+}
+.b-list-photos img {
+  width: 100%; aspect-ratio: 1/1; object-fit: cover;
+  border-radius: 2px; border: 1px solid var(--border);
+  cursor: pointer; transition: transform .2s, opacity .2s;
+}
+.b-list-photos img:hover { transform: scale(1.05); opacity: 0.9; }
+.b-list-link {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700;
+  color: var(--red); text-transform: uppercase; letter-spacing: .08em;
+  transition: color .2s;
+}
+.b-list-link:hover { color: #fff; }
+
+/* Custom Map Controls */
+.leaflet-control-zoom { border: none !important; margin: 20px !important; }
+.leaflet-control-zoom a {
+  background: var(--bg) !important; color: var(--text) !important;
+  border: 1px solid var(--border) !important; 
+  width: 40px !important; height: 40px !important;
+  line-height: 40px !important; font-size: 18px !important; 
+  border-radius: 2px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+  margin-bottom: 6px !important; transition: all .2s !important;
+  display: flex !important; align-items: center; justify-content: center;
+}
+.leaflet-control-zoom a:hover { color: #fff !important; background: var(--red) !important; border-color: var(--red) !important; }
+
+/* Drawing Mode Results Overlay */
+#draw-results {
+  position: absolute; top: 70px; left: 15px;
+  background: rgba(0,0,0,0.85); color: #fff;
+  padding: 15px; border-radius: 6px;
+  font-family: monospace; font-size: 11px;
+  z-index: 2000; display: none;
+  max-width: 280px; border: 1px solid var(--red);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+#draw-results h4 { margin: 0 0 10px; color: var(--red); text-transform: uppercase; font-size: 12px; }
+#draw-results .val-row { margin-bottom: 8px; }
+#draw-results label { color: #888; display: block; margin-bottom: 2px; }
+#draw-results input { 
+  width: 100%; background: #222; border: 1px solid #444; 
+  color: #0f0; padding: 4px; border-radius: 2px; font-size: 10px;
+}
+.draw-hint { font-style: italic; color: #aaa; margin-top: 10px; }
+
+.draw-point-marker {
+  background: var(--red); border: 2px solid #fff;
+  border-radius: 50%; width: 10px; height: 10px;
+  box-shadow: 0 0 10px rgba(204,51,51,0.8);
+}
+
+/* Territory Overlay - REFINED DESIGN */
+.territory-rect {
+  fill: rgba(204, 51, 51, 0.15);
+  stroke: var(--red);
+  stroke-width: 3;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 15px rgba(204,51,51,0.4));
+  cursor: pointer;
+  transition: opacity 0.4s, fill 0.3s;
+}
+.territory-rect:hover {
+  fill: rgba(204, 51, 51, 0.25);
+  stroke-width: 5;
+}
+.territory-label-marker {
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.territory-label {
+  font-family: var(--font); font-size: 18px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: #fff; text-align: center;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  padding: 12px 24px; border-radius: 4px;
+  background: var(--red);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  white-space: nowrap;
+}
+
+@media(max-width:700px) {
+  .map-sidebar-wrap { display:none; }
+}
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav class="breadcrumbs">
+  <a href="{% url 'home' %}">Главная</a><span>→</span>
+  <span>Интерактивная карта</span>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="map-wrapper">
+  <div class="map-area">
+    <div id="leaflet-map"></div>
+  </div>
+  <div class="map-sidebar-wrap">
+    <h3>Здания предприятия</h3>
+    {% for building in buildings %}
+    <div class="building-list-item" data-slug="{{ building.slug }}" id="sidebar-{{ building.slug }}">
+      <div class="b-list-header" onclick="flyToBuilding('{{ building.slug }}', false)">
+        <div class="b-list-header-text">
+          <h4>{{ building.name }}</h4>
+          {% if building.built_years %}<p>{{ building.built_years }}</p>{% endif %}
+        </div>
+      </div>
+      <div class="b-list-content">
+        <div class="b-list-inner">
+          {% if building.main_image %}
+          <img src="{{ building.main_image.url }}" class="b-list-img" alt="{{ building.name }}" onclick="openLightbox('{{ building.main_image.url }}')">
+          {% endif %}
+          <div class="b-list-desc">{{ building.description|linebreaks }}</div>
+          
+          {% if building.photos.exists %}
+          <div class="b-list-photos">
+            {% for photo in building.photos.all %}
+            <img src="{{ photo.image.url }}" alt="{{ building.name }}" onclick="openLightbox('{{ photo.image.url }}')">
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          <a href="{{ building.get_absolute_url }}" class="b-list-link">Подробнее о здании →</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Lightbox Overlay -->
+<div id="map-lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+  <span class="lightbox-close">&times;</span>
+  <div class="lightbox-content" onclick="event.stopPropagation()">
+    <img id="lightbox-img" src="" alt="View">
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{% localize off %}
+<script>
+(function() {
+  // Lightbox functions
+  window.openLightbox = function(url) {
+    const lb = document.getElementById('map-lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = url;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeLightbox = function() {
+    const lb = document.getElementById('map-lightbox');
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+
+  const IMG_W = 7368;
+  const IMG_H = 4144;
+
+  // Admin settings
+  const CENTER_X = {{ map_settings.center_x }};
+  const CENTER_Y = {{ map_settings.center_y }};
+  const DEFAULT_ZOOM = {{ map_settings.zoom }};
+  const MIN_ZOOM = {{ map_settings.min_zoom }};
+  const MAX_ZOOM = {{ map_settings.max_zoom }};
+  const BUILDING_ZOOM = {{ map_settings.building_zoom }};
+
+  // Image bounds: [[0, 0], [IMG_H, IMG_W]]
+  const bounds = [[0, 0], [IMG_H, IMG_W]];
+
+  const map = L.map('leaflet-map', {
+    crs: L.CRS.Simple,
+    minZoom: MIN_ZOOM,
+    maxZoom: MAX_ZOOM,
+    maxBounds: bounds,
+    maxBoundsViscosity: 1.0,
+    zoomControl: true,
+    attributionControl: false,
+    zoomSnap: 1.0,
+    zoomDelta: 1.0,
+    doubleClickZoom: false,
+    preferCanvas: true,
+  });
+
+  // Image overlay
+  const imageUrl = '{% static "img/map2002.jpg" %}';
+  const overlay = L.imageOverlay(imageUrl, bounds).addTo(map);
+
+  // Set initial view: convert pixel coords to CRS.Simple (y inverted)
+  map.setView([IMG_H - CENTER_Y, CENTER_X], DEFAULT_ZOOM);
+
+  // Auto-calculate minZoom to prevent black borders (fit image to container)
+  function adjustMinZoom() {
+    const calculatedMinZoom = map.getBoundsZoom(bounds, true);
+    const finalMinZoom = Math.max(MIN_ZOOM, calculatedMinZoom);
+    
+    if (map.getMinZoom() !== finalMinZoom) {
+      map.setMinZoom(finalMinZoom);
+      if (map.getZoom() < finalMinZoom) {
+        map.setZoom(finalMinZoom);
+      }
+    }
+  }
+
+  map.on('load resize', adjustMinZoom);
+  
+  // Trigger initial check
+  const initialCalculatedMinZoom = map.getBoundsZoom(bounds, true);
+  const startMinZoom = Math.max(MIN_ZOOM, initialCalculatedMinZoom);
+  map.setMinZoom(startMinZoom);
+  
+  if (DEFAULT_ZOOM < startMinZoom) {
+    map.setZoom(startMinZoom);
+  } else {
+    map.setZoom(DEFAULT_ZOOM);
+  }
+
+  // Territory Overlay
+  const territoryLayer = L.layerGroup();
+  {% if map_settings.show_territory %}
+  (function() {
+    const tx = {{ map_settings.territory_x }};
+    const ty = {{ map_settings.territory_y }};
+    const tw = {{ map_settings.territory_w }};
+    const th = {{ map_settings.territory_h }};
+    const trot = {{ map_settings.territory_rotation }};
+    const tMirrorX = {% if map_settings.territory_mirror_x %}true{% else %}false{% endif %};
+    const tMirrorY = {% if map_settings.territory_mirror_y %}true{% else %}false{% endif %};
+    const tShape = "{{ map_settings.territory_clip_path|escapejs }}";
+    const tLabel = "{{ map_settings.territory_label|escapejs }}";
+    const showLabel = {% if map_settings.show_territory_label %}true{% else %}false{% endif %};
+
+    // Use a Polygon instead of a Rectangle to support custom shapes and rotation
+    const rad = (trot * Math.PI) / 180;
+    let rawPoints = [];
+    if (tShape) {
+      const matches = [...tShape.matchAll(/([\d.]+)%\s+([\d.]+)%/g)];
+      rawPoints = matches.map(m => [
+        (parseFloat(m[1])/100 - 0.5) * tw,
+        (parseFloat(m[2])/100 - 0.5) * th
+      ]);
+    } else {
+      rawPoints = [[-tw/2, -th/2], [tw/2, -th/2], [tw/2, th/2], [-tw/2, th/2]];
+    }
+
+    // Apply mirroring and rotation
+    const polyPoints = rawPoints.map(([px, py]) => {
+      // Mirroring: simply negate the relative coordinate if flag is set
+      const mx = tMirrorX ? -px : px;
+      const my = tMirrorY ? -py : py;
+      
+      const rx = mx * Math.cos(rad) - my * Math.sin(rad);
+      const ry = mx * Math.sin(rad) + my * Math.cos(rad);
+      return [IMG_H - (ty + ry), tx + rx]; // [lat, lng]
+    });
+
+    const territoryPoly = L.polygon(polyPoints, {
+      color: '#CC3333',
+      weight: 3,
+      fillColor: '#CC3333',
+      fillOpacity: 0.15,
+      interactive: true
+    });
+
+    territoryPoly.on('click', function(e) {
+      L.DomEvent.stopPropagation(e);
+      // Immediate smooth fade
+      territoryPoly.setStyle({ opacity: 0, fillOpacity: 0 });
+      if (labelMarker) labelMarker.getElement().style.opacity = '0';
+      
+      map.flyTo([IMG_H - CENTER_Y, CENTER_X], DEFAULT_ZOOM, {
+        duration: 1.5,
+        easeLinearity: 0.25
+      });
+    });
+
+    territoryLayer.addLayer(territoryPoly);
+
+    // Label stays constant screen size
+    let labelMarker = null;
+    if (showLabel) {
+      labelMarker = L.marker([IMG_H - ty, tx], {
+        icon: L.divIcon({
+          className: 'territory-label-marker',
+          html: `<div class="territory-label">${tLabel}</div>`,
+          iconSize: [240, 50],
+          iconAnchor: [120, 25],
+        })
+      });
+      territoryLayer.addLayer(labelMarker);
+    }
+  })();
+  {% endif %}
+
+  // Buildings
+  const buildings = {
+    {% for b in buildings %}
+    "{{ b.slug }}": {
+      x: {{ b.pos_x }},
+      y: {{ b.pos_y }},
+      w: {{ b.map_width }},
+      h: {{ b.map_height }},
+      rot: {{ b.map_rotation }},
+      shape: "{{ b.map_clip_path|escapejs }}",
+      name: "{{ b.name|escapejs }}",
+      built: "{{ b.built_years|escapejs }}",
+      desc: "{{ b.description|escapejs|truncatewords:25 }}",
+      url: "{% url 'mapblock:building' b.slug %}",
+      mainImage: "{% if b.main_image %}{{ b.main_image.url }}{% endif %}"
+    },
+    {% endfor %}
+  };
+
+  const markers = {};
+  const markerLayer = L.layerGroup();
+
+  Object.entries(buildings).forEach(([slug, b]) => {
+    // 1. Calculate Polygon Points
+    const w = (b.w / 100) * IMG_W;
+    const h = (b.h / 100) * IMG_H;
+    const rad = (b.rot * Math.PI) / 180;
+    
+    let rawPoints = [];
+    if (b.shape) {
+      const matches = [...b.shape.matchAll(/([\d.]+)%\s+([\d.]+)%/g)];
+      rawPoints = matches.map(m => [
+        (parseFloat(m[1])/100 - 0.5) * w,
+        (parseFloat(m[2])/100 - 0.5) * h
+      ]);
+    } else {
+      rawPoints = [[-w/2, -h/2], [w/2, -h/2], [w/2, h/2], [-w/2, h/2]];
+    }
+
+    const polyPoints = rawPoints.map(([px, py]) => {
+      const rx = px * Math.cos(rad) - py * Math.sin(rad);
+      const ry = px * Math.sin(rad) + py * Math.cos(rad);
+      return [IMG_H - (b.y + ry), b.x + rx];
+    });
+
+    const polygon = L.polygon(polyPoints, {
+      color: '#CC3333',
+      weight: 2,
+      fillColor: '#FFFFFF',
+      fillOpacity: 0,
+      opacity: 0,
+      interactive: true
+    });
+
+    const labelMarker = L.marker([IMG_H - b.y, b.x], {
+      interactive: false,
+      icon: L.divIcon({
+        className: 'building-label-marker',
+        html: `<div class="building-label-text" id="label-text-${slug}">${b.name}</div>`,
+        iconSize: [240, 60],
+        iconAnchor: [120, 30],
+      })
+    });
+
+    polygon.on('mouseover', function() {
+      if (!document.getElementById(`sidebar-${slug}`).classList.contains('active')) {
+        this.setStyle({ fillOpacity: 0.7, weight: 4 });
+      }
+    });
+    polygon.on('mouseout', function() {
+      if (!document.getElementById(`sidebar-${slug}`).classList.contains('active')) {
+        this.setStyle({ fillOpacity: 0.35, weight: 2 });
+      }
+    });
+
+    polygon.on('click', function(e) {
+      L.DomEvent.stopPropagation(e);
+      flyToBuilding(slug, false);
+    });
+
+    markers[slug] = polygon;
+    markerLayer.addLayer(polygon);
+    markerLayer.addLayer(labelMarker);
+  });
+
+  // Scaling labels proportionally to building width
+  function refreshLabels() {
+    const currentZoom = map.getZoom();
+    const scale = Math.pow(2, currentZoom);
+    
+    Object.entries(buildings).forEach(([slug, b]) => {
+      const textDiv = document.getElementById(`label-text-${slug}`);
+      if (!textDiv) return;
+      const markerEl = textDiv.parentElement;
+      if (!markerEl || !markerEl.classList.contains('leaflet-marker-icon')) return;
+
+      const currentW = (b.w / 100) * IMG_W * scale;
+      const currentH = (b.h / 100) * IMG_H * scale;
+      
+      markerEl.style.width = currentW + 'px';
+      markerEl.style.height = currentH + 'px';
+      markerEl.style.marginLeft = (-currentW / 2) + 'px';
+      markerEl.style.marginTop = (-currentH / 2) + 'px';
+      
+      // Hide label if building is too small to contain it cleanly
+      if (currentW < 40) {
+        markerEl.style.opacity = '0';
+      } else if (map.getZoom() >= DEFAULT_ZOOM - 0.5) {
+        markerEl.style.opacity = '1';
+      }
+
+      const baseFontSize = 10.5;
+      const zoomDiff = currentZoom - DEFAULT_ZOOM;
+      const multiplier = zoomDiff < 0 ? 2.5 : 1.2;
+      const fontSize = baseFontSize + (zoomDiff * multiplier);
+      
+      textDiv.style.fontSize = Math.max(7, Math.min(13, fontSize)) + 'px';
+    });
+  }
+  map.on('zoom moveend', refreshLabels);
+  refreshLabels();
+
+  // Show/hide buildings based on zoom
+  function updateVisibility() {
+    const currentZoom = map.getZoom();
+    const threshold = DEFAULT_ZOOM - 0.05;
+
+    if (currentZoom >= threshold) {
+      if (!map.hasLayer(markerLayer)) markerLayer.addTo(map);
+      if (map.hasLayer(territoryLayer)) map.removeLayer(territoryLayer);
+      
+      // Fade in buildings
+      markerLayer.eachLayer(layer => {
+        if (layer.setStyle && !layer.getIcon) layer.setStyle({ opacity: 1, fillOpacity: 0.35 });
+      });
+      refreshLabels();
+    } else {
+      if (map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
+      if (!map.hasLayer(territoryLayer)) {
+        territoryLayer.addTo(map);
+      }
+      // Ensure visibility when in overview range
+      territoryLayer.eachLayer(layer => {
+        if (layer.setStyle && !layer.getIcon) {
+          layer.setStyle({ opacity: 1, fillOpacity: 0.15 });
+        }
+      });
+    }
+  }
+
+  map.on('zoomend moveend', updateVisibility);
+  
+  // Track zoom level to handle smooth transitions
+  let lastZoomLevel = map.getZoom();
+  map.on('zoomstart', () => { lastZoomLevel = map.getZoom(); });
+  
+  updateVisibility();
+
+  // Sidebar click → fly to building & open/toggle accordion
+  window.flyToBuilding = function(slug, forceOpen = false) {
+    const b = buildings[slug];
+    if (!b) return;
+
+    const sidebarItem = document.getElementById(`sidebar-${slug}`);
+    const isCurrentlyActive = sidebarItem && sidebarItem.classList.contains('active');
+
+    const target = [IMG_H - b.y, b.x];
+    const currentZoom = map.getZoom();
+    const targetZoom = currentZoom >= BUILDING_ZOOM ? currentZoom : BUILDING_ZOOM;
+    
+    map.flyTo(target, targetZoom, { duration: 0.8 });
+
+    document.querySelectorAll('.building-list-item').forEach(el => {
+      if (el.getAttribute('data-slug') === slug) {
+        if (isCurrentlyActive && !forceOpen) {
+          el.classList.remove('active');
+        } else {
+          el.classList.add('active');
+          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      } else {
+        el.classList.remove('active');
+      }
+    });
+
+    Object.keys(markers).forEach(s => {
+      const poly = markers[s];
+      const sidebarNowActive = document.getElementById(`sidebar-${s}`).classList.contains('active');
+      if (sidebarNowActive) {
+        poly.setStyle({ fillOpacity: 0.7, weight: 4 });
+      } else {
+        poly.setStyle({ fillOpacity: 0.35, weight: 2 });
+      }
+    });
+  };
+})();
+</script>
+{% endlocalize %}
+{% endblock %}

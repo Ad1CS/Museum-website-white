@@ -1,0 +1,59 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}404 — Страница не найдена{% endblock %}
+
+{% block content %}
+<div style="
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 60px 20px;
+  text-align: center;
+">
+  <img
+    src="{% static 'img/pig_404.jpg' %}"
+    alt="Свиньи на комбинате"
+    style="
+      width: 100%;
+      max-width: 420px;
+      height: auto;
+      display: block;
+      filter: sepia(20%) contrast(1.05);
+      border: 1px solid var(--border);
+      margin-bottom: 32px;
+    "
+  >
+  <p style="
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(13px, 2vw, 16px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin: 0 0 6px;
+  ">404</p>
+  <p style="
+    font-family: 'PT Serif', serif;
+    font-size: clamp(18px, 3vw, 26px);
+    color: var(--white-dim);
+    margin: 0 0 28px;
+    font-style: italic;
+  ">Упс, такой страницы не существует.</p>
+  <a href="{% url 'home' %}" style="
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red-bright);
+    text-decoration: none;
+    border: 1px solid var(--red-dark);
+    padding: 8px 20px;
+    transition: background 0.2s;
+  " onmouseover="this.style.background='rgba(204,82,81,0.15)'"
+     onmouseout="this.style.background='transparent'">
+    ← На главную
+  </a>
+</div>
+{% endblock %}

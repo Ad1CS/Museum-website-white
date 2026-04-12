@@ -1,0 +1,44 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}Библиотека{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <!-- Category tabs -->
+  <div class="lib-tabs">
+    <a href="{% url 'library:home' %}" class="lib-tab {% if not current_cat %}active{% endif %}">все</a>
+    <a href="?cat=book" class="lib-tab {% if current_cat == 'book' %}active{% endif %}">книги <span class="lib-tab-count">{{ books_count }}</span></a>
+    <a href="?cat=periodical" class="lib-tab {% if current_cat == 'periodical' %}active{% endif %}">периодика <span class="lib-tab-count">{{ periodicals_count }}</span></a>
+  </div>
+
+  <!-- Search -->
+  <div class="page-toolbar">
+    <form class="search-bar" method="get">
+      {% if current_cat %}<input type="hidden" name="cat" value="{{ current_cat }}">{% endif %}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" name="q" placeholder="Поиск по названию или автору..." value="{{ q }}">
+    </form>
+    <span class="result-count">Изданий: {{ items|length }}</span>
+  </div>
+
+  <!-- Grid -->
+  <div class="lib-grid">
+    {% for item in items %}
+    <a href="{{ item.get_absolute_url }}" class="lib-card">
+      <div class="lib-card-cover">
+        {% if item.cover %}<img src="{{ item.cover.url }}" alt="{{ item.title }}" loading="lazy">
+        {% else %}<span class="lib-card-ext">{{ item.file_ext|upper }}</span>{% endif %}
+      </div>
+      <div class="lib-card-info">
+        <h4>{{ item.title|truncatewords:10 }}</h4>
+        {% if item.author %}<p class="lib-card-author">{{ item.author }}</p>{% endif %}
+        {% if item.year %}<p class="lib-card-year">{{ item.year }}</p>{% endif %}
+        <span class="lib-card-badge">{{ item.file_ext|upper }} · скачать</span>
+      </div>
+    </a>
+    {% empty %}
+    <div class="empty-state" style="grid-column:1/-1"><p>Изданий пока нет.</p></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

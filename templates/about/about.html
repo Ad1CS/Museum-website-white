@@ -1,0 +1,33 @@
+{% extends "base/base.html" %}
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+<div class="page-container" style="max-width:800px;margin:0 auto;">
+  <h1 class="about-title">{{ page.title }}</h1>
+  <div class="about-body">{{ page.body|linebreaks }}</div>
+
+  {% if page.contact_email or page.contact_phone or page.contact_address %}
+  <div class="about-section">
+    <h2 class="about-section-label">контакты</h2>
+    {% if page.contact_address %}<p class="about-contact">{{ page.contact_address }}</p>{% endif %}
+    {% if page.contact_email %}<p class="about-contact"><a href="mailto:{{ page.contact_email }}">{{ page.contact_email }}</a></p>{% endif %}
+    {% if page.contact_phone %}<p class="about-contact"><a href="tel:{{ page.contact_phone }}">{{ page.contact_phone }}</a></p>{% endif %}
+  </div>
+  {% endif %}
+
+  {% if page.vk_url or page.telegram_url or page.youtube_url %}
+  <div class="about-section">
+    <h2 class="about-section-label">мы в сети</h2>
+    <div class="about-socials">
+      {% if page.vk_url %}<a href="{{ page.vk_url }}" target="_blank" rel="noopener" class="about-social-link">VK</a>{% endif %}
+      {% if page.telegram_url %}<a href="{{ page.telegram_url }}" target="_blank" rel="noopener" class="about-social-link">Telegram</a>{% endif %}
+      {% if page.youtube_url %}<a href="{{ page.youtube_url }}" target="_blank" rel="noopener" class="about-social-link">YouTube</a>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if page.extra_html %}
+  <div class="about-section">{{ page.extra_html|safe }}</div>
+  {% endif %}
+</div>
+{% endblock %}

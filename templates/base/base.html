@@ -1,0 +1,81 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Музей трудовой и воинской славы{% endblock %} — Ленинградский мясокомбинат им. С.М. Кирова</title>
+<link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+<link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+<link rel="stylesheet" href="{% static 'css/museum.css' %}">
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{% block hero_area_start %}{% endblock %}
+
+<header id="header">
+  <div class="header-nav-row">
+    <nav aria-label="Основная навигация">
+      <a href="{% url 'home' %}" {% if request.path == '/' %}class="active"{% endif %}>главная</a>
+      {% url 'history' as history_url %}<a href="{{ history_url }}" {% if request.path == history_url %}class="active"{% endif %}>история предприятия</a>
+      <a href="{% url 'fond:catalog' %}" {% if 'fond' in request.resolver_match.namespace %}class="active"{% endif %}>фонд</a>
+      <a href="{% url 'gallery:home' %}" {% if 'gallery' in request.resolver_match.namespace %}class="active"{% endif %}>галерея</a>
+      <a href="{% url 'staff:list' %}" {% if 'staff' in request.resolver_match.namespace %}class="active"{% endif %}>отдел кадров</a>
+      {% url 'library:home' as lib_url %}<a href="{{ lib_url }}" {% if 'library' in request.resolver_match.namespace %}class="active"{% endif %}>библиотека</a>
+      <a href="{% url 'mapblock:map' %}" {% if 'mapblock' in request.resolver_match.namespace %}class="active"{% endif %}>интерактивная карта</a>
+      {% url 'about:page' as about_url %}<a href="{{ about_url }}" {% if 'about' in request.resolver_match.namespace %}class="active"{% endif %}>о проекте</a>
+    </nav>
+  </div>
+  <div class="header-search-row">
+    <form action="{% url 'fond:catalog' %}" method="get">
+      <input type="text" name="q" placeholder="поиск по музею..." value="{{ request.GET.q|default:'' }}">
+    </form>
+  </div>
+</header>
+
+{% block hero_area_end %}{% endblock %}
+
+<div class="mobile-nav-drawer" id="mobile-drawer" onclick="closeDrawer(event)">
+  <div class="mobile-nav-panel">
+    <div class="mobile-nav-header"><h2>Музей трудовой и воинской славы</h2></div>
+    <nav class="mobile-nav-links">
+      <a href="{% url 'home' %}" {% if request.path == '/' %}class="active"{% endif %}>главная</a>
+      {% url 'history' as history_url %}<a href="{{ history_url }}" {% if request.path == history_url %}class="active"{% endif %}>история предприятия</a>
+      <a href="{% url 'fond:catalog' %}" {% if 'fond' in request.resolver_match.namespace %}class="active"{% endif %}>фонд</a>
+      <a href="{% url 'gallery:home' %}" {% if 'gallery' in request.resolver_match.namespace %}class="active"{% endif %}>галерея</a>
+      <a href="{% url 'staff:list' %}" {% if 'staff' in request.resolver_match.namespace %}class="active"{% endif %}>отдел кадров</a>
+      <a href="{% url 'news:list' %}" {% if 'news' in request.resolver_match.namespace %}class="active"{% endif %}>новости</a>
+      <a href="{% url 'mapblock:map' %}" {% if 'mapblock' in request.resolver_match.namespace %}class="active"{% endif %}>интерактивная карта</a>
+      {% url 'library:home' as lib_url %}<a href="{{ lib_url }}" {% if 'library' in request.resolver_match.namespace %}class="active"{% endif %}>библиотека</a>
+      {% url 'about:page' as about_url %}<a href="{{ about_url }}" {% if 'about' in request.resolver_match.namespace %}class="active"{% endif %}>о проекте</a>
+    </nav>
+  </div>
+</div>
+
+{% block breadcrumbs %}{% endblock %}
+<main id="main-content">{% block content %}{% endblock %}</main>
+
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a href="{% url 'home' %}" class="bottom-nav-btn {% if request.path == '/' %}active{% endif %}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>главная</a>
+    {% url 'history' as history_url %}<a href="{{ history_url }}" class="bottom-nav-btn {% if request.path == history_url %}active{% endif %}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>история</a>
+    <a href="{% url 'fond:catalog' %}" class="bottom-nav-btn {% if 'fond' in request.resolver_match.namespace %}active{% endif %}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>фонд</a>
+    <a href="{% url 'gallery:home' %}" class="bottom-nav-btn {% if 'gallery' in request.resolver_match.namespace %}active{% endif %}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>галерея</a>
+    <a href="{% url 'staff:list' %}" class="bottom-nav-btn {% if 'staff' in request.resolver_match.namespace %}active{% endif %}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>кадры</a>
+    <a href="{% url 'news:list' %}" class="bottom-nav-btn {% if 'news' in request.resolver_match.namespace %}active{% endif %}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>новости</a>
+    <a href="{% url 'mapblock:map' %}" class="bottom-nav-btn {% if 'mapblock' in request.resolver_match.namespace %}active{% endif %}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>карта</a>
+  </div>
+</nav>
+
+<footer>
+  <p class="footer-copy">© 2026 Музей трудовой и воинской славы Ленинградского мясокомбината им. С.М. Кирова</p>
+  <div class="footer-contacts">
+    <span>Санкт-Петербург, Московское шоссе</span>
+    <a href="mailto:museum@kirovmeat.ru">museum@kirovmeat.ru</a>
+  </div>
+</footer>
+
+<script src="{% static 'js/museum.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>
