@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block section_name %}<a href="{% url 'about:page' %}">о проекте</a> >>>{% endblock %}
+{% block title %}О проекте{% endblock %}
+
+{% block hero_area_start %}
+<div class="page-dark-bg" style="background-image:url('{% static 'img/about_bg.jpg' %}')">
+<div class="page-dark-bg__overlay"></div>
+{% endblock %}
+
+{% block hero_area_end %}
+  <div class="about-page">
+    <div class="about-text-block">
+      <p>{{ page.body|linebreaksbr }}</p>
+    </div>
+
+    <div class="about-contacts-block">
+      <h2>наши контакты:</h2>
+      {% if page.contact_email %}<p>почта: <a href="mailto:{{ page.contact_email }}">{{ page.contact_email }}</a></p>{% endif %}
+      {% if page.vk_url %}<p>группа вк: <a href="{{ page.vk_url }}" target="_blank">{{ page.vk_url }}</a></p>{% endif %}
+      {% if page.telegram_url %}<p>телеграм: <a href="{{ page.telegram_url }}" target="_blank">{{ page.telegram_url }}</a></p>{% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}{% endblock %}

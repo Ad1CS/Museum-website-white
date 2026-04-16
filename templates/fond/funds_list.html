@@ -1,0 +1,42 @@
+{% extends "base/base.html" %}
+{% block section_name %}<a href="{% url 'fond:catalog' %}">фонд</a> >>> список фондов >>>{% endblock %}
+{% block title %}Список фондов{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="page-toolbar">
+    <div class="view-toggle">
+      <a href="{% url 'fond:catalog' %}" class="view-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Каталог
+      </a>
+      <a href="{% url 'fond:funds_list' %}" class="view-btn active">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>
+        Список фондов
+      </a>
+    </div>
+    <span class="result-count">Фондов: {{ funds|length }}</span>
+  </div>
+
+  <div class="funds-list">
+    {% for fund in funds %}
+    <a href="{{ fund.get_absolute_url }}" class="fund-item">
+      <div class="fund-item-left">
+        <div class="fund-item-id">{{ fund.code }}</div>
+        <div class="fund-item-date">{{ fund.dates_display }}</div>
+      </div>
+      <div class="fund-item-center">
+        <div class="fund-item-name">{{ fund.name }}</div>
+        {% if fund.description %}<div class="fund-item-desc">{{ fund.description|truncatewords:25 }}</div>{% endif %}
+      </div>
+      <div class="fund-item-stats">
+        <span>Описей: <strong>{{ fund.inventories.count }}</strong></span>
+        <span>Предметов: <strong>{{ fund.items.count }}</strong></span>
+      </div>
+    </a>
+    {% empty %}
+    <div class="empty-state"><p>Фонды пока не добавлены.</p></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

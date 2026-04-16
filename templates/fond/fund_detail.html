@@ -1,0 +1,42 @@
+{% extends "base/base.html" %}
+{% block section_name %}<a href="{% url 'fond:funds_list' %}">фонды</a> >>> {{ fund.code }} >>>{% endblock %}
+{% block title %}{{ fund.code }} — {{ fund.name|truncatewords:6 }}{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="fund-detail-header">
+    <span class="fund-detail-code">{{ fund.code }}</span>
+    <h1 class="fund-detail-name">{{ fund.name }}</h1>
+    {% if fund.dates_display != '—' %}<p class="fund-detail-dates">{{ fund.dates_display }}</p>{% endif %}
+    {% if fund.description %}<p class="fund-detail-desc">{{ fund.description }}</p>{% endif %}
+  </div>
+
+  {% for inventory in inventories %}
+  <div class="inventory-section">
+    <div class="inventory-header">
+      <h2>Опись {{ inventory.number }}{% if inventory.name %} — {{ inventory.name }}{% endif %}</h2>
+      <span class="result-count">Дел: {{ inventory.cases.count }}</span>
+    </div>
+    <div class="cases-list">
+      {% for case in inventory.cases.all %}
+      <a href="{{ case.get_absolute_url }}" class="case-item">
+        <div class="case-number">{{ case.number }}</div>
+        <div class="case-info">
+          <div class="case-title">{{ case.title }}</div>
+          {% if case.date_start %}<div class="case-dates">{{ case.date_start|date:"Y" }}{% if case.date_end %} — {{ case.date_end|date:"Y" }}{% endif %}</div>{% endif %}
+        </div>
+        <div class="case-meta">
+          {% if case.sheets_count %}<span>Листов: {{ case.sheets_count }}</span>{% endif %}
+          {% if case.digitized %}<span class="digitized-badge">Оцифровано</span>{% endif %}
+        </div>
+      </a>
+      {% empty %}
+        <p class="empty-note">Дела пока не добавлены.</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% empty %}
+  <div class="empty-state"><p>Описи пока не добавлены.</p></div>
+  {% endfor %}
+</div>
+{% endblock %}

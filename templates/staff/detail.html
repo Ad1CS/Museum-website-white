@@ -1,0 +1,82 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}{{ member.full_name }}{% endblock %}
+
+{% block section_name %}<a href="{% url 'staff:list' %}">сотрудники</a> >>> {{ member.full_name }} >>>{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="item-detail-layout">
+
+    <!-- LEFT: Photo -->
+    <div class="item-detail-image-col item-detail-image-col--portrait">
+      {% if member.photo %}
+        <img src="{{ member.photo.url }}" alt="{{ member.full_name }}" class="staff-detail-photo">
+      {% else %}
+        <div class="item-detail-photo-placeholder item-detail-photo-placeholder--portrait">Нет фото</div>
+      {% endif %}
+    </div>
+
+    <!-- RIGHT: Bio -->
+    <div class="item-detail-info-col white-text">
+      <span class="tag">Сотрудник</span>
+      <h1 class="item-detail-title">{{ member.full_name }}</h1>
+
+      {% if member.role or member.years_worked %}
+      <table class="item-fields-table">
+        {% if member.years_of_life %}<tr><th>Годы жизни</th><td>{{ member.years_of_life }}</td></tr>{% endif %}
+        {% if member.role %}<tr><th>Должность</th><td>{{ member.role }} {% if member.role_years %}({{ member.role_years }}){% endif %}</td></tr>{% endif %}
+        {% if member.role2 %}<tr><th>Должность 2</th><td>{{ member.role2 }} {% if member.role2_years %}({{ member.role2_years }}){% endif %}</td></tr>{% endif %}
+        {% if member.role3 %}<tr><th>Должность 3</th><td>{{ member.role3 }} {% if member.role3_years %}({{ member.role3_years }}){% endif %}</td></tr>{% endif %}
+        {% if member.years_worked %}<tr><th>Общий стаж</th><td>{{ member.years_worked }}</td></tr>{% endif %}
+        {% if member.personal_fund %}
+        <tr>
+          <th>Личный фонд</th>
+          <td><a href="{{ member.personal_fund.get_absolute_url }}" class="table-link">{{ member.personal_fund.code }} — {{ member.personal_fund.name|truncatewords:8 }}</a></td>
+        </tr>
+        {% endif %}
+      </table>
+      {% endif %}
+
+      {% if member.biography %}
+      <div class="staff-biography">
+        <h2 class="bio-heading">Биография</h2>
+        <div class="bio-text">{{ member.biography|linebreaks }}</div>
+      </div>
+      {% endif %}
+
+      {% if member.personal_fund %}
+      <a href="{{ member.personal_fund.get_absolute_url }}" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Перейти к личному фонду
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- RELATED FOND ITEMS -->
+  {% if related_items %}
+  <div class="related-section">
+    <div class="section-header">
+      <h2>Предметы, связанные с биографией</h2>
+      <a href="{% url 'fond:catalog' %}" class="section-more">В каталог →</a>
+    </div>
+    <div class="catalog-grid">
+      {% for item in related_items %}
+      <a href="{{ item.get_absolute_url }}" class="catalog-card">
+        <div class="catalog-card-img">
+          {% if item.image %}<img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">{% else %}<span>Нет фото</span>{% endif %}
+          <span class="item-type-badge">{{ item.get_item_type_display }}</span>
+        </div>
+        <div class="catalog-card-info">
+          <h4>{{ item.title|truncatewords:10 }}</h4>
+          <p>{{ item.creation_date_text|default:"—" }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

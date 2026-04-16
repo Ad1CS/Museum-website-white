@@ -1,0 +1,150 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block section_name %}<a href="{% url 'fond:catalog' %}">фонд</a> >>> <a href="{{ case.inventory.fund.get_absolute_url }}">{{ case.inventory.fund.code }}</a> >>> дело № {{ case.number }} >>>{% endblock %}
+{% block title %}{{ case.title }}{% endblock %}
+
+{% block content %}
+<div class="detail-layout">
+  <div class="detail-main">
+    <div class="detail-header">
+      <div class="detail-category">Дело № {{ case.number }} • Опись {{ case.inventory.number }}</div>
+      <h1 class="detail-title">{{ case.title }}</h1>
+    </div>
+
+    <div class="detail-info-grid">
+      <div class="info-item">
+        <div class="info-label">Крайние даты</div>
+        <div class="info-value">
+          {% if case.date_start or case.date_end %}
+            {{ case.date_start|date:"Y" }} — {{ case.date_end|date:"Y" }}
+          {% else %}
+            не указаны
+          {% endif %}
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Количество листов</div>
+        <div class="info-value">{{ case.sheets_count }}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Статус</div>
+        <div class="info-value">
+          {% if case.digitized %}
+            <span style="color:var(--red)">● Оцифровано</span>
+          {% else %}
+            не оцифровано
+          {% endif %}
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Фонд</div>
+        <div class="info-value">{{ case.inventory.fund.code }}</div>
+      </div>
+    </div>
+
+    {% if case.items.exists %}
+    <div class="detail-section">
+      <h2 class="section-title">Предметы в этом деле</h2>
+      <div class="lib-grid" style="margin-top:20px;">
+        {% for item in case.items.all %}
+        <div class="lib-card">
+          <a href="{{ item.get_absolute_url }}" class="lib-card-cover">
+            {% if item.image %}
+              <img src="{{ item.image.url }}" alt="{{ item.title }}">
+            {% else %}
+              <div class="no-photo">нет фото</div>
+            {% endif %}
+          </a>
+          <div class="lib-card-body">
+            <a href="{{ item.get_absolute_url }}" class="lib-card-title">{{ item.title }}</a>
+            <div class="lib-card-meta">{{ item.inventory_number }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <aside class="detail-sidebar">
+    <div class="sidebar-block">
+      <h3>Опись</h3>
+      <p style="font-size:14px; color:var(--text2); line-height:1.6;">
+        <strong>№ {{ case.inventory.number }}</strong><br>
+        {{ case.inventory.name }}
+      </p>
+      <div style="margin-top:20px;">
+        <a href="{{ case.inventory.fund.get_absolute_url }}" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; width:100%; box-sizing:border-box;">К описанию фонда</a>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<style>
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+.detail-main { min-width: 0; }
+.detail-category {
+  color: var(--red);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+.detail-title {
+  font-size: 42px;
+  line-height: 1.1;
+  margin-bottom: 40px;
+  font-weight: 800;
+}
+.detail-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 30px;
+  padding: 30px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 60px;
+}
+.info-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text2);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.info-value {
+  font-size: 18px;
+  font-weight: 500;
+}
+.detail-section { margin-top: 60px; }
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+.sidebar-block {
+  background: var(--bg2);
+  padding: 30px;
+  border: 1px solid var(--border);
+}
+.sidebar-block h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+@media(max-width: 900px) {
+  .detail-layout { grid-template-columns: 1fr; gap: 40px; }
+  .detail-title { font-size: 32px; }
+}
+</style>
+{% endblock %}

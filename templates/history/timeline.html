@@ -1,0 +1,156 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}История предприятия{% endblock %}
+
+{% block hero_area_start %}<div class="tl-first-section"><div class="tl-bg" style="background-image:url('{% static 'img/timeline_1.png' %}')"></div><div class="tl-bg-overlay"></div>{% endblock %}
+
+{% block hero_area_end %}
+<div class="timeline-header">
+  <span>лента времени</span>
+  <span>история предприятия</span>
+</div>
+<div class="tl-content">
+  <div class="tl-year">1931</div>
+  <div class="tl-events">
+    <div><div class="tl-event-date">16 июля</div></div>
+    <div><div class="tl-event-date">7 ноября</div><div class="tl-event-text">начало закладки<br>фундамента под<br>будущий завод</div></div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.tl-first-section { position:relative; min-height:100vh; }
+.tl-first-section > .tl-bg { position:absolute; inset:0; background-size:cover; background-position:center; }
+.tl-first-section > .tl-bg-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.3); pointer-events:none; }
+.tl-first-section #header { background:transparent !important; border-bottom:none !important; position:relative; }
+.tl-first-section .header-nav-row { border-top: 1px solid rgba(255,255,255,0.25); border-bottom: 2px solid rgba(255,255,255,0.4); }
+.tl-first-section #header nav a { color:#fff; transition: all 0.2s ease; }
+.tl-first-section #header nav a:hover { color:#e69291; }
+.tl-first-section #header nav a:active { color:#e69291; }
+.tl-first-section #header nav a.active { color:#e69291; font-weight:600; }
+.tl-first-section .header-search-row { border-top-color:rgba(255,255,255,0.15); }
+.tl-first-section .header-search-row input { color:#fff; border-bottom: 1px solid rgba(255,255,255,0.3); }
+.tl-first-section .header-search-row input::placeholder { color:rgba(255,255,255,0.7); }
+
+.timeline-header { position:relative; z-index:2; display:flex; justify-content:center; gap:600px; padding:18px 48px; border-bottom:1px solid rgba(255,255,255,0.2); }
+.timeline-header span:first-child { font-size:24px; font-weight:800; color:#000; text-transform:uppercase; letter-spacing:0.02em; }
+.timeline-header span:last-child { font-size:24px; color:#fff; align-self:center; font-weight: 500; text-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+
+.tl-content { position:relative; z-index:2; padding:60px 64px 80px; display:flex; flex-direction:column; align-items:center; }
+.tl-year { font-family:var(--font); font-size:120px; font-weight:800; color:#fff; line-height:0.9; margin-bottom:24px; text-align:center; text-shadow:0 4px 20px rgba(0,0,0,0.4); }
+.tl-year--left { position:absolute; left:64px; top:50%; transform:translateY(-50%); margin:0; z-index:10; }
+.tl-first-section .tl-year { position:absolute; left:64px; top:50%; transform:translateY(-50%); margin:0; z-index:10; }
+.tl-first-section .tl-events { border-left-color:rgba(255,255,255,0.8); min-height:180px; margin-top:140px; }
+.tl-first-section .tl-event-date { color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.3); font-size:24px; }
+.tl-first-section .tl-event-text { color:rgba(255,255,255,0.9); text-shadow:0 2px 10px rgba(0,0,0,0.3); font-size:16px; }
+.tl-first-section .tl-period-label { color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.3); }
+.tl-first-section .tl-vline { background:rgba(255,255,255,0.8); }
+.tl-events { padding-left:32px; border-left:6px solid rgba(255,255,255,0.8); display:flex; flex-direction:column; gap:16px; margin:20px auto; width:fit-content; text-align:left; }
+.tl-event-date { font-size:14px; font-weight:700; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.3); }
+.tl-event-text { font-size:12px; color:rgba(255,255,255,0.9); line-height:1.45; margin-top:2px; text-shadow:0 2px 10px rgba(0,0,0,0.3); }
+.tl-period-label { font-size:52px; font-weight:800; color:#fff; line-height:1.1; margin-top:140px; text-align:center; text-shadow:0 2px 10px rgba(0,0,0,0.3); }
+.tl-section-top-label { margin-top:0 !important; margin-bottom:15px; font-size:64px !important; border-bottom: 2px solid #fff; padding-bottom: 10px; }
+.tl-section-top-date { color:#fff !important; font-size:28px !important; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,0.3); margin-left: 100px; }
+.tl-center-block { display:flex; flex-direction:column; align-items:center; margin-top:24px; gap:8px; }
+.tl-vline { width:6px; background:rgba(255,255,255,0.8); }
+
+.tl-section { position:relative; width:100%; min-height:100vh; display:flex; overflow:hidden; }
+.tl-section .tl-bg { position:absolute; inset:0; background-size:cover; background-position:center; }
+.tl-section .tl-bg-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.3); pointer-events:none; }
+.tl-section .tl-content { position:relative; z-index:2; padding:80px 64px; width:100%; min-height:100vh; display:flex; flex-direction:column; align-items:center; }
+.tl-content--bottom { justify-content: flex-end; align-items: flex-start !important; padding-bottom: 140px !important; padding-left: 64px !important; }
+.tl-content--bottom .tl-year { text-align: left; margin: 0; }
+
+/* Period overlay — sits between two photo sections, overlapping both */
+.tl-period-bridge {
+  position:relative; z-index:5;
+  margin-top:-220px; margin-bottom:-120px;
+  display:flex; flex-direction:column; align-items:center;
+  padding:20px 0;
+  pointer-events:none;
+}
+.tl-sep-line { width:6px; height:200px; background:rgba(255,255,255,0.9); }
+.tl-sep-text { font-size:38px; font-weight:800; color:#fff; line-height:1.1; text-align:center; text-shadow:0 2px 10px rgba(0,0,0,0.3); }
+
+@media(max-width:768px) {
+  .tl-year { font-size:64px; }
+  .tl-year--left, .tl-first-section .tl-year { 
+    position: relative; 
+    left: auto; 
+    top: auto; 
+    transform: none; 
+    text-align: center;
+    margin: 0 0 20px 0 !important;
+  }
+  .tl-content--bottom { 
+    justify-content: center; 
+    align-items: center !important; 
+    padding-left: 20px !important;
+    padding-bottom: 40px !important;
+  }
+  .tl-content--bottom .tl-year { text-align: center; }
+  
+  .tl-period-label { font-size:32px; }
+  .tl-section-top-label { font-size:42px !important; }
+  .tl-section-top-date { font-size:20px !important; margin-left: 0 !important; }
+  .tl-sep-text { font-size:28px; }
+  .tl-content { padding:40px 20px; text-align: center; }
+  .timeline-header { padding:12px 20px; flex-direction: row; justify-content: space-between; gap: 10px; }
+  .timeline-header span:first-child { font-size: 16px; }
+  .timeline-header span:last-child { font-size: 14px; }
+  .tl-period-bridge { margin-top: -160px; margin-bottom: -100px; }
+  .tl-sep-line { height: 150px; }
+}
+@media(max-width:480px) {
+  .tl-year { font-size:48px; }
+  .tl-period-label { font-size:24px; }
+  .tl-section-top-label { font-size:32px !important; }
+  .tl-sep-text { font-size:22px; }
+  .tl-events { padding-left: 16px; border-left-width: 4px; margin-left: auto; margin-right: auto; }
+  .tl-first-section .tl-event-date { font-size: 18px; }
+  .tl-first-section .tl-events { margin-top: 20px; min-height: auto; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tl-section">
+  <div class="tl-bg" style="background-image:url('{% static 'img/timeline_2.png' %}')"></div>
+  <div class="tl-bg-overlay"></div>
+  <div class="tl-content">
+    <div class="tl-period-label" style="margin-top:0 !important; margin-bottom:0 !important;">строительство<br>комбината</div>
+    <div style="display:flex; align-items:flex-start; gap:15px; margin-top:20px; padding-left: 100px;">
+      <div class="tl-vline" style="height:180px; margin:0;"></div>
+      <div class="tl-event-date tl-section-top-date" style="margin:0;">16 июля</div>
+    </div>
+  </div>
+</div>
+
+<div class="tl-section">
+  <div class="tl-bg" style="background-image:url('{% static 'img/timeline_3.png' %}')"></div>
+  <div class="tl-bg-overlay"></div>
+  <div class="tl-content"><div class="tl-year tl-year--left">1933</div></div>
+</div>
+
+<!-- Period label overlapping between section 3 and 4, no gap -->
+<div class="tl-period-bridge">
+  <div class="tl-sep-line"></div>
+  <div class="tl-sep-text">довоенный<br>период</div>
+</div>
+
+<div class="tl-section">
+  <div class="tl-bg" style="background-image:url('{% static 'img/timeline_4.png' %}')"></div>
+  <div class="tl-bg-overlay"></div>
+  <div class="tl-content tl-content--bottom"><div class="tl-year">1937</div></div>
+</div>
+
+<div class="tl-section">
+  <div class="tl-bg" style="background-image:url('{% static 'img/timeline_5.png' %}')"></div>
+  <div class="tl-bg-overlay"></div>
+  <div class="tl-content"><div class="tl-period-label">война</div></div>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

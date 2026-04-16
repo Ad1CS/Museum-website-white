@@ -1,0 +1,179 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block section_name %}<a href="{% url 'gallery:home' %}">галерея</a> >>> {{ album.title|truncatewords:6 }} >>>{% endblock %}
+{% block title %}{{ album.title }}{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="album-detail-header">
+    <p class="period-label">{{ album.get_period_display }}</p>
+    <h1 class="album-detail-title">{{ album.title }}</h1>
+    {% if album.description %}<p class="album-detail-desc">{{ album.description }}</p>{% endif %}
+    <p class="result-count" style="margin-top:8px">{{ photos.count }} медиафайлов</p>
+  </div>
+
+  <!-- MEDIA GRID with lightbox -->
+  <div class="photo-masonry" id="photo-grid">
+    {% for item in photos %}
+    {% if item.is_video %}
+    <!-- VIDEO ITEM -->
+    <div class="photo-thumb-wrap video-item" onclick="openVideoModal('{{ item.embed_url|default:'' }}','{{ item.video_file.url|default:'' }}','{{ item.caption|escapejs }}')">
+      <div class="photo-thumb" style="position:relative;">
+        {% if item.image %}
+          <img src="{{ item.image.url }}" alt="{{ item.caption }}" loading="lazy">
+        {% else %}
+          <div style="width:100%;height:100%;background:var(--dark3);display:flex;align-items:center;justify-content:center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cc5251" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="#cc5251" stroke="none"/></svg>
+          </div>
+        {% endif %}
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="#fff" stroke="none"/></svg>
+        </div>
+      </div>
+      <div class="photo-caption-bar">
+        <span class="video-badge">▶ Видео</span>
+        {% if item.caption %}<span>{{ item.caption }}</span>{% endif %}
+        {% if item.date_text %}<span class="photo-date">{{ item.date_text }}</span>{% endif %}
+        {% if item.fond_item %}<a href="{{ item.fond_item.get_absolute_url }}" class="photo-fond-link" onclick="event.stopPropagation()">→ В фонд</a>{% endif %}
+      </div>
+    </div>
+    {% else %}
+    <!-- PHOTO ITEM -->
+    <div class="photo-thumb-wrap" onclick="openLightbox({{ forloop.counter0 }})">
+      <div class="photo-thumb">
+        {% if item.image %}
+          <img src="{{ item.image.url }}" alt="{{ item.caption }}" loading="lazy">
+        {% endif %}
+      </div>
+      {% if item.caption or item.date_text %}
+      <div class="photo-caption-bar">
+        {% if item.caption %}<span>{{ item.caption }}</span>{% endif %}
+        {% if item.date_text %}<span class="photo-date">{{ item.date_text }}</span>{% endif %}
+        {% if item.fond_item %}<a href="{{ item.fond_item.get_absolute_url }}" class="photo-fond-link" onclick="event.stopPropagation()">→ В фонд</a>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    {% empty %}
+    <div class="empty-state"><p>Медиафайлы пока не добавлены в этот альбом.</p></div>
+    {% endfor %}
+  </div>
+
+  <!-- OTHER ALBUMS IN PERIOD -->
+  {% if other_albums %}
+  <div class="related-section">
+    <div class="section-header"><h2>Другие альбомы этого периода</h2></div>
+    <div class="albums-grid">
+      {% for a in other_albums %}
+      <a href="{{ a.get_absolute_url }}" class="album-card">
+        <div class="album-cover">
+          {% if a.cover %}<img src="{{ a.cover.url }}" alt="{{ a.title }}" loading="lazy">{% else %}<span>Нет обложки</span>{% endif %}
+        </div>
+        <div class="album-info">
+          <h4>{{ a.title }}</h4>
+          <p>{{ a.photos.count }} фотографий</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фотографии">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Закрыть">✕</button>
+  <button class="lightbox-prev" onclick="lightboxNav(-1)" aria-label="Предыдущее фото">&#8592;</button>
+  <button class="lightbox-next" onclick="lightboxNav(1)" aria-label="Следующее фото">&#8594;</button>
+  <div class="lightbox-content">
+    <img id="lightbox-img" src="" alt="">
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Video modal -->
+<div id="video-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:3000;align-items:center;justify-content:center;flex-direction:column;" onclick="closeVideoModal()">
+  <button onclick="closeVideoModal()" style="position:fixed;top:20px;right:20px;background:rgba(10,10,10,.8);border:1px solid #444;color:#f0ede8;width:44px;height:44px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+  <div id="video-modal-inner" style="max-width:90vw;max-height:85vh;width:900px;" onclick="event.stopPropagation()"></div>
+  <p id="video-modal-caption" style="margin-top:12px;color:#888;font-family:'PT Serif',serif;font-size:13px;max-width:700px;text-align:center;"></p>
+</div>
+<style>
+.video-badge { background:rgba(204,82,81,.2);border:1px solid #cc5251;color:#cc5251;font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:1px 5px;border-radius:1px;flex-shrink:0; }
+.video-item { cursor:pointer; }
+</style>
+<script>
+// Only photos go into lightbox (videos open in video modal)
+const photos = [
+  {% for item in photos %}
+  {% if not item.is_video %}
+  { src: "{% if item.image %}{{ item.image.url }}{% endif %}", caption: "{{ item.caption|escapejs }}", date: "{{ item.date_text|escapejs }}" },
+  {% else %}
+  null,
+  {% endif %}
+  {% endfor %}
+].filter(Boolean);
+let currentIndex = 0;
+
+function openLightbox(idx) {
+  currentIndex = idx;
+  updateLightbox();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lightboxNav(dir) {
+  currentIndex = (currentIndex + dir + photos.length) % photos.length;
+  updateLightbox();
+}
+
+function updateLightbox() {
+  const p = photos[currentIndex];
+  document.getElementById('lightbox-img').src = p.src;
+  document.getElementById('lightbox-caption').textContent = [p.caption, p.date].filter(Boolean).join(' · ');
+}
+
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+
+document.addEventListener('keydown', function(e) {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') lightboxNav(-1);
+  if (e.key === 'ArrowRight') lightboxNav(1);
+});
+
+function openVideoModal(embedUrl, fileUrl, caption) {
+  const inner = document.getElementById('video-modal-inner');
+  document.getElementById('video-modal-caption').textContent = caption;
+  if (embedUrl) {
+    inner.innerHTML = `<iframe src="${embedUrl}?autoplay=1" width="100%" height="500" frameborder="0" allowfullscreen allow="autoplay"></iframe>`;
+  } else if (fileUrl) {
+    inner.innerHTML = `<video src="${fileUrl}" controls autoplay style="width:100%;max-height:80vh;"></video>`;
+  } else {
+    inner.innerHTML = '<p style="color:#888;padding:40px;text-align:center">Видео недоступно</p>';
+  }
+  const modal = document.getElementById('video-modal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeVideoModal() {
+  document.getElementById('video-modal').style.display = 'none';
+  document.getElementById('video-modal-inner').innerHTML = '';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeVideoModal();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block section_name %}фонд >>>{% endblock %}
+{% block title %}Фонд — Каталог{% endblock %}
+
+{% block content %}
+<div class="page-container">
+
+  <!-- MODE TOGGLE + SEARCH TOOLBAR -->
+  <div class="page-toolbar">
+    <div class="view-toggle" role="group" aria-label="Режим просмотра">
+      <a href="{% url 'fond:catalog' %}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}"
+         class="view-btn {% if view_mode == 'catalog' %}active{% endif %}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Каталог
+      </a>
+      <a href="{% url 'fond:funds_list' %}" class="view-btn {% if view_mode == 'funds' %}active{% endif %}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Список фондов
+      </a>
+    </div>
+
+    <form class="search-bar" method="get" action="{% url 'fond:catalog' %}" role="search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" name="q" placeholder="Поиск по каталогу..." value="{{ q }}" aria-label="Поиск по каталогу">
+      {% if selected_type %}<input type="hidden" name="type" value="{{ selected_type }}">{% endif %}
+      {% if selected_period %}<input type="hidden" name="period" value="{{ selected_period }}">{% endif %}
+    </form>
+
+    <select class="filter-select" onchange="applyFilter('type', this.value)" aria-label="Тип предмета">
+      <option value="">Все типы</option>
+      {% for val, label in item_types %}
+        <option value="{{ val }}" {% if selected_type == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+
+    <select class="filter-select" onchange="applyFilter('period', this.value)" aria-label="Период">
+      <option value="">Все периоды</option>
+      {% for val, label in periods %}
+        <option value="{{ val }}" {% if selected_period == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+
+    <span class="result-count">Найдено: {{ paginator.count }}</span>
+  </div>
+
+  <!-- CATALOG GRID -->
+  {% if items %}
+  <div class="catalog-grid" id="catalog-grid">
+    {% for item in items %}
+    <a href="{{ item.get_absolute_url }}" class="catalog-card">
+      <div class="catalog-card-img">
+        {% if item.image %}
+          <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">
+        {% else %}
+          <span>Нет изображения</span>
+        {% endif %}
+        <span class="item-type-badge">{{ item.get_item_type_display }}</span>
+      </div>
+      <div class="catalog-card-info">
+        <h4>{{ item.title|truncatewords:12 }}</h4>
+        <p>{{ item.creation_date_text|default:item.get_period_display }}</p>
+        {% if item.kp_number %}<p class="kp-num">{{ item.kp_number }}</p>{% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- PAGINATION -->
+  {% if is_paginated %}
+  <nav class="pagination" aria-label="Страницы">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_period %}&period={{ selected_period }}{% endif %}" class="page-btn">← Назад</a>
+    {% endif %}
+    <span class="page-info">Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_period %}&period={{ selected_period }}{% endif %}" class="page-btn">Вперёд →</a>
+    {% endif %}
+  </nav>
+  {% endif %}
+
+  {% else %}
+  <div class="empty-state">
+    <p>Предметы не найдены. Попробуйте изменить параметры поиска.</p>
+    <a href="{% url 'fond:catalog' %}" class="btn-reset">Сбросить фильтры</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function applyFilter(param, value) {
+  const url = new URL(window.location);
+  if (value) { url.searchParams.set(param, value); }
+  else { url.searchParams.delete(param); }
+  url.searchParams.delete('page');
+  window.location = url.toString();
+}
+</script>
+{% endblock %}
