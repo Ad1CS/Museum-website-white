@@ -226,9 +226,40 @@ footer#site-footer { display: none !important; }
   border: 1px solid rgba(255,255,255,0.1) !important;
 }
 
-@media(max-width:900px) {
-  .building-popup-panel { width: 320px; right: 20px; top: 120px; }
-  .map-bottom-nav { gap: 20px; overflow-x: auto; max-width: 90vw; padding-bottom: 10px; }
+@media(max-width:600px) {
+  /* Header adjustments */
+  .map-path { font-size: 11px; gap: 5px; }
+  .map-path .sep { font-size: 9px; }
+  .header-search input { font-size: 11px !important; width: 120px !important; }
+  .header-sub-row { padding: 10px 20px; }
+
+  /* Popup adjustments - centered at bottom */
+  .building-popup-panel {
+    width: calc(100% - 40px);
+    right: 20px; left: 20px;
+    top: auto; bottom: 120px;
+    max-height: 50vh;
+  }
+  .popup-img-wrap { height: 160px; }
+  .popup-body { padding: 20px; }
+  .popup-body h2 { font-size: 16px; margin-bottom: 10px; }
+  .popup-desc { font-size: 12px; margin-bottom: 15px; }
+  .popup-footer { padding: 0 20px 20px; }
+
+  /* Bottom nav adjustments - much smaller to fit screen */
+  .map-bottom-nav {
+    bottom: 25px;
+    padding: 0 15px 10px;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .map-nav-item {
+    font-size: 10px;
+    line-height: 1.2;
+    min-width: fit-content;
+  }
 }
 </style>
 {% endblock %}
@@ -498,7 +529,8 @@ footer#site-footer { display: none !important; }
       built: "{{ b.built_years|escapejs }}",
       desc: "{{ b.description|escapejs|truncatewords:25 }}",
       url: "{% url 'mapblock:building' b.slug %}",
-      mainImage: "{% if b.main_image %}{{ b.main_image.url }}{% endif %}"
+      mainImage: "{% if b.main_image %}{{ b.main_image.url }}{% endif %}",
+      crop: "{{ b.manual_crop_data }}"
     },
     {% endfor %}
   };
@@ -710,8 +742,34 @@ footer#site-footer { display: none !important; }
       document.getElementById('popup-desc').innerHTML = b.desc; 
       document.getElementById('popup-link').href = b.url;
       if (b.mainImage) {
-        document.getElementById('popup-img').src = b.mainImage;
-        document.getElementById('popup-img').parentElement.style.display = 'block';
+        const imgEl = document.getElementById('popup-img');
+        imgEl.src = b.mainImage;
+        imgEl.parentElement.style.display = 'block';
+        
+        // Apply manual crop if exists (x,y,w,h in %)
+        if (b.crop) {
+          const [x, y, w, h] = b.crop.split(',').map(parseFloat);
+          imgEl.style.objectFit = 'none';
+          imgEl.style.objectPosition = `${x}% ${y}%`;
+          imgEl.style.width = (10000 / w) + '%';
+          imgEl.style.height = (10000 / h) + '%';
+          imgEl.style.transform = `scale(${w/100})`;
+          imgEl.style.transformOrigin = 'top left';
+          // Actually, a simpler way to do manual crop with CSS is using percentages on object-position
+          // but that requires fixed container aspect ratio.
+          // Better approach for water-like see through:
+          imgEl.style.objectFit = 'cover';
+          imgEl.style.objectPosition = `${x + w/2}% ${y + h/2}%`;
+          // If w/h are provided, we can simulate zoom
+          imgEl.style.transform = `scale(${100/w})`;
+          imgEl.style.transformOrigin = `${x}% ${y}%`;
+        } else {
+          imgEl.style.objectFit = 'cover';
+          imgEl.style.objectPosition = 'center';
+          imgEl.style.transform = 'none';
+          imgEl.style.width = '100%';
+          imgEl.style.height = '100%';
+        }
       } else {
         document.getElementById('popup-img').parentElement.style.display = 'none';
       }

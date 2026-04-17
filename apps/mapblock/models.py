@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 
 
 class MapSettings(models.Model):
@@ -66,7 +68,15 @@ class Building(models.Model):
     slug = models.SlugField('Slug', unique=True)
     name = models.CharField('Название', max_length=300)
     main_image = models.ImageField('Главное фото', upload_to='map/buildings/', blank=True, null=True)
+
+    # Automated cropping for the map popup (16:9 ratio)
+    main_image_cropped = ImageSpecField(source='main_image',
+                                      processors=[ResizeToFill(420, 240)],
+                                      format='JPEG',
+                                      options={'quality': 90})
+
     built_years = models.CharField('Год постройки', max_length=100, blank=True)
+    manual_crop_data = models.CharField('Данные обрезки', max_length=500, blank=True, default='')
     description = models.TextField('Описание')
     # Map position — geographic coordinates
     pos_x = models.FloatField('Позиция X (пиксели)', default=3684, help_text='X-координата центра здания на карте (0–7368)')

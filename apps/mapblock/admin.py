@@ -12,12 +12,12 @@ class BuildingAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
     filter_horizontal   = ['photos']
-    readonly_fields     = ['map_shape_editor']
+    readonly_fields     = ['map_shape_editor', 'cropped_preview', 'manual_crop_tool']
     save_on_top = True
 
     fieldsets = (
         ('Основное', {
-            'fields': ('name', 'slug', 'main_image', 'built_years', 'description', 'published'),
+            'fields': ('name', 'slug', 'main_image', 'cropped_preview', 'manual_crop_tool', 'built_years', 'description', 'published'),
         }),
         ('📸 Галерея (Дополнительные фото)', {
             'fields': ('photos',),
@@ -54,6 +54,117 @@ class BuildingAdmin(admin.ModelAdmin):
             rot=rotation_style, clip=clip_style,
         )
     map_preview_thumb.short_description = 'Позиция'
+
+    def cropped_preview(self, obj):
+        if obj.main_image:
+            # main_image_cropped is an ImageSpecField from models.py
+            return format_html(
+                '<div style="margin-bottom:10px;"><img src="{}" style="max-width:300px; border-radius:4px; border:1px solid #444;"></div>'
+                '<div style="color:#aaa; font-size:11px;">Это автоматическая обрезка (16:9) для окна на карте.</div>',
+                obj.main_image_cropped.url
+            )
+        return "Сначала загрузите изображение"
+    cropped_preview.short_description = 'Предпросмотр (16:9)'
+
+    def manual_crop_tool(self, obj):
+        if not obj.main_image:
+            return "Сначала загрузите изображение"
+        
+        img_url = obj.main_image.url
+        crop_data = obj.manual_crop_data or "0,0,100,100" # fallback
+
+        return format_html('''
+<div style="margin-top:16px; border:1px solid #444; padding:20px; background:#1a1a1a; border-radius:8px; font-family:sans-serif;">
+  <div style="font-size:12px;color:#fff;margin-bottom:15px; font-weight:bold; text-transform:uppercase; letter-spacing:0.05em;">
+    Инструмент ручной обрезки фото (16:9)
+  </div>
+  
+  <div id="crop-viewport" style="width:100%; max-width:600px; position:relative; cursor: crosshair; user-select: none; overflow:hidden; border:1px solid #333;">
+    <img src="{img_url}" id="crop-source-img" style="width:100%; display:block; opacity:0.6;">
+    <div id="crop-frame" style="position:absolute; border:2px solid #ff4444; box-shadow: 0 0 0 4000px rgba(0,0,0,0.5); cursor:move;">
+        <div style="position:absolute; right:-5px; bottom:-5px; width:10px; height:10px; background:#ff4444; cursor:nwse-resize;"></div>
+    </div>
+  </div>
+
+  <div style="margin-top:15px; display:flex; gap:10px;">
+    <button type="button" onclick="applyManualCrop()" id="crop-apply-btn" style="font-size:11px;padding:8px 20px;background:#fff;color:#000;border:none;cursor:pointer;font-weight:bold;border-radius:4px;">ПРИМЕНИТЬ ОБРЕЗКУ</button>
+  </div>
+</div>
+
+<script>
+(function() {{
+  const viewport = document.getElementById('crop-viewport');
+  const img = document.getElementById('crop-source-img');
+  const frame = document.getElementById('crop-frame');
+  const dataInput = document.querySelector('input[name="manual_crop_data"]');
+  
+  let isDragging = false;
+  let isResizing = false;
+  let startX, startY, startLeft, startTop, startWidth, startHeight;
+
+  img.onload = () => {{
+    const currentData = dataInput.value || "10,10,80,45";
+    const [x, y, w, h] = currentData.split(',').map(parseFloat);
+    
+    frame.style.left = x + '%';
+    frame.style.top = y + '%';
+    frame.style.width = w + '%';
+    frame.style.height = (w * (9/16) * (img.naturalWidth / img.naturalHeight)) + '%';
+    
+    if (h) frame.style.height = h + '%';
+  }};
+
+  frame.onmousedown = e => {{
+    e.preventDefault();
+    const rect = frame.getBoundingClientRect();
+    if (e.clientX > rect.right - 15 && e.clientY > rect.bottom - 15) {{
+        isResizing = true;
+    }} else {{
+        isDragging = true;
+    }}
+    startX = e.clientX; startY = e.clientY;
+    startLeft = frame.offsetLeft; startTop = frame.offsetTop;
+    startWidth = frame.offsetWidth; startHeight = frame.offsetHeight;
+  }};
+
+  window.addEventListener('mousemove', e => {{
+    if (!isDragging && !isResizing) return;
+    
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    const vRect = viewport.getBoundingClientRect();
+
+    if (isDragging) {{
+        let nl = ((startLeft + dx) / vRect.width) * 100;
+        let nt = ((startTop + dy) / vRect.height) * 100;
+        frame.style.left = Math.max(0, Math.min(100 - (frame.offsetWidth/vRect.width*100), nl)) + '%';
+        frame.style.top = Math.max(0, Math.min(100 - (frame.offsetHeight/vRect.height*100), nt)) + '%';
+    }} else if (isResizing) {{
+        let nw = ((startWidth + dx) / vRect.width) * 100;
+        frame.style.width = Math.max(10, Math.min(100 - (frame.offsetLeft/vRect.width*100), nw)) + '%';
+        // Force 16:9 ratio
+        const ratio = (9/16) * (img.naturalWidth / img.naturalHeight);
+        frame.style.height = (parseFloat(frame.style.width) * ratio) + '%';
+    }}
+  }});
+
+  window.addEventListener('mouseup', () => {{ isDragging = false; isResizing = false; }});
+
+  window.applyManualCrop = () => {{
+    const x = parseFloat(frame.style.left);
+    const y = parseFloat(frame.style.top);
+    const w = parseFloat(frame.style.width);
+    const h = parseFloat(frame.style.height);
+    dataInput.value = `${{x.toFixed(2)}},${{y.toFixed(2)}},${{w.toFixed(2)}},${{h.toFixed(2)}}`;
+    
+    const btn = document.getElementById('crop-apply-btn');
+    btn.style.background = "#4CAF50"; btn.innerText = "ОБРЕЗКА ПРИМЕНЕНА! СОХРАНИТЕ ЗДАНИЕ";
+    setTimeout(() => {{ btn.style.background = "#fff"; btn.innerText = "ПРИМЕНИТЬ ОБРЕЗКУ"; }}, 3000);
+  }};
+}})();
+</script>
+''', img_url=img_url)
+    manual_crop_tool.short_description = 'Ручная обрезка'
 
     def pos_display(self, obj):
         return format_html(

@@ -90,20 +90,20 @@ html body #header .main-nav a {
     flex-direction: column;
     height: auto;
     padding: 0;
+    background: transparent !important;
   }
   .nav-row {
     display: flex;
     width: 100%;
-    justify-content: space-around;
-  }
-  .nav-row:first-child {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: none;
   }
   html body #header .main-nav a {
-    font-size: 24px !important;
-    padding: 15px 10px;
+    font-size: 13px !important;
+    padding: 10px 4px;
     height: auto;
     flex: 1;
+    line-height: 1.2;
+    white-space: normal;
   }
 }
 
