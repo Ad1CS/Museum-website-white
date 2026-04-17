@@ -72,18 +72,18 @@ button,select,input { font-family:var(--font); }
 
 .main-nav {
   display:flex; align-items:center; justify-content:center;
-  padding:0 60px; height:65px;
+  padding:0 60px; height:70px;
 }
 .nav-row { display: contents; }
-.main-nav a {
-  font-family:var(--font); font-size:16px; font-weight:700;
+html body #header .main-nav a {
+  font-family:var(--font); font-size:19px !important; font-weight:700;
   text-transform:lowercase; color:#fff;
-  padding:0 20px; white-space:nowrap; transition:color .15s;
+  padding:0 25px; white-space:nowrap; transition:all .15s;
   height:100%; display:flex; align-items:center; justify-content:center; text-align:center;
 }
-.main-nav a:hover { color:#e69291; }
-.main-nav a:active { color:#e69291; }
-.main-nav a.active { color:#e69291; }
+.main-nav a:hover { color:#e69291 !important; }
+.main-nav a:active { color:#e69291 !important; }
+.main-nav a.active { color:#e69291 !important; }
 
 @media(max-width:600px) {
   .main-nav {
@@ -99,9 +99,9 @@ button,select,input { font-family:var(--font); }
   .nav-row:first-child {
     border-bottom: 1px solid rgba(255,255,255,0.1);
   }
-  .main-nav a {
-    font-size: 10px;
-    padding: 12px 5px;
+  html body #header .main-nav a {
+    font-size: 24px !important;
+    padding: 15px 10px;
     height: auto;
     flex: 1;
   }
