@@ -3,7 +3,7 @@ import os
 import base64
 from io import BytesIO
 
-img_path = 'static/img/map2002.jpg'
+img_path = 'static/img/map2002_new.jpg'
 webp_path = 'static/img/map2002.webp'
 placeholder_path = 'static/img/map2002_tiny.jpg'
 

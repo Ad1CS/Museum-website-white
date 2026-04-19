@@ -16,7 +16,6 @@ environ.Env.read_env(BASE_DIR / '.env')
 
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-replace-in-production-with-a-real-secret-key-123456')
 DEBUG = env('DEBUG', default=False)
-print(f"DEBUG IS: {DEBUG}")
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.onrender.com', '*'])
 
 INSTALLED_APPS = [

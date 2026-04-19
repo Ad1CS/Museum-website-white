@@ -38,7 +38,7 @@ class BuildingAdmin(admin.ModelAdmin):
 
     def map_preview_thumb(self, obj):
         from django.templatetags.static import static
-        bg_url = static('img/map_aerial.png')
+        bg_url = static('img/map2002_new.jpg')
         rotation_style = f'transform:rotate({obj.map_rotation}deg);transform-origin:center;'
         clip_style = f'clip-path:polygon({obj.map_clip_path});' if obj.map_clip_path else ''
         return format_html(
@@ -176,7 +176,7 @@ class BuildingAdmin(admin.ModelAdmin):
 
     def map_shape_editor(self, obj):
         from django.templatetags.static import static
-        map_url = static('img/map2002.jpg')
+        map_url = static('img/map2002_new.jpg')
         
         # Pre-load existing data
         existing_points = []
@@ -476,7 +476,7 @@ class MapSettingsAdmin(admin.ModelAdmin):
 
     def map_shape_editor(self, obj):
         from django.templatetags.static import static
-        map_url = static('img/map2002.jpg')
+        map_url = static('img/map2002_new.jpg')
         
         # Pre-load existing data
         existing_points = []
