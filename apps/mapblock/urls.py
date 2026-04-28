@@ -5,5 +5,6 @@ app_name = 'mapblock'
 
 urlpatterns = [
     path('', views.MapView.as_view(), name='map'),
+    path('plans/', views.PlansView.as_view(), name='plans'),
     path('<slug:slug>/', views.BuildingDetailView.as_view(), name='building'),
 ]

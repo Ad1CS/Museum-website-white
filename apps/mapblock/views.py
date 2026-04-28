@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, ListView
 from .models import Building, MapSettings
 
 
@@ -31,3 +31,19 @@ class BuildingDetailView(DetailView):
     model = Building
     context_object_name = 'building'
     slug_url_kwarg = 'slug'
+
+
+class PlansView(ListView):
+    template_name = 'mapblock/plans.html'
+    context_object_name = 'items'
+
+    def get_queryset(self):
+        from apps.fond.models import FondItem
+        # Assuming documents or specific tag/category represents maps and plans
+        return FondItem.objects.filter(
+            published=True,
+            title__icontains='план'
+        ) | FondItem.objects.filter(
+            published=True,
+            title__icontains='карта'
+        )
