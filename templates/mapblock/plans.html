@@ -1,0 +1,149 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block section_name %}
+<a href="{% url 'mapblock:map' %}">интерактивная карта</a>
+<span class="sep">>>></span>
+<a href="{% url 'mapblock:plans' %}">карты и планы</a>
+{% endblock %}
+
+{% block title %}Карты и планы предприятия{% endblock %}
+
+{% block extra_head %}
+<link rel="preload" as="image" href="{% static 'img/map2002.webp' %}">
+<style>
+.page-dark-bg {
+  background-color: #1a1815;
+  /* Inline Base64 placeholder for instant background during transition */
+  background-image: url('data:image/jpeg;base64,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');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  transition: background-image 0.6s ease-in;
+}
+
+.plans-page {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 120px 48px 60px;
+  min-height: calc(100vh - 101px);
+  display: flex;
+  flex-direction: column;
+}
+
+.plans-title {
+  font-family: var(--font);
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: lowercase;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.plans-list {
+  list-style: none;
+  padding: 0;
+}
+
+.plans-item {
+  margin-bottom: 25px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  padding-bottom: 15px;
+  transition: all 0.3s;
+}
+
+.plans-item:hover {
+  border-bottom-color: #E69291;
+}
+
+.plans-item a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  text-decoration: none;
+  color: rgba(255,255,255,0.9);
+}
+
+.plans-item:hover a {
+  color: #E69291;
+}
+
+.plan-name {
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.plan-meta {
+  font-family: var(--font);
+  font-size: 13px;
+  font-style: italic;
+  color: rgba(255,255,255,0.5);
+  white-space: nowrap;
+  margin-left: 20px;
+}
+
+.plans-empty {
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+  margin-top: 40px;
+}
+
+@media(max-width: 600px) {
+  .plans-page { padding: 100px 20px 40px; }
+  .plan-name { font-size: 15px; }
+  .plans-item a { flex-direction: column; gap: 5px; }
+  .plan-meta { margin-left: 0; }
+}
+</style>
+{% endblock %}
+
+{% block hero_area_start %}
+<div class="page-dark-bg" id="plans-bg">
+<div class="page-dark-bg__overlay" style="background: rgba(0,0,0,0.75);"></div>
+{% endblock %}
+
+{% block hero_area_end %}
+  <div class="plans-page">
+    <h1 class="plans-title">карты и планы предприятия</h1>
+    
+    <div class="plans-list">
+      {% for item in items %}
+      <div class="plans-item">
+        <a href="{{ item.get_absolute_url }}">
+          <span class="plan-name">{{ item.title }}</span>
+          <span class="plan-meta">{{ item.inventory_number }} {% if item.creation_date_text %}({{ item.creation_date_text }}){% endif %}</span>
+        </a>
+      </div>
+      {% empty %}
+      <p class="plans-empty">В данном разделе пока нет материалов.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Smoothly swap placeholder for high-res image once loaded
+  (function() {
+    const bg = document.getElementById('plans-bg');
+    const highRes = new Image();
+    highRes.src = '{% static "img/map2002.webp" %}';
+    if (highRes.complete) {
+        bg.style.backgroundImage = `url('${highRes.src}')`;
+    } else {
+        highRes.onload = function() {
+          bg.style.backgroundImage = `url('${highRes.src}')`;
+        };
+    }
+  })();
+</script>
+{% endblock %}
