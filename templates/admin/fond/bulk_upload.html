@@ -1,0 +1,143 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrahead %}{{ block.super }}
+<script src="{% url 'admin:jsi18n' %}"></script>
+<style>
+    .bulk-upload-container { padding: 20px; background: #fff; border: 1px solid #ccc; margin-top: 20px; }
+    .drop-zone { border: 2px dashed #417690; padding: 40px; text-align: center; color: #666; cursor: pointer; transition: background 0.3s; margin-bottom: 20px; }
+    .drop-zone:hover { background: #f0f7fb; }
+    .progress-item { margin: 10px 0; padding: 10px; border: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
+    .status-badge { padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+    .status-waiting { background: #eee; color: #666; }
+    .status-uploading { background: #417690; color: #fff; }
+    .status-success { background: #26a69a; color: #fff; }
+    .status-error { background: #f44336; color: #fff; }
+    .btn-upload { background: #417690; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .btn-upload:disabled { background: #ccc; cursor: not-allowed; }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label='fond' %}">Фонд</a>
+&rsaquo; <a href="{% url 'admin:fond_fonditem_changelist' %}">Предметы фонда</a>
+&rsaquo; <a href="{% url 'admin:fond_fonditem_change' item.pk %}">{{ item.title }}</a>
+&rsaquo; Массовая загрузка фотографий
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>Массовая загрузка фотографий для: {{ item.title }}</h1>
+    
+    <div class="bulk-upload-container">
+        <p>Выберите несколько фотографий. Они будут автоматически привязаны к этому предмету, 
+        добавлены в галерею и (если у предмета нет фото) первая станет основной фотографией предмета.</p>
+
+        <form id="upload-form">
+            {% csrf_token %}
+            <div class="drop-zone" id="drop-zone">
+                <p>Перетащите файлы сюда или нажмите для выбора</p>
+                <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
+            </div>
+            
+            <div id="file-list"></div>
+            
+            <div style="margin-top: 20px;">
+                <button type="button" class="btn-upload" id="start-upload" disabled>Начать загрузку</button>
+                <a href="{% url 'admin:fond_fonditem_change' item.pk %}" class="closelink" style="margin-left: 20px;">Вернуться к предмету</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileList = document.getElementById('file-list');
+    const startBtn = document.getElementById('start-upload');
+    let selectedFiles = [];
+
+    dropZone.onclick = () => fileInput.click();
+
+    fileInput.onchange = (e) => {
+        addFiles(e.target.files);
+    };
+
+    dropZone.ondragover = (e) => {
+        e.preventDefault();
+        dropZone.style.background = '#f0f7fb';
+    };
+
+    dropZone.ondragleave = () => {
+        dropZone.style.background = 'transparent';
+    };
+
+    dropZone.ondrop = (e) => {
+        e.preventDefault();
+        dropZone.style.background = 'transparent';
+        addFiles(e.dataTransfer.files);
+    };
+
+    function addFiles(files) {
+        for (let file of files) {
+            if (file.type.startsWith('image/')) {
+                selectedFiles.push(file);
+                const item = document.createElement('div');
+                item.className = 'progress-item';
+                item.innerHTML = `
+                    <span>${file.name} (${(file.size/1024/1024).toFixed(2)} MB)</span>
+                    <span class="status-badge status-waiting">Ожидание</span>
+                `;
+                fileList.appendChild(item);
+            }
+        }
+        if (selectedFiles.length > 0) startBtn.disabled = false;
+    }
+
+    startBtn.onclick = async () => {
+        startBtn.disabled = true;
+        const badges = fileList.querySelectorAll('.status-badge');
+        
+        // We can send all files in one request as the view expects getlist('images')
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+        
+        for (let i = 0; i < selectedFiles.length; i++) {
+            formData.append('images', selectedFiles[i]);
+            badges[i].className = 'status-badge status-uploading';
+            badges[i].innerText = 'Загрузка...';
+        }
+
+        try {
+            const response = await fetch('{% url "admin:fond_item_bulk_upload_do" item.pk %}', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            
+            if (response.ok) {
+                badges.forEach(b => {
+                    b.className = 'status-badge status-success';
+                    b.innerText = 'Готово';
+                });
+                alert('Успешно загружено: ' + result.created + ' фото');
+                window.location.href = '{% url "admin:fond_fonditem_change" item.pk %}';
+            } else {
+                throw new Error(result.error || 'Ошибка загрузки');
+            }
+        } catch (err) {
+            alert('Ошибка: ' + err.message);
+            badges.forEach(b => {
+                if (b.innerText === 'Загрузка...') {
+                    b.className = 'status-badge status-error';
+                    b.innerText = 'Ошибка';
+                }
+            });
+            startBtn.disabled = false;
+        }
+    };
+</script>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block body_class %}class="page-fond-dark"{% endblock %}
+
+{% block section_name %}фонд >>>{% endblock %}
+{% block title %}Фонд — Каталог{% endblock %}
+
+{% block content %}
+<style>
+  body.page-fond-dark {
+    background: #000 url('{% static "fond/fondBG.jpg" %}') no-repeat center top fixed !important;
+    background-size: cover !important;
+  }
+  body.page-fond-dark::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
+</style>
+<div class="page-margins-1-1">
+  <h1 class="main-title-1-1 lowercase" style="font-size: 80px; font-weight: 800; margin: 60px 0;">фонд</h1>
+
+  <div class="toolbar-1-1" style="display: flex; align-items: center; gap: 50px; padding-bottom: 50px;">
+    <div class="view-toggle" style="display: flex; gap: 40px;">
+      <a href="{% url 'fond:catalog' %}" class="view-btn active" style="font-size: 13px; font-weight: 900; text-transform: lowercase; letter-spacing: 0.3em; opacity: 1; border-bottom: 1px solid #fff; padding-bottom: 8px;">каталог</a>
+      <a href="{% url 'fond:funds_list' %}" class="view-btn" style="font-size: 13px; font-weight: 900; text-transform: lowercase; letter-spacing: 0.3em; opacity: 0.2; border-bottom: 1px solid transparent; padding-bottom: 8px;">список фондов</a>
+    </div>
+    <div style="flex:1;">
+      <form method="get"><input type="text" name="q" class="search-input" style="width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px 0; font-size: 18px; outline: none; font-style: italic;" placeholder="поиск по каталогу.." value="{{ q }}"></form>
+    </div>
+    <select class="view-btn active" style="background:transparent; border:none; outline:none; cursor:pointer; color: #fff; opacity: 0.2;" onchange="applyFilter('type', this.value)">
+      <option value="" style="background:#000;">все типы</option>
+      {% for val, label in item_types %}<option value="{{ val }}" {% if selected_type == val %}selected{% endif %} style="background:#000;">{{ label|lower }}</option>{% endfor %}
+    </select>
+  </div>
+
+  <!-- 4.5 Items Grid Logic: Adjusted height so 1st row is full, 2nd is hint -->
+  <div class="catalog-grid-1-1" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; padding-bottom: 100px;">
+    {% for item in items %}
+    <a href="{{ item.get_absolute_url }}" class="unified-plate">
+      <div class="unified-plate-img-frame" style="height: 380px;">
+        {% if item.image %}<img src="{{ item.image.url }}" alt="{{ item.title }}" class="unified-plate-img" loading="lazy">{% else %}<div style="height:100%; display:flex; align-items:center; justify-content:center; opacity:0.03; font-size:40px; font-weight:900;">MUSEUM</div>{% endif %}
+        <span style="position: absolute; top: 25px; right: 25px; background: rgba(0,0,0,0.8); padding: 6px 14px; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em;">{{ item.get_item_type_display|lower }}</span>
+      </div>
+      <div class="unified-plate-content">
+        <div>
+          <h4 class="unified-plate-title">{{ item.title|truncatewords:8 }}</h4>
+          <p class="unified-plate-sub">{{ item.creation_date_text|default:item.get_period_display|lower }}</p>
+        </div>
+        <div class="unified-plate-arrow">→</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  {% if is_paginated %}
+  <nav style="margin-top:40px; display:flex; gap:60px; justify-content:center; padding-bottom:150px;">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="view-btn active" style="opacity:0.5;">назад</a>{% endif %}
+    <span style="opacity:0.1; font-size:11px; font-weight:900; align-self:center; letter-spacing:0.5em;">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="view-btn active" style="opacity:0.5;">вперед</a>{% endif %}
+  </nav>
+  {% endif %}
+</div>
+
+<script>
+function applyFilter(param, value) {
+  const url = new URL(window.location);
+  if (value) url.searchParams.set(param, value); else url.searchParams.delete(param);
+  url.searchParams.delete('page'); window.location = url.toString();
+}
+</script>
+{% endblock %}

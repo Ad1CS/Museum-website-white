@@ -1,0 +1,842 @@
+{% extends "base/base.html" %}
+{% load static l10n %}
+
+{% block section_name %}
+<div class="map-path">
+  <a href="{% url 'home' %}">главная</a>
+  <span class="sep">>>></span>
+  <a href="{% url 'mapblock:map' %}">интерактивная карта</a>
+  <span id="breadcrumb-building-sep" class="sep" style="display:none">>>></span>
+  <span id="breadcrumb-building" class="current-item" style="display:none"></span>
+</div>
+{% endblock %}
+{% block title %}Интерактивная карта{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="preload" as="image" href="{% static 'img/map2002.webp' %}">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+/* Fullscreen background map layout */
+#main-content {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1;
+}
+#header {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 5000;
+  background: transparent !important;
+}
+.header-sub-row { border-bottom: 1px solid rgba(255,255,255,0.15) !important; }
+
+/* Path styling inside header-sub-row */
+.map-path {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 16px; letter-spacing: 0.05em; text-transform: lowercase;
+}
+.map-path a, .map-path span { color: rgba(255,255,255,0.6); transition: color 0.2s; }
+.map-path a:hover { color: #fff; }
+.map-path .sep { opacity: 0.4; font-size: 14px; }
+.map-path .current-item { color: #E69291 !important; font-weight: 700; }
+
+.header-search input {
+  font-size: 16px !important;
+  width: 240px !important;
+}
+
+#leaflet-map {
+  width:100%; height: 100%;
+  background:#1a1815;
+}
+.map-wrapper {
+  width:100%; height: 100%; position: relative;
+}
+.map-area { width:100%; height: 100%; }
+
+/* Hide zoom controls */
+.leaflet-control-zoom { display: none !important; }
+
+/* Hide footer for this page */
+footer#site-footer { display: none !important; }
+
+/* Professional Map Loader */
+.map-loader-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #1a1815;
+  z-index: 6000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+.loader-content {
+  text-align: center;
+  max-width: 300px;
+}
+.loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(230,146,145,0.1);
+  border-top-color: #E69291;
+  border-radius: 50%;
+  margin: 0 auto 24px;
+  animation: loader-spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes loader-spin {
+  to { transform: rotate(360deg); }
+}
+.loader-text {
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+.loader-subtext {
+  font-family: var(--font);
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Building Polygons */
+.building-polygon {
+  fill: rgba(255, 255, 255, 0);
+  stroke: #FFFFFF;
+  stroke-width: 0.3;
+  cursor: pointer;
+  transition: fill 0.3s, stroke-width 0.3s, stroke 0.3s;
+}
+.building-polygon:hover, .building-polygon.active-polygon {
+  fill: rgba(230, 146, 145, 0.3);
+  stroke: #E69291;
+  stroke-width: 1.0;
+}
+
+.building-label-marker {
+  pointer-events: none;
+  transition: opacity 0.4s;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+.building-label-text {
+  font-family: var(--font); font-size: 7px; font-weight: 100;
+  letter-spacing: .02em; text-transform: uppercase;
+  color: #fff; text-align: center;
+  text-shadow: 0 1px 4px rgba(0,0,0,1), 0 0 8px rgba(0,0,0,0.8);
+  white-space: normal; line-height: 1.1;
+  padding: 0;
+  background: transparent;
+  box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: auto;
+  max-height: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+/* Hide existing sidebar */
+.map-sidebar-wrap { display: none !important; }
+
+/* New Building Info Panel (Popup) */
+.building-popup-panel {
+  position: absolute; right: 40px; top: 140px; bottom: 160px;
+  width: 420px; background: rgba(0,0,0,0.7);
+  z-index: 4500; color: #fff;
+  display: none; flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  border: none;
+}
+.building-popup-panel.active { display: flex; }
+.popup-img-wrap { width: 100%; height: 240px; overflow: hidden; background: transparent; }
+.popup-img-wrap img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+.popup-body { padding: 30px; flex: 1; overflow-y: auto; }
+.popup-body h2 {
+  font-size: 20px; font-weight: 700; text-transform: uppercase;
+  margin-bottom: 15px; color: #fff; line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+.popup-desc {
+  font-family: var(--font); font-size: 14px; color: rgba(255,255,255,0.9);
+  line-height: 1.7; margin-bottom: 25px;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+}
+.popup-footer { padding: 0 30px 30px; }
+.popup-link {
+  font-size: 12px; color: #fff; text-transform: uppercase;
+  letter-spacing: 0.12em; text-decoration: none;
+  opacity: 0.7; transition: all 0.2s;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 2px;
+}
+.popup-link:hover { opacity: 1; color: #E69291; border-color: #E69291; }
+.popup-link::after { content: ""; }
+
+/* Bottom Map Navigation */
+.map-bottom-nav {
+  position: absolute; bottom: 40px; left: 0; right: 0;
+  z-index: 4500; display: flex;
+  padding: 0 80px 20px;
+  border-bottom: 1px solid #fff;
+  justify-content: space-between;
+}
+.map-nav-item {
+  color: #fff; font-size: 24px; font-weight: 800; text-transform: lowercase;
+  cursor: pointer; transition: color 0.2s; opacity: 0.85;
+  letter-spacing: 0.02em; text-align: center; line-height: 1.1;
+}
+.map-nav-item:hover, .map-nav-item.active { color: #E69291; opacity: 1; }
+
+/* Custom Map Controls */
+.leaflet-control-zoom { border: none !important; margin-top: 180px !important; margin-left: 30px !important; }
+.leaflet-control-zoom a {
+  background: rgba(0,0,0,0.5) !important; color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.2) !important; 
+  width: 40px !important; height: 40px !important;
+  line-height: 40px !important; font-size: 18px !important; 
+  border-radius: 2px !important;
+  margin-bottom: 6px !important; transition: all .2s !important;
+  display: flex !important; align-items: center; justify-content: center;
+}
+.leaflet-control-zoom a:hover { color: #fff !important; background: #E69291 !important; border-color: #E69291 !important; }
+
+/* Territory Overlay adjustment */
+.territory-label {
+  background: rgba(0,0,0,0.6) !important;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+@media(max-width:600px) {
+  /* Header adjustments */
+  .map-path { font-size: 11px; gap: 5px; }
+  .map-path .sep { font-size: 9px; }
+  .header-search input { font-size: 11px !important; width: 120px !important; }
+  .header-sub-row { padding: 10px 20px; }
+
+  /* Popup adjustments - centered at bottom */
+  .building-popup-panel {
+    width: calc(100% - 40px);
+    right: 20px; left: 20px;
+    top: auto; bottom: 120px;
+    max-height: 50vh;
+  }
+  .popup-img-wrap { height: 160px; }
+  .popup-body { padding: 20px; }
+  .popup-body h2 { font-size: 16px; margin-bottom: 10px; }
+  .popup-desc { font-size: 12px; margin-bottom: 15px; }
+  .popup-footer { padding: 0 20px 20px; }
+
+  /* Bottom nav adjustments - much smaller to fit screen */
+  .map-bottom-nav {
+    bottom: 25px;
+    padding: 0 15px 10px;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .map-nav-item {
+    font-size: 10px;
+    line-height: 1.2;
+    min-width: fit-content;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="map-wrapper">
+  <div class="map-area">
+    <div id="map-loader" class="map-loader-overlay">
+      <div class="loader-content">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Загрузка интерактивной карты</div>
+        <div class="loader-subtext">Это может занять несколько секунд</div>
+      </div>
+    </div>
+    
+    <div id="leaflet-map"></div>
+
+
+
+    <!-- Bottom Map Navigation -->    <div class="map-bottom-nav">
+      <div class="map-nav-item active" data-year="2002">спутниковый<br>снимок 2002</div>
+      <div class="map-nav-item" data-year="1966">спутниковый<br>снимок 1966</div>
+      <div class="map-nav-item" data-year="1943">аэрофотосъемка<br>люфтваффе 1943</div>
+      <a href="{% url 'mapblock:plans' %}" class="map-nav-item">карты и планы<br>предприятия</a>
+    </div>
+  </div>
+
+  <!-- Building Info Popup Panel -->
+  <div id="building-popup" class="building-popup-panel">
+    <div class="popup-img-wrap">
+      <img id="popup-img" src="" alt="">
+    </div>
+    <div class="popup-body">
+      <h2 id="popup-title"></h2>
+      <div id="popup-desc" class="popup-desc"></div>
+    </div>
+    <div class="popup-footer">
+      <a id="popup-link" href="#" class="popup-link">подробнее об объекте</a>
+    </div>
+  </div>
+
+  <div class="map-sidebar-wrap">
+    <h3>Здания предприятия</h3>
+    {% for building in buildings %}
+    <div class="building-list-item" data-slug="{{ building.slug }}" id="sidebar-{{ building.slug }}">
+      <div class="b-list-header" onclick="flyToBuilding('{{ building.slug }}', false)">
+        <div class="b-list-header-text">
+          <h4>{{ building.name }}</h4>
+          {% if building.built_years %}<p>{{ building.built_years }}</p>{% endif %}
+        </div>
+      </div>
+      <div class="b-list-content">
+        <div class="b-list-inner">
+          {% if building.main_image %}
+          <img src="{{ building.main_image.url }}" class="b-list-img" alt="{{ building.name }}" onclick="openLightbox('{{ building.main_image.url }}')">
+          {% endif %}
+          <div class="b-list-desc">{{ building.description|linebreaks }}</div>
+          
+          {% if building.photos.exists %}
+          <div class="b-list-photos">
+            {% for photo in building.photos.all %}
+            <img src="{{ photo.image.url }}" alt="{{ building.name }}" onclick="openLightbox('{{ photo.image.url }}')">
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          <a href="{{ building.get_absolute_url }}" class="b-list-link">Подробнее о здании →</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Lightbox Overlay -->
+<div id="map-lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+  <span class="lightbox-close">&times;</span>
+  <div class="lightbox-content" onclick="event.stopPropagation()">
+    <img id="lightbox-img" src="" alt="View">
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{% localize off %}
+<script>
+(function() {
+  // Lightbox functions
+  window.openLightbox = function(url) {
+    const lb = document.getElementById('map-lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = url;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeLightbox = function() {
+    const lb = document.getElementById('map-lightbox');
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+
+  const IMG_W = 7368;
+  const IMG_H = 4144;
+
+  // Admin settings
+  const CENTER_X = {{ map_settings.center_x }};
+  const CENTER_Y = {{ map_settings.center_y }};
+  const DEFAULT_ZOOM = {{ map_settings.zoom }};
+  const MIN_ZOOM = {{ map_settings.min_zoom }};
+  const MAX_ZOOM = {{ map_settings.max_zoom }};
+  const BUILDING_ZOOM = {{ map_settings.building_zoom }};
+
+  // Image bounds: [[0, 0], [IMG_H, IMG_W]]
+  const bounds = [[0, 0], [IMG_H, IMG_W]];
+
+  const map = L.map('leaflet-map', {
+    crs: L.CRS.Simple,
+    minZoom: MIN_ZOOM,
+    maxZoom: MAX_ZOOM,
+    maxBounds: bounds,
+    maxBoundsViscosity: 1.0,
+    zoomControl: true,
+    attributionControl: false,
+    zoomSnap: 0.1,
+    zoomDelta: 0.5,
+    doubleClickZoom: false,
+    preferCanvas: true,
+  });
+
+  // Map layers data
+  const mapLayers = {
+    "2002": {
+      url: '{% static "img/map2002_new.jpg" %}',
+      fallback: '{% static "img/map2002.jpg" %}'
+    },
+    "1966": {
+      url: '{% static "img/1966.jpg" %}'
+    },
+    "1943": {
+      url: '{% static "img/1943.jpg" %}'
+    }
+  };
+
+  // Create Panes for correct layering
+  map.createPane('basePane');
+  map.getPane('basePane').style.zIndex = 100;
+  map.createPane('historicalPane');
+  map.getPane('historicalPane').style.zIndex = 200;
+  
+  // Load the base map image (Always remains in the background)
+  // We use the original 7368x4144 bounds to keep existing buildings aligned
+  let baseImageUrl = mapLayers["2002"].url;
+  const baseImage = L.imageOverlay(baseImageUrl, bounds, { pane: 'basePane' }).addTo(map);
+  
+  // Historical overlay layer
+  let historicalOverlay = null;
+  let currentLayerYear = "2002";
+
+  // Helper function to hide loader
+  function hideLoader() {
+    const loader = document.getElementById('map-loader');
+    if (loader) {
+      loader.style.opacity = '0';
+      setTimeout(() => { loader.style.display = 'none'; }, 600);
+    }
+  }
+
+  // Initial load handler for base image
+  baseImage.on('load', function() {
+    if (!historicalOverlay) hideLoader();
+  });
+  baseImage.on('error', function() {
+    console.warn("Base map image failed to load.");
+    hideLoader();
+  });
+
+  // Safety timeout: hide loader after 5s regardless
+  setTimeout(hideLoader, 5000);
+
+  // Set initial view without animation for speed
+  map.setView([IMG_H - CENTER_Y, CENTER_X], DEFAULT_ZOOM, { animate: false });
+
+  // Auto-calculate minZoom to prevent black borders (fit image to container)
+  function adjustMinZoom() {
+    const calculatedMinZoom = map.getBoundsZoom(bounds, true);
+    const finalMinZoom = Math.max(MIN_ZOOM, calculatedMinZoom);
+    
+    if (map.getMinZoom() !== finalMinZoom) {
+      map.setMinZoom(finalMinZoom);
+      if (map.getZoom() < finalMinZoom) {
+        map.setZoom(finalMinZoom);
+      }
+    }
+  }
+
+  map.on('load resize', adjustMinZoom);
+
+
+
+  // Trigger initial check
+  const initialCalculatedMinZoom = map.getBoundsZoom(bounds, true);
+  const startMinZoom = Math.max(MIN_ZOOM, initialCalculatedMinZoom);
+  map.setMinZoom(startMinZoom);
+  
+  if (DEFAULT_ZOOM < startMinZoom) {
+    map.setZoom(startMinZoom);
+  } else {
+    map.setZoom(DEFAULT_ZOOM);
+  }
+
+  // Territory Overlay
+  const territoryLayer = L.layerGroup();
+  {% if map_settings.show_territory %}
+  (function() {
+    const tx = {{ map_settings.territory_x }};
+    const ty = {{ map_settings.territory_y }};
+    const tw = {{ map_settings.territory_w }};
+    const th = {{ map_settings.territory_h }};
+    const trot = {{ map_settings.territory_rotation }};
+    const tMirrorX = {% if map_settings.territory_mirror_x %}true{% else %}false{% endif %};
+    const tMirrorY = {% if map_settings.territory_mirror_y %}true{% else %}false{% endif %};
+    const tShape = "{{ map_settings.territory_clip_path|escapejs }}";
+    const tLabel = "{{ map_settings.territory_label|escapejs }}";
+    const showLabel = {% if map_settings.show_territory_label %}true{% else %}false{% endif %};
+
+    // Use a Polygon instead of a Rectangle to support custom shapes and rotation
+    const rad = (trot * Math.PI) / 180;
+    let rawPoints = [];
+    if (tShape) {
+      const matches = [...tShape.matchAll(/([\d.]+)%\s+([\d.]+)%/g)];
+      rawPoints = matches.map(m => [
+        (parseFloat(m[1])/100 - 0.5) * tw,
+        (parseFloat(m[2])/100 - 0.5) * th
+      ]);
+    } else {
+      rawPoints = [[-tw/2, -th/2], [tw/2, -th/2], [tw/2, th/2], [-tw/2, th/2]];
+    }
+
+    // Apply mirroring and rotation
+    const polyPoints = rawPoints.map(([px, py]) => {
+      // Mirroring: simply negate the relative coordinate if flag is set
+      const mx = tMirrorX ? -px : px;
+      const my = tMirrorY ? -py : py;
+      
+      const rx = mx * Math.cos(rad) - my * Math.sin(rad);
+      const ry = mx * Math.sin(rad) + my * Math.cos(rad);
+      return [IMG_H - (ty + ry), tx + rx]; // [lat, lng]
+    });
+
+    const territoryPoly = L.polygon(polyPoints, {
+      color: '#FFFFFF',
+      weight: 0.6,
+      fillColor: '#FFFFFF',
+      fillOpacity: 0.1,
+      interactive: true
+    });
+
+    territoryPoly.on('click', function(e) {
+      L.DomEvent.stopPropagation(e);
+      // Immediate smooth fade
+      territoryPoly.setStyle({ opacity: 0, fillOpacity: 0 });
+      if (labelMarker) labelMarker.getElement().style.opacity = '0';
+      
+      map.flyTo([IMG_H - CENTER_Y, CENTER_X], DEFAULT_ZOOM, {
+        duration: 1.5,
+        easeLinearity: 0.25
+      });
+    });
+
+    territoryLayer.addLayer(territoryPoly);
+
+    // Label stays constant screen size
+    let labelMarker = null;
+    if (showLabel) {
+      labelMarker = L.marker([IMG_H - ty, tx], {
+        icon: L.divIcon({
+          className: 'territory-label-marker',
+          html: `<div class="territory-label">${tLabel}</div>`,
+          iconSize: [240, 50],
+          iconAnchor: [120, 25],
+        })
+      });
+      territoryLayer.addLayer(labelMarker);
+    }
+  })();
+  {% endif %}
+
+  // Buildings
+  const buildings = {
+    {% for b in buildings %}
+    "{{ b.slug }}": {
+      x: {{ b.pos_x }},
+      y: {{ b.pos_y }},
+      w: {{ b.map_width }},
+      h: {{ b.map_height }},
+      rot: {{ b.map_rotation }},
+      shape: "{{ b.map_clip_path|escapejs }}",
+      name: "{{ b.name|escapejs }}",
+      built: "{{ b.built_years|escapejs }}",
+      desc: "{{ b.description|escapejs|truncatewords:25 }}",
+      url: "{% url 'mapblock:building' b.slug %}",
+      mainImage: "{% if b.main_image %}{{ b.main_image.url }}{% endif %}",
+      crop: "{{ b.manual_crop_data }}"
+    },
+    {% endfor %}
+  };
+
+  const markers = {};
+  const markerLayer = L.layerGroup();
+
+  Object.entries(buildings).forEach(([slug, b]) => {
+    // 1. Calculate Polygon Points
+    const w = (b.w / 100) * IMG_W;
+    const h = (b.h / 100) * IMG_H;
+    const rad = (b.rot * Math.PI) / 180;
+    
+    let rawPoints = [];
+    if (b.shape) {
+      const matches = [...b.shape.matchAll(/([\d.]+)%\s+([\d.]+)%/g)];
+      rawPoints = matches.map(m => [
+        (parseFloat(m[1])/100 - 0.5) * w,
+        (parseFloat(m[2])/100 - 0.5) * h
+      ]);
+    } else {
+      rawPoints = [[-w/2, -h/2], [w/2, -h/2], [w/2, h/2], [-w/2, h/2]];
+    }
+
+    const polyPoints = rawPoints.map(([px, py]) => {
+      const rx = px * Math.cos(rad) - py * Math.sin(rad);
+      const ry = px * Math.sin(rad) + py * Math.cos(rad);
+      return [IMG_H - (b.y + ry), b.x + rx];
+    });
+
+    const polygon = L.polygon(polyPoints, {
+      color: '#FFFFFF',
+      weight: 0.4,
+      fillColor: '#FFFFFF',
+      fillOpacity: 0,
+      opacity: 0,
+      interactive: true
+    });
+
+    const labelMarker = L.marker([IMG_H - b.y, b.x], {
+      interactive: false,
+      icon: L.divIcon({
+        className: 'building-label-marker',
+        html: `<div class="building-label-text" id="label-text-${slug}">${b.name}</div>`,
+        iconSize: [240, 60],
+        iconAnchor: [120, 30],
+      })
+    });
+
+    polygon.on('mouseover', function() {
+      if (!document.getElementById(`sidebar-${slug}`).classList.contains('active')) {
+        this.setStyle({ fillOpacity: 0.4, weight: 1.0 });
+      }
+    });
+    polygon.on('mouseout', function() {
+      if (!document.getElementById(`sidebar-${slug}`).classList.contains('active')) {
+        this.setStyle({ fillOpacity: 0.15, weight: 0.4 });
+      }
+    });
+
+    polygon.on('click', function(e) {
+      L.DomEvent.stopPropagation(e);
+      flyToBuilding(slug, false);
+    });
+
+    markers[slug] = polygon;
+    markerLayer.addLayer(polygon);
+    markerLayer.addLayer(labelMarker);
+  });
+
+  // Scaling labels proportionally to building width
+  function refreshLabels() {
+    const currentZoom = map.getZoom();
+    const scale = Math.pow(2, currentZoom);
+    
+    Object.entries(buildings).forEach(([slug, b]) => {
+      const textDiv = document.getElementById(`label-text-${slug}`);
+      if (!textDiv) return;
+      const markerEl = textDiv.parentElement;
+      if (!markerEl || !markerEl.classList.contains('leaflet-marker-icon')) return;
+
+      const currentW = (b.w / 100) * IMG_W * scale;
+      const currentH = (b.h / 100) * IMG_H * scale;
+      
+      markerEl.style.width = currentW + 'px';
+      markerEl.style.height = currentH + 'px';
+      markerEl.style.marginLeft = (-currentW / 2) + 'px';
+      markerEl.style.marginTop = (-currentH / 2) + 'px';
+      
+      // Hide label if building is too small to contain it cleanly 
+      // OR if zoom level is not high enough
+      if (currentW < 40 || map.getZoom() < BUILDING_ZOOM + 1.2) {
+        markerEl.style.opacity = '0';
+      } else {
+        markerEl.style.opacity = '1';
+      }
+
+      const baseFontSize = 7.5;
+      const zoomDiff = currentZoom - DEFAULT_ZOOM;
+      const multiplier = zoomDiff < 0 ? 1.5 : 0.8;
+      const fontSize = baseFontSize + (zoomDiff * multiplier);
+      
+      textDiv.style.fontSize = Math.max(5, Math.min(11, fontSize)) + 'px';
+    });
+  }
+  map.on('zoom moveend', refreshLabels);
+  refreshLabels();
+
+  // Show/hide buildings based on zoom
+  function updateVisibility() {
+    const currentZoom = map.getZoom();
+    const threshold = DEFAULT_ZOOM - 0.05;
+
+    if (currentZoom >= threshold) {
+      if (!map.hasLayer(markerLayer)) markerLayer.addTo(map);
+      if (map.hasLayer(territoryLayer)) map.removeLayer(territoryLayer);
+      
+      // Fade in buildings
+      markerLayer.eachLayer(layer => {
+        if (layer.setStyle && !layer.getIcon) layer.setStyle({ opacity: 1, fillOpacity: 0.15 });
+      });
+      refreshLabels();
+    } else {
+      if (map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
+      if (!map.hasLayer(territoryLayer)) {
+        territoryLayer.addTo(map);
+      }
+      
+      // Ensure visibility when in overview range
+      territoryLayer.eachLayer(layer => {
+        if (layer.setStyle && !layer.getIcon) {
+          layer.setStyle({ opacity: 1, fillOpacity: 0.1 });
+        }
+      });
+    }
+  }
+
+  map.on('zoomend moveend', updateVisibility);
+  
+  // Track zoom level to handle smooth transitions
+  let lastZoomLevel = map.getZoom();
+  map.on('zoomstart', () => { lastZoomLevel = map.getZoom(); });
+  
+  updateVisibility();
+
+  let currentSelectedSlug = null;
+
+  // Popup functions
+  window.closePopup = function() {
+    document.getElementById('building-popup').classList.remove('active');
+    currentSelectedSlug = null;
+    // Clear selection
+    Object.keys(markers).forEach(s => {
+      markers[s].setStyle({ fillOpacity: 0, stroke: '#FFFFFF', weight: 0.4 });
+    });
+    // Clear breadcrumb
+    const bcSep = document.getElementById('breadcrumb-building-sep');
+    const bcText = document.getElementById('breadcrumb-building');
+    if (bcSep) bcSep.style.display = 'none';
+    if (bcText) bcText.style.display = 'none';
+  };
+
+  // Bottom navigation switching
+  document.querySelectorAll('.map-nav-item').forEach(item => {
+    item.addEventListener('click', function() {
+      const year = this.getAttribute('data-year');
+      if (!year) return;
+
+      document.querySelectorAll('.map-nav-item').forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+      currentLayerYear = year;
+
+      // If switching to base 2002, just remove the overlay
+      if (year === "2002") {
+        if (historicalOverlay) {
+          map.removeLayer(historicalOverlay);
+          historicalOverlay = null;
+        }
+        return;
+      }
+
+      // If switching to a historical map
+      if (mapLayers[year]) {
+        const loader = document.getElementById('map-loader');
+        if (loader) {
+          loader.style.display = 'flex';
+          loader.style.opacity = '1';
+        }
+
+        if (historicalOverlay) {
+          map.removeLayer(historicalOverlay);
+        }
+
+        const layerBounds = mapLayers[year].bounds || bounds;
+        historicalOverlay = L.imageOverlay(mapLayers[year].url, layerBounds, {
+          pane: 'historicalPane'
+        });
+        
+        historicalOverlay.on('load', hideLoader);
+        historicalOverlay.on('error', hideLoader);
+        historicalOverlay.addTo(map);
+      }
+    });
+  });
+
+  // Sidebar click → fly to building & open/toggle accordion
+  window.flyToBuilding = function(slug) {
+    if (currentSelectedSlug === slug) {
+      closePopup();
+      return;
+    }
+    
+    const b = buildings[slug];
+    if (!b) return;
+
+    currentSelectedSlug = slug;
+    const target = [IMG_H - b.y, b.x];
+    const targetZoom = Math.max(map.getZoom(), BUILDING_ZOOM + 1.2);
+    
+    map.flyTo(target, targetZoom, { duration: 0.8 });
+
+    // Mark as selected
+    Object.keys(markers).forEach(s => {
+      const poly = markers[s];
+      if (s === slug) {
+        poly.setStyle({ fillOpacity: 0.4, stroke: '#E69291', weight: 1.0 });
+        poly.bringToFront();
+      } else {
+        poly.setStyle({ fillOpacity: 0, stroke: '#FFFFFF', weight: 0.4 });
+      }
+    });
+
+    // Update breadcrumb
+    const bcSep = document.getElementById('breadcrumb-building-sep');
+    const bcText = document.getElementById('breadcrumb-building');
+    if (bcSep && bcText) {
+      bcSep.style.display = 'inline';
+      bcText.style.display = 'inline';
+      bcText.textContent = b.name;
+    }
+
+    // Update and show popup
+    const popup = document.getElementById('building-popup');
+    if (popup) {
+      document.getElementById('popup-title').textContent = b.name;
+      document.getElementById('popup-desc').innerHTML = b.desc; 
+      document.getElementById('popup-link').href = b.url;
+      if (b.mainImage) {
+        const imgEl = document.getElementById('popup-img');
+        imgEl.src = b.mainImage;
+        imgEl.parentElement.style.display = 'block';
+        
+        // Apply manual crop if exists (x,y,w,h in %)
+        if (b.crop) {
+          const [x, y, w, h] = b.crop.split(',').map(parseFloat);
+          imgEl.style.objectFit = 'none';
+          imgEl.style.objectPosition = `${x}% ${y}%`;
+          imgEl.style.width = (10000 / w) + '%';
+          imgEl.style.height = (10000 / h) + '%';
+          imgEl.style.transform = `scale(${w/100})`;
+          imgEl.style.transformOrigin = 'top left';
+          // Actually, a simpler way to do manual crop with CSS is using percentages on object-position
+          // but that requires fixed container aspect ratio.
+          // Better approach for water-like see through:
+          imgEl.style.objectFit = 'cover';
+          imgEl.style.objectPosition = `${x + w/2}% ${y + h/2}%`;
+          // If w/h are provided, we can simulate zoom
+          imgEl.style.transform = `scale(${100/w})`;
+          imgEl.style.transformOrigin = `${x}% ${y}%`;
+        } else {
+          imgEl.style.objectFit = 'cover';
+          imgEl.style.objectPosition = 'center';
+          imgEl.style.transform = 'none';
+          imgEl.style.width = '100%';
+          imgEl.style.height = '100%';
+        }
+      } else {
+        document.getElementById('popup-img').parentElement.style.display = 'none';
+      }
+      popup.classList.add('active');
+    }
+  };
+})();
+</script>
+{% endlocalize %}
+{% endblock %}

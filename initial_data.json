@@ -1,0 +1,1353 @@
+[
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-04-19T21:43:16.841Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=0.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 X\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 Y\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0428\\u0438\\u0440\\u0438\\u043d\\u0430\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0412\\u044b\\u0441\\u043e\\u0442\\u0430\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2026-04-19T21:47:14.264Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0426\\u0435\\u043d\\u0442\\u0440 \\u2014 X (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u0426\\u0435\\u043d\\u0442\\u0440 \\u2014 Y (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"Zoom (\\u043c\\u0430\\u0441\\u0448\\u0442\\u0430\\u0431)\", \"\\u041f\\u043e\\u043a\\u0430\\u0437\\u044b\\u0432\\u0430\\u0442\\u044c \\u043d\\u0430\\u0434\\u043f\\u0438\\u0441\\u044c \\u0442\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u0438\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2026-04-19T21:50:03.685Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 X\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 Y\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0428\\u0438\\u0440\\u0438\\u043d\\u0430\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0412\\u044b\\u0441\\u043e\\u0442\\u0430\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2026-04-19T21:50:20.056Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041c\\u0438\\u043d\\u0438\\u043c\\u0430\\u043b\\u044c\\u043d\\u044b\\u0439 zoom\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2026-04-19T21:50:41.964Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-2.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Zoom (\\u043c\\u0430\\u0441\\u0448\\u0442\\u0430\\u0431)\", \"\\u041c\\u0438\\u043d\\u0438\\u043c\\u0430\\u043b\\u044c\\u043d\\u044b\\u0439 zoom\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2026-04-19T21:50:59.150Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Zoom (\\u043c\\u0430\\u0441\\u0448\\u0442\\u0430\\u0431)\", \"Zoom \\u043f\\u043e\\u043a\\u0430\\u0437\\u0430 \\u0437\\u0434\\u0430\\u043d\\u0438\\u0439\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2026-04-19T21:51:13.717Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041c\\u0438\\u043d\\u0438\\u043c\\u0430\\u043b\\u044c\\u043d\\u044b\\u0439 zoom\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2026-04-19T21:51:37.589Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Zoom \\u043f\\u043e\\u043a\\u0430\\u0437\\u0430 \\u0437\\u0434\\u0430\\u043d\\u0438\\u0439\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2026-04-19T21:52:00.675Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Zoom \\u043f\\u043e\\u043a\\u0430\\u0437\\u0430 \\u0437\\u0434\\u0430\\u043d\\u0438\\u0439\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2026-04-19T21:52:28.174Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041c\\u0438\\u043d\\u0438\\u043c\\u0430\\u043b\\u044c\\u043d\\u044b\\u0439 zoom\", \"Zoom \\u043f\\u043e\\u043a\\u0430\\u0437\\u0430 \\u0437\\u0434\\u0430\\u043d\\u0438\\u0439\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2026-04-19T22:00:05.388Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-6.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Zoom (\\u043c\\u0430\\u0441\\u0448\\u0442\\u0430\\u0431)\", \"Zoom \\u043f\\u043e\\u043a\\u0430\\u0437\\u0430 \\u0437\\u0434\\u0430\\u043d\\u0438\\u0439\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2026-04-19T22:00:24.963Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Zoom (\\u043c\\u0430\\u0441\\u0448\\u0442\\u0430\\u0431)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2026-04-19T22:00:58.956Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 X\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 Y\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2026-04-19T22:01:46.492Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 X\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 Y\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2026-04-19T22:02:39.417Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=1.0)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2026-04-19T22:03:07.065Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=1.0)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2026-04-19T22:03:15.543Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 Y\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2026-04-19T22:03:56.808Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 Y\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2026-04-19T22:06:42.962Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 X\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 Y\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0428\\u0438\\u0440\\u0438\\u043d\\u0430\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0412\\u044b\\u0441\\u043e\\u0442\\u0430\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2026-04-19T22:17:48.024Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 X\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0426\\u0435\\u043d\\u0442\\u0440 Y\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0428\\u0438\\u0440\\u0438\\u043d\\u0430\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0412\\u044b\\u0441\\u043e\\u0442\\u0430\", \"\\u0422\\u0435\\u0440\\u0440\\u0438\\u0442\\u043e\\u0440\\u0438\\u044f: \\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2026-04-19T22:20:04.594Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "1",
+    "object_repr": "Лайф-стак",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f X (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f Y (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u043b\\u0435\\u0432\\u0430 (%)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u0432\\u0435\\u0440\\u0445\\u0443 (%)\", \"\\u0428\\u0438\\u0440\\u0438\\u043d\\u0430 (%)\", \"\\u0412\\u044b\\u0441\\u043e\\u0442\\u0430 (%)\", \"\\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2026-04-19T22:22:16.134Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0426\\u0435\\u043d\\u0442\\u0440 \\u2014 X (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u0426\\u0435\\u043d\\u0442\\u0440 \\u2014 Y (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"Zoom (\\u043c\\u0430\\u0441\\u0448\\u0442\\u0430\\u0431)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2026-04-19T22:22:52.124Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Настройки карты (zoom=-1.0)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Zoom \\u043f\\u043e\\u043a\\u0430\\u0437\\u0430 \\u0437\\u0434\\u0430\\u043d\\u0438\\u0439\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2026-04-19T22:27:15.545Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "2",
+    "object_repr": "Утиль-завод",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f X (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f Y (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u043b\\u0435\\u0432\\u0430 (%)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u0432\\u0435\\u0440\\u0445\\u0443 (%)\", \"\\u0428\\u0438\\u0440\\u0438\\u043d\\u0430 (%)\", \"\\u0412\\u044b\\u0441\\u043e\\u0442\\u0430 (%)\", \"\\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2026-04-19T22:27:58.300Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "3",
+    "object_repr": "Убойно-разделочный корпус",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f X (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f Y (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u043b\\u0435\\u0432\\u0430 (%)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u0432\\u0435\\u0440\\u0445\\u0443 (%)\", \"\\u0428\\u0438\\u0440\\u0438\\u043d\\u0430 (%)\", \"\\u0412\\u044b\\u0441\\u043e\\u0442\\u0430 (%)\", \"\\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2026-04-19T22:29:07.424Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "2",
+    "object_repr": "Утиль-завод",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f X (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f Y (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u043b\\u0435\\u0432\\u0430 (%)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u0432\\u0435\\u0440\\u0445\\u0443 (%)\", \"\\u0428\\u0438\\u0440\\u0438\\u043d\\u0430 (%)\", \"\\u0412\\u044b\\u0441\\u043e\\u0442\\u0430 (%)\", \"\\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 27,
+  "fields": {
+    "action_time": "2026-04-19T22:30:03.106Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "4",
+    "object_repr": "Холодильно-колбасный корпус",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f X (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f Y (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u043b\\u0435\\u0432\\u0430 (%)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u0432\\u0435\\u0440\\u0445\\u0443 (%)\", \"\\u0428\\u0438\\u0440\\u0438\\u043d\\u0430 (%)\", \"\\u0412\\u044b\\u0441\\u043e\\u0442\\u0430 (%)\", \"\\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 28,
+  "fields": {
+    "action_time": "2026-04-19T22:30:49.459Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "5",
+    "object_repr": "Административный корпус",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f X (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f Y (\\u043f\\u0438\\u043a\\u0441\\u0435\\u043b\\u0438)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u043b\\u0435\\u0432\\u0430 (%)\", \"\\u041f\\u043e\\u0437\\u0438\\u0446\\u0438\\u044f \\u0441\\u0432\\u0435\\u0440\\u0445\\u0443 (%)\", \"\\u0428\\u0438\\u0440\\u0438\\u043d\\u0430 (%)\", \"\\u0412\\u044b\\u0441\\u043e\\u0442\\u0430 (%)\", \"\\u0424\\u043e\\u0440\\u043c\\u0430 (clip-path polygon)\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 29,
+  "fields": {
+    "action_time": "2026-04-19T22:32:04.637Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "1",
+    "object_repr": "Лайф-стак",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"\\u0413\\u043b\\u0430\\u0432\\u043d\\u043e\\u0435 \\u0444\\u043e\\u0442\\u043e\"]}}]"
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$720000$pPgrRUiWucpNojZ52QIbhS$KXBkxKYv8eKlVB0eMI9u01KWG+B2KzUADl/O4xkpbW0=",
+    "last_login": "2026-04-19T21:42:37.366Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@example.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-19T21:38:47.250Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "xjcjjyplrhkbla30e36tlsnzhjffbno8",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2RBWaCkevfsGsssuUjUlKe3J-HdD0oNeZybzVhH3rcS9yRpnVhcF6vTLCNNTli74gcu96lSXbZ1J90QftulbZXldj_ZvULCVvoUcaBoyCBmx5Gmw1hlPJAHGFJhA2JHYnJzPaGBKaHA8G3QMjpNRny_6Bjid:1wEZuX:yX4e_lwoHFdpiVDyuAN2iK4Gb5sjs85duajZXNN_q_s",
+    "expire_date": "2026-05-03T21:42:37.375Z"
+  }
+},
+{
+  "model": "fond.fund",
+  "pk": 1,
+  "fields": {
+    "code": "Ф-1",
+    "name": "ЛЕНИНГРАДСКИЙ МЯСОКОМБИНАТ ИМ. С.М. КИРОВА",
+    "description": "Основной фонд предприятия. Приказы, планы, отчёты по производству.",
+    "date_start": 1930,
+    "date_end": 1941,
+    "created_at": "2026-04-19T21:38:29.014Z"
+  }
+},
+{
+  "model": "fond.fund",
+  "pk": 2,
+  "fields": {
+    "code": "Ф-2",
+    "name": "ДОКУМЕНТЫ БЛОКАДНОГО ПЕРИОДА",
+    "description": "Переписка, приказы, ведомости о работе комбината в условиях блокады.",
+    "date_start": 1941,
+    "date_end": 1945,
+    "created_at": "2026-04-19T21:38:29.021Z"
+  }
+},
+{
+  "model": "fond.fund",
+  "pk": 3,
+  "fields": {
+    "code": "Ф-3",
+    "name": "ЛИЧНЫЙ ФОНД ДИРЕКТОРА ПЕТРОВА В.И.",
+    "description": "Личные документы, переписка, фотографии директора комбината 1961–1979 гг.",
+    "date_start": 1961,
+    "date_end": 1979,
+    "created_at": "2026-04-19T21:38:29.028Z"
+  }
+},
+{
+  "model": "fond.fund",
+  "pk": 4,
+  "fields": {
+    "code": "Ф-4",
+    "name": "ФОТОФОНД МЯСОКОМБИНАТА",
+    "description": "Фотографии предприятия, сотрудников, событий и продукции.",
+    "date_start": 1930,
+    "date_end": 1992,
+    "created_at": "2026-04-19T21:38:29.035Z"
+  }
+},
+{
+  "model": "fond.inventory",
+  "pk": 1,
+  "fields": {
+    "fund": 1,
+    "number": "1",
+    "name": "Приказы и распоряжения",
+    "description": ""
+  }
+},
+{
+  "model": "fond.archivecase",
+  "pk": 1,
+  "fields": {
+    "inventory": 1,
+    "number": "1",
+    "title": "Приказы по мясокомбинату за 1941 год",
+    "date_start": "1941-01-01",
+    "date_end": "1941-12-31",
+    "sheets_count": 182,
+    "digitized": true
+  }
+},
+{
+  "model": "fond.archivecase",
+  "pk": 2,
+  "fields": {
+    "inventory": 1,
+    "number": "2",
+    "title": "Приказы по мясокомбинату за 1942 год",
+    "date_start": "1942-01-01",
+    "date_end": "1942-12-31",
+    "sheets_count": 154,
+    "digitized": false
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 1,
+  "fields": {
+    "title": "Советский камполон — образец продукции мясокомбината",
+    "description": "",
+    "item_type": "object",
+    "period": "1941-1945",
+    "kp_number": "КП 264437",
+    "inventory_number": "ГМИ СПб Инв.№-V-Б-496р",
+    "goskatalog_number": "62751852",
+    "size": "1.5×6.5×9 см",
+    "material": "",
+    "creation_place": "СССР, РСФСР, Ленинград",
+    "creation_date_text": "1941–1945 гг.",
+    "fund": 2,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.063Z",
+    "updated_at": "2026-04-19T21:38:29.063Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 2,
+  "fields": {
+    "title": "Фотография главного здания мясокомбината, вид с фасада",
+    "description": "",
+    "item_type": "photo",
+    "period": "1931-1940",
+    "kp_number": "КП 12045",
+    "inventory_number": "ГМИ СПб Инв.№-Ф-1204",
+    "goskatalog_number": "",
+    "size": "13×18 см",
+    "material": "",
+    "creation_place": "Ленинград",
+    "creation_date_text": "1935 г.",
+    "fund": 4,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.070Z",
+    "updated_at": "2026-04-19T21:38:29.070Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 3,
+  "fields": {
+    "title": "Приказ №47 об организации ночных смен в период блокады",
+    "description": "",
+    "item_type": "document",
+    "period": "1941-1945",
+    "kp_number": "КП 8823",
+    "inventory_number": "Ф.2 Оп.1 Д.47",
+    "goskatalog_number": "",
+    "size": "21×29.7 см",
+    "material": "",
+    "creation_place": "Ленинград",
+    "creation_date_text": "1942 г.",
+    "fund": 2,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.078Z",
+    "updated_at": "2026-04-19T21:38:29.078Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 4,
+  "fields": {
+    "title": "Удостоверение ударника производства Громовой А.П.",
+    "description": "",
+    "item_type": "document",
+    "period": "1931-1940",
+    "kp_number": "КП 5521",
+    "inventory_number": "ГМИ СПб Инв.№-Д-0521",
+    "goskatalog_number": "",
+    "size": "7×10 см",
+    "material": "",
+    "creation_place": "Ленинград",
+    "creation_date_text": "1936 г.",
+    "fund": 1,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.086Z",
+    "updated_at": "2026-04-19T21:38:29.086Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 5,
+  "fields": {
+    "title": "Орден Трудового Красного Знамени, врученный коллективу",
+    "description": "",
+    "item_type": "object",
+    "period": "1946-1992",
+    "kp_number": "КП 41100",
+    "inventory_number": "ГМИ СПб Инв.№-V-А-100",
+    "goskatalog_number": "",
+    "size": "Ø 42 мм",
+    "material": "",
+    "creation_place": "СССР",
+    "creation_date_text": "1948 г.",
+    "fund": 1,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.093Z",
+    "updated_at": "2026-04-19T21:38:29.093Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 6,
+  "fields": {
+    "title": "Карта-схема территории предприятия",
+    "description": "",
+    "item_type": "document",
+    "period": "1931-1940",
+    "kp_number": "КП 6600",
+    "inventory_number": "ГМИ СПб Инв.№-Д-0600",
+    "goskatalog_number": "",
+    "size": "60×84 см",
+    "material": "",
+    "creation_place": "Ленинград",
+    "creation_date_text": "1933 г.",
+    "fund": 1,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.100Z",
+    "updated_at": "2026-04-19T21:38:29.100Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 7,
+  "fields": {
+    "title": "Генеральный план развития Ленинградского мясокомбината, 1932 г.",
+    "description": "Первоначальный проект застройки территории, выполненный архитектурной мастерской Н. Троцкого.",
+    "item_type": "document",
+    "period": "1931-1940",
+    "kp_number": "",
+    "inventory_number": "КП-1024",
+    "goskatalog_number": "",
+    "size": "",
+    "material": "",
+    "creation_place": "",
+    "creation_date_text": "1932",
+    "fund": 1,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-28T14:41:32.508Z",
+    "updated_at": "2026-04-28T14:41:32.508Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 8,
+  "fields": {
+    "title": "План-схема цехов основного производства (убойно-разделочный корпус)",
+    "description": "Детальная схема расположения конвейерных линий и технологического оборудования.",
+    "item_type": "document",
+    "period": "1931-1940",
+    "kp_number": "",
+    "inventory_number": "КП-1025",
+    "goskatalog_number": "",
+    "size": "",
+    "material": "",
+    "creation_place": "",
+    "creation_date_text": "1934",
+    "fund": 1,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-28T14:41:32.520Z",
+    "updated_at": "2026-04-28T14:41:32.520Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 9,
+  "fields": {
+    "title": "Карта оборонительных сооружений на территории комбината, 1942 г.",
+    "description": "Схема расположения бомбоубежищ, огневых точек и линий обороны в период Блокады.",
+    "item_type": "document",
+    "period": "1941-1945",
+    "kp_number": "",
+    "inventory_number": "КП-2056",
+    "goskatalog_number": "",
+    "size": "",
+    "material": "",
+    "creation_place": "",
+    "creation_date_text": "1942",
+    "fund": 1,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-28T14:41:32.527Z",
+    "updated_at": "2026-04-28T14:41:32.527Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 10,
+  "fields": {
+    "title": "Генеральный план реконструкции предприятия, 1946 г.",
+    "description": "Проект восстановления разрушенных корпусов и расширения производственных площадей после войны.",
+    "item_type": "document",
+    "period": "1946-1992",
+    "kp_number": "",
+    "inventory_number": "КП-3012",
+    "goskatalog_number": "",
+    "size": "",
+    "material": "",
+    "creation_place": "",
+    "creation_date_text": "1946",
+    "fund": 1,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-28T14:41:32.534Z",
+    "updated_at": "2026-04-28T14:41:32.534Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 11,
+  "fields": {
+    "title": "Схема инженерных коммуникаций и транспортных путей (ж/д ветки)",
+    "description": "План развития транспортной инфраструктуры комбината с указанием подъездных путей.",
+    "item_type": "document",
+    "period": "1946-1992",
+    "kp_number": "",
+    "inventory_number": "КП-3015",
+    "goskatalog_number": "",
+    "size": "",
+    "material": "",
+    "creation_place": "",
+    "creation_date_text": "1955",
+    "fund": 1,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-28T14:41:32.540Z",
+    "updated_at": "2026-04-28T14:41:32.540Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "fond.fonditem",
+  "pk": 12,
+  "fields": {
+    "title": "Ситуационный план прилегающих территорий Московского района",
+    "description": "Карта размещения комбината в городской среде и связи с жилыми массивами.",
+    "item_type": "document",
+    "period": "1946-1992",
+    "kp_number": "",
+    "inventory_number": "КП-3088",
+    "goskatalog_number": "",
+    "size": "",
+    "material": "",
+    "creation_place": "",
+    "creation_date_text": "1960-е гг.",
+    "fund": 1,
+    "archive_case": null,
+    "image": "",
+    "video_file": "",
+    "video_url": "",
+    "published": true,
+    "created_at": "2026-04-28T14:41:32.547Z",
+    "updated_at": "2026-04-28T14:41:32.547Z",
+    "linked_staff": []
+  }
+},
+{
+  "model": "gallery.album",
+  "pk": 1,
+  "fields": {
+    "title": "Первые строители комбината",
+    "period": "pre-soviet",
+    "description": "",
+    "cover": "",
+    "order": 1,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.216Z"
+  }
+},
+{
+  "model": "gallery.album",
+  "pk": 2,
+  "fields": {
+    "title": "Строительство главного корпуса",
+    "period": "construction",
+    "description": "",
+    "cover": "",
+    "order": 1,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.222Z"
+  }
+},
+{
+  "model": "gallery.album",
+  "pk": 3,
+  "fields": {
+    "title": "Торжественное открытие, 1933",
+    "period": "construction",
+    "description": "",
+    "cover": "",
+    "order": 2,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.229Z"
+  }
+},
+{
+  "model": "gallery.album",
+  "pk": 4,
+  "fields": {
+    "title": "Рабочие будни 1930-х",
+    "period": "prewar",
+    "description": "",
+    "cover": "",
+    "order": 1,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.235Z"
+  }
+},
+{
+  "model": "gallery.album",
+  "pk": 5,
+  "fields": {
+    "title": "Стахановцы комбината",
+    "period": "prewar",
+    "description": "",
+    "cover": "",
+    "order": 2,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.242Z"
+  }
+},
+{
+  "model": "gallery.album",
+  "pk": 6,
+  "fields": {
+    "title": "Комбинат в годы блокады",
+    "period": "blockade",
+    "description": "",
+    "cover": "",
+    "order": 1,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.248Z"
+  }
+},
+{
+  "model": "gallery.album",
+  "pk": 7,
+  "fields": {
+    "title": "Восстановление предприятия, 1944–1950",
+    "period": "golden",
+    "description": "",
+    "cover": "",
+    "order": 1,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.255Z"
+  }
+},
+{
+  "model": "gallery.album",
+  "pk": 8,
+  "fields": {
+    "title": "Юбилей 50 лет комбинату, 1980",
+    "period": "golden",
+    "description": "",
+    "cover": "",
+    "order": 2,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.262Z"
+  }
+},
+{
+  "model": "gallery.album",
+  "pk": 9,
+  "fields": {
+    "title": "Реорганизация предприятия",
+    "period": "post-soviet",
+    "description": "",
+    "cover": "",
+    "order": 1,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.269Z"
+  }
+},
+{
+  "model": "gallery.album",
+  "pk": 10,
+  "fields": {
+    "title": "Музей трудовой и воинской славы",
+    "period": "modern",
+    "description": "",
+    "cover": "",
+    "order": 1,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.276Z"
+  }
+},
+{
+  "model": "staff.staffmember",
+  "pk": 1,
+  "fields": {
+    "last_name": "Громова",
+    "first_name": "Анна",
+    "patronymic": "Петровна",
+    "years_of_life": "",
+    "role": "Начальник смены убойного цеха",
+    "role_years": "",
+    "role2": "",
+    "role2_years": "",
+    "role3": "",
+    "role3_years": "",
+    "years_worked": "1935–1968",
+    "biography": "Анна Петровна Громова начала работу на мясокомбинате в 1935 году разнорабочей. К 1940 году возглавила смену убойного цеха. В годы блокады обеспечивала бесперебойную работу цеха в экстремальных условиях. Награждена медалью «За оборону Ленинграда».",
+    "photo": "",
+    "personal_fund": null,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.108Z"
+  }
+},
+{
+  "model": "staff.staffmember",
+  "pk": 2,
+  "fields": {
+    "last_name": "Петров",
+    "first_name": "Василий",
+    "patronymic": "Иванович",
+    "years_of_life": "",
+    "role": "Директор мясокомбината",
+    "role_years": "",
+    "role2": "",
+    "role2_years": "",
+    "role3": "",
+    "role3_years": "",
+    "years_worked": "1961–1979",
+    "biography": "Василий Иванович Петров руководил предприятием в период его наибольшего расцвета. При нём были введены в строй новые производственные мощности, численность работников возросла до 3 200 человек. Заслуженный работник пищевой промышленности РСФСР.",
+    "photo": "",
+    "personal_fund": 3,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.115Z"
+  }
+},
+{
+  "model": "staff.staffmember",
+  "pk": 3,
+  "fields": {
+    "last_name": "Захаров",
+    "first_name": "Михаил",
+    "patronymic": "Сергеевич",
+    "years_of_life": "",
+    "role": "Главный инженер",
+    "role_years": "",
+    "role2": "",
+    "role2_years": "",
+    "role3": "",
+    "role3_years": "",
+    "years_worked": "1938–1955",
+    "biography": "Михаил Сергеевич Захаров разработал систему аварийного электроснабжения цехов в начале блокады, что позволило сохранить производство. После войны руководил восстановлением разрушенных корпусов.",
+    "photo": "",
+    "personal_fund": null,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.122Z"
+  }
+},
+{
+  "model": "staff.staffmember",
+  "pk": 4,
+  "fields": {
+    "last_name": "Воронова",
+    "first_name": "Евдокия",
+    "patronymic": "Фёдоровна",
+    "years_of_life": "",
+    "role": "Бригадир колбасного цеха",
+    "role_years": "",
+    "role2": "",
+    "role2_years": "",
+    "role3": "",
+    "role3_years": "",
+    "years_worked": "1941–1944",
+    "biography": "Евдокия Фёдоровна Воронова работала на комбинате в годы блокады. Её бригада выполняла план при жесточайших условиях, нередко живя прямо на предприятии в период обстрелов.",
+    "photo": "",
+    "personal_fund": null,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.129Z"
+  }
+},
+{
+  "model": "staff.staffmember",
+  "pk": 5,
+  "fields": {
+    "last_name": "Кузнецов",
+    "first_name": "Алексей",
+    "patronymic": "Иванович",
+    "years_of_life": "",
+    "role": "Технолог производства",
+    "role_years": "",
+    "role2": "",
+    "role2_years": "",
+    "role3": "",
+    "role3_years": "",
+    "years_worked": "1933–1960",
+    "biography": "",
+    "photo": "",
+    "personal_fund": null,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.136Z"
+  }
+},
+{
+  "model": "staff.staffmember",
+  "pk": 6,
+  "fields": {
+    "last_name": "Морозова",
+    "first_name": "Нина",
+    "patronymic": "Александровна",
+    "years_of_life": "",
+    "role": "Лаборант ОТК",
+    "role_years": "",
+    "role2": "",
+    "role2_years": "",
+    "role3": "",
+    "role3_years": "",
+    "years_worked": "1950–1985",
+    "biography": "",
+    "photo": "",
+    "personal_fund": null,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.143Z"
+  }
+},
+{
+  "model": "staff.staffmember",
+  "pk": 7,
+  "fields": {
+    "last_name": "Сидоров",
+    "first_name": "Фёдор",
+    "patronymic": "Михайлович",
+    "years_of_life": "",
+    "role": "Механик холодильного цеха",
+    "role_years": "",
+    "role2": "",
+    "role2_years": "",
+    "role3": "",
+    "role3_years": "",
+    "years_worked": "1940–1975",
+    "biography": "",
+    "photo": "",
+    "personal_fund": null,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.151Z"
+  }
+},
+{
+  "model": "staff.staffmember",
+  "pk": 8,
+  "fields": {
+    "last_name": "Лебедева",
+    "first_name": "Галина",
+    "patronymic": "Николаевна",
+    "years_of_life": "",
+    "role": "Нормировщик",
+    "role_years": "",
+    "role2": "",
+    "role2_years": "",
+    "role3": "",
+    "role3_years": "",
+    "years_worked": "1944–1970",
+    "biography": "",
+    "photo": "",
+    "personal_fund": null,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.158Z"
+  }
+},
+{
+  "model": "staff.staffmember",
+  "pk": 9,
+  "fields": {
+    "last_name": "Иванов",
+    "first_name": "Пётр",
+    "patronymic": "Васильевич",
+    "years_of_life": "",
+    "role": "Первый начальник скотобазы",
+    "role_years": "",
+    "role2": "",
+    "role2_years": "",
+    "role3": "",
+    "role3_years": "",
+    "years_worked": "1930–1941",
+    "biography": "",
+    "photo": "",
+    "personal_fund": null,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.165Z"
+  }
+},
+{
+  "model": "staff.staffmember",
+  "pk": 10,
+  "fields": {
+    "last_name": "Белова",
+    "first_name": "Тамара",
+    "patronymic": "Константиновна",
+    "years_of_life": "",
+    "role": "Главный бухгалтер",
+    "role_years": "",
+    "role2": "",
+    "role2_years": "",
+    "role3": "",
+    "role3_years": "",
+    "years_worked": "1955–1992",
+    "biography": "",
+    "photo": "",
+    "personal_fund": null,
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.172Z"
+  }
+},
+{
+  "model": "mapblock.mapsettings",
+  "pk": 1,
+  "fields": {
+    "zoom": -1.0,
+    "center_x": 3912.0,
+    "center_y": 2740.0,
+    "min_zoom": -10,
+    "max_zoom": 3,
+    "building_zoom": -1.0,
+    "show_territory": true,
+    "show_territory_label": false,
+    "territory_x": 2926.0,
+    "territory_y": 2662.0,
+    "territory_w": 2213.0,
+    "territory_h": 1077.0,
+    "territory_rotation": 0.0,
+    "territory_mirror_x": false,
+    "territory_mirror_y": false,
+    "territory_clip_path": "0% 99.6%, 98.6% 100%, 100% 37%, 36.4% 34.1%, 36.3% 0%, 0% 0.8%",
+    "territory_label": "Территория комбината"
+  }
+},
+{
+  "model": "mapblock.building",
+  "pk": 1,
+  "fields": {
+    "slug": "lifestak",
+    "name": "Лайф-стак",
+    "main_image": "map/buildings/life_stck.jpg",
+    "built_years": "1930–1932",
+    "manual_crop_data": "",
+    "description": "Скотобаза — первый объект, возведённый на территории будущего мясокомбината. Принимала скот, поступавший со всей Ленинградской области. В годы блокады скотобаза продолжала работу в условиях острой нехватки кормов и постоянных обстрелов.",
+    "pos_x": 3182.0,
+    "pos_y": 2542.0,
+    "map_left": 41.6,
+    "map_top": 60.7,
+    "map_width": 3.1,
+    "map_height": 1.3,
+    "map_rotation": 0.0,
+    "map_clip_path": "13.1% 0%, 84.3% 0.9%, 86.2% 18.3%, 92.6% 6.4%, 99.8% 17.4%, 100% 45.9%, 93.9% 62.4%, 89.7% 44%, 90.8% 93.6%, 82.3% 100%, 65.9% 98.2%, 8.7% 97.2%, 9.4% 42.2%, 4.8% 41.3%, 0% 42.2%, 0% 10.1%, 4.1% 2.8%",
+    "order": 1,
+    "published": true,
+    "photos": []
+  }
+},
+{
+  "model": "mapblock.building",
+  "pk": 2,
+  "fields": {
+    "slug": "util-zavod",
+    "name": "Утиль-завод",
+    "main_image": "",
+    "built_years": "1933",
+    "manual_crop_data": "",
+    "description": "Завод по переработке вторичного сырья — шкур, костей, жира. Обеспечивал безотходное производство. В 1941–1944 гг. использовался для нужд обороны города.",
+    "pos_x": 3221.0,
+    "pos_y": 2660.0,
+    "map_left": 42.5,
+    "map_top": 63.3,
+    "map_width": 2.3,
+    "map_height": 1.9,
+    "map_rotation": 0.0,
+    "map_clip_path": "0% 0%, 0% 55%, 12.5% 61.5%, 14.6% 97.2%, 39.6% 100%, 40.8% 73.4%, 90% 66.1%, 90.8% 52.3%, 100% 49.5%, 99.2% 10.1%",
+    "order": 2,
+    "published": true,
+    "photos": []
+  }
+},
+{
+  "model": "mapblock.building",
+  "pk": 3,
+  "fields": {
+    "slug": "uboyny-korpus",
+    "name": "Убойно-разделочный корпус",
+    "main_image": "",
+    "built_years": "1932",
+    "manual_crop_data": "",
+    "description": "Главный производственный корпус комбината. Проектировался по образцу современных американских мясокомбинатов. Серьёзно пострадал в ходе авиационных налётов 1941–1942 гг., восстановлен к 1946 году.",
+    "pos_x": 3237.0,
+    "pos_y": 2775.0,
+    "map_left": 43.0,
+    "map_top": 65.9,
+    "map_width": 1.9,
+    "map_height": 2.1,
+    "map_rotation": 0.0,
+    "map_clip_path": "0.3% 10.1%, 76.6% 9%, 78.3% 0%, 100% 2.2%, 100% 79.8%, 82.5% 84.8%, 83.2% 97.2%, 47.9% 100%, 47.9% 83.1%, 0% 80.9%",
+    "order": 3,
+    "published": true,
+    "photos": []
+  }
+},
+{
+  "model": "mapblock.building",
+  "pk": 4,
+  "fields": {
+    "slug": "holodilno-kolbasny",
+    "name": "Холодильно-колбасный корпус",
+    "main_image": "",
+    "built_years": "1935",
+    "manual_crop_data": "",
+    "description": "Введён в эксплуатацию в 1935 году. Включал холодильные камеры ёмкостью 5 000 тонн и цех по производству колбасных изделий. В блокаду стал одним из ключевых объектов продовольственного обеспечения Ленинграда.",
+    "pos_x": 3219.0,
+    "pos_y": 2961.0,
+    "map_left": 40.5,
+    "map_top": 68.7,
+    "map_width": 6.3,
+    "map_height": 5.5,
+    "map_rotation": 0.0,
+    "map_clip_path": "0% 4.2%, 96.8% 4.6%, 96.7% 0%, 99.2% 0%, 100% 28.4%, 98.2% 69.5%, 78.1% 71.4%, 78% 100%, 22.9% 99.2%, 23.1% 85.2%, 18.7% 85.4%, 19% 59.9%, 0.4% 59.4%",
+    "order": 4,
+    "published": true,
+    "photos": []
+  }
+},
+{
+  "model": "mapblock.building",
+  "pk": 5,
+  "fields": {
+    "slug": "administrativny",
+    "name": "Административный корпус",
+    "main_image": "",
+    "built_years": "1931",
+    "manual_crop_data": "",
+    "description": "Построен одновременно с первыми производственными корпусами. Здесь размещались дирекция, плановый отдел и партийный комитет предприятия. В настоящее время в корпусе находится музей трудовой и воинской славы.",
+    "pos_x": 2910.0,
+    "pos_y": 3106.0,
+    "map_left": 38.9,
+    "map_top": 74.4,
+    "map_width": 1.1,
+    "map_height": 1.1,
+    "map_rotation": 0.0,
+    "map_clip_path": "0% 1.1%, 84.8% 10.8%, 86.1% 0%, 98.2% 0%, 100% 90.3%, 62.4% 88.2%, 61.8% 100%, 48.5% 98.9%, 49.7% 87.1%, 1.2% 88.2%",
+    "order": 5,
+    "published": true,
+    "photos": []
+  }
+},
+{
+  "model": "news.newspost",
+  "pk": 1,
+  "fields": {
+    "title": "Открытие выставки «Блокадный мясокомбинат»",
+    "body": "В музее открылась постоянная экспозиция, посвящённая работе предприятия в годы блокады Ленинграда. В витринах представлены подлинные документы, личные вещи сотрудников и архивные фотографии 1941–1944 годов. На открытии присутствовали потомки работников блокадного комбината.",
+    "date": "2026-02-18",
+    "image": "",
+    "published": true,
+    "created_at": "2026-04-19T21:38:28.986Z"
+  }
+},
+{
+  "model": "news.newspost",
+  "pk": 2,
+  "fields": {
+    "title": "Передача архива семьи Громовых",
+    "body": "Семья потомственных работников комбината передала в фонды музея личный архив Анны Петровны Громовой — бригадира убойного цеха в годы блокады. В составе архива — письма, фотографии и памятные предметы 1935–1968 годов.",
+    "date": "2026-03-05",
+    "image": "",
+    "published": true,
+    "created_at": "2026-04-19T21:38:28.993Z"
+  }
+},
+{
+  "model": "news.newspost",
+  "pk": 3,
+  "fields": {
+    "title": "Первые результаты оцифровки фонда №12",
+    "body": "Завершён первый этап оцифровки архивных документов фонда №12. В цифровой каталог добавлено 347 новых карточек. Работа продолжается.",
+    "date": "2026-03-01",
+    "image": "",
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.000Z"
+  }
+},
+{
+  "model": "news.newspost",
+  "pk": 4,
+  "fields": {
+    "title": "Экспедиция по записи воспоминаний ветеранов",
+    "body": "Музей объявляет о начале экспедиции по сбору устных воспоминаний ветеранов предприятия и их потомков. Экспедиция пройдёт в апреле 2026 года.",
+    "date": "2026-01-14",
+    "image": "",
+    "published": true,
+    "created_at": "2026-04-19T21:38:29.007Z"
+  }
+},
+{
+  "model": "about.aboutpage",
+  "pk": 1,
+  "fields": {
+    "title": "О проекте",
+    "body": "Деятельность историко-краеведческого проекта направлена на сохранение памяти о Ленинградском\nмясокомбинате, о трудовом и воинском подвиге его работников. Это частная некоммерческая\nинициатива, основанная на добровольной деятельности группы энтузиастов. На сайте проекта можно\nознакомиться с историей предприятия, а также с уникальными материалами из личных фондов,\nоткрытых источников и архива ООО «Самсон-Мед». Проводятся также открытые\nмероприятия: лекции, выставки, встречи.",
+    "contact_email": "lmkmuseum@yandex.ru",
+    "contact_phone": "",
+    "contact_address": "Санкт-Петербург, Московское шоссе",
+    "vk_url": "https://vk.com/myasokombinatkirova",
+    "telegram_url": "",
+    "youtube_url": "",
+    "extra_html": "",
+    "updated_at": "2026-04-24T19:01:47.095Z"
+  }
+}
+]

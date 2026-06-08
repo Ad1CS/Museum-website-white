@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+{% block section_name %}<a href="{% url 'news:list' %}">новости</a> >>> {{ post.title|truncatewords:6 }} >>>{% endblock %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <article class="news-article">
+    <div class="news-article-meta">
+      <span class="news-card-date">{{ post.date|date:"j E Y" }}</span>
+    </div>
+    <h1 class="news-article-title">{{ post.title }}</h1>
+    {% if post.image %}
+    <div class="news-article-img">
+      <img src="{{ post.image.url }}" alt="{{ post.title }}" loading="lazy">
+    </div>
+    {% endif %}
+    <div class="news-article-body">{{ post.body|linebreaks }}</div>
+  </article>
+
+  {% if recent %}
+  <div class="related-section">
+    <div class="section-header"><h2>Другие новости</h2></div>
+    <div class="news-grid">
+      {% for p in recent %}
+      <a href="{{ p.get_absolute_url }}" class="news-card">
+        <div class="news-card-date">{{ p.date|date:"j E Y" }}</div>
+        {% if p.image %}<div class="news-card-img" style="background-image:url('{{ p.image.url }}')"></div>{% else %}<div class="news-card-img news-card-img--empty"></div>{% endif %}
+        <h3>{{ p.title }}</h3>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

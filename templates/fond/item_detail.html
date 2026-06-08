@@ -1,0 +1,195 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block body_class %}class="page-fond-dark"{% endblock %}
+
+{% block section_name %}<a href="{% url 'fond:catalog' %}">фонд</a> >>> {{ item.title|truncatewords:6 }} >>>{% endblock %}
+{% block title %}Предмет: {{ item.title }}{% endblock %}
+
+{% block content %}
+<style>
+  body.page-fond-dark {
+    background: #000 url('{% static "fond/fondBG.jpg" %}') no-repeat center top fixed !important;
+    background-size: cover !important;
+  }
+  body.page-fond-dark::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
+
+  /* 1:1 POSTCARD & ALBUM LAYOUT */
+  .card-container-1-1 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 40px;
+    align-items: start;
+  }
+
+  .photo-main-1-1 {
+    background: #ffffff;
+    padding: 15px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    cursor: zoom-in;
+    transition: transform 0.4s ease;
+  }
+  .photo-main-1-1:hover { transform: scale(1.02); }
+  .photo-main-1-1 img { width: 100%; display: block; }
+
+  .card-info-1-1 { display: flex; flex-direction: column; gap: 40px; }
+  
+  .type-tag-1-1 { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3em; opacity: 0.3; margin-bottom: 10px; }
+  .title-1-1 { font-size: 44px; font-weight: 800; line-height: 1; text-transform: lowercase; letter-spacing: -0.02em; margin: 0; }
+  .desc-1-1 { font-size: 18px; line-height: 1.7; font-weight: 300; opacity: 0.6; margin-top: 20px; }
+
+  /* Postcard Back Side */
+  .photo-back-1-1 {
+    width: 220px;
+    background: #ffffff;
+    padding: 10px;
+    margin-top: 30px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    cursor: zoom-in;
+    align-self: flex-start;
+  }
+  .photo-back-1-1 img { width: 100%; display: block; }
+
+  /* Meta Grid */
+  .meta-grid-1-1 { width: 100%; border-collapse: collapse; margin-top: 50px; }
+  .meta-grid-1-1 th {
+    text-align: left; padding: 20px 0; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.25em; opacity: 0.3; font-weight: 900;
+    border-bottom: 1px solid rgba(255,255,255,0.05); width: 220px;
+  }
+  .meta-grid-1-1 td { padding: 20px 0; font-size: 18px; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+  /* Album Strip */
+  .album-strip-1-1 {
+    display: flex; gap: 15px; margin-top: 40px; overflow-x: auto; padding-bottom: 20px;
+  }
+  .album-item-1-1 {
+    width: 120px; height: 120px; flex-shrink: 0; background: #fff; padding: 5px; cursor: pointer; opacity: 0.6; transition: 0.3s;
+  }
+  .album-item-1-1:hover { opacity: 1; }
+  .album-item-1-1 img { width: 100%; height: 100%; object-fit: cover; }
+
+  @media (max-width: 1200px) {
+    .card-container-1-1 { grid-template-columns: 1fr; gap: 40px; }
+  }
+</style>
+
+<div class="page-margins-1-1">
+  <div class="card-container-1-1">
+    
+    <!-- LEFT: Media -->
+    <div style="display: flex; flex-direction: column; position: relative;">
+      <div style="display: flex; align-items: flex-start; gap: 30px;">
+        <div class="photo-main-1-1" id="mainPhotoFrame" style="flex: 1;" onclick="openLightbox(0)">
+          {% if item.image %}
+            <img id="mainPhotoImg" src="{{ item.image.url }}" alt="{{ item.title }}">
+          {% else %}
+            <div style="aspect-ratio:1.4; background:#111; display:flex; align-items:center; justify-content:center; font-size:40px; font-weight:900; opacity:0.1;">MUSEUM</div>
+          {% endif %}
+        </div>
+
+        {% if item.back_image %}
+        <div class="photo-back-1-1" style="margin-top: 0; width: 180px;" onclick="openLightbox(-1)">
+          <img src="{{ item.back_image.url }}" alt="Оборот">
+          <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.4; margin-top: 10px; text-align: center;">оборотная сторона</div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Album Strip for Batch Uploaded Photos -->
+      {% if item.media.all %}
+      <div class="album-strip-1-1">
+        {% for m in item.media.all %}
+        <div class="album-item-1-1" onclick="openLightbox({{ forloop.counter0 }})">
+          <img src="{{ m.image.url }}" alt="Фото {{ forloop.counter }}">
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- RIGHT: Info -->
+    <div class="card-info-1-1">
+      <div>
+        <div class="type-tag-1-1">{{ item.get_item_type_display|lower }}</div>
+        <h1 class="title-1-1">{{ item.title }}</h1>
+        <p class="desc-1-1">{{ item.description|default:"описание данного объекта в настоящий момент подготавливается." }}</p>
+      </div>
+
+      <table class="meta-grid-1-1">
+        <tr><th>период создания</th><td>{{ item.creation_date_text|default:"—" }}</td></tr>
+        <tr><th>материал / техника</th><td>{{ item.material|default:"—" }}</td></tr>
+        <tr><th>размеры / формат</th><td>{{ item.size|default:"—" }}</td></tr>
+        <tr><th>номер по кп</th><td>{{ item.kp_number|default:"—" }}</td></tr>
+        <tr><th>инвентарный номер</th><td>{{ item.inventory_number|default:"—" }}</td></tr>
+        {% if item.fund %}
+        <tr><th>архивный фонд</th><td><a href="{{ item.fund.get_absolute_url }}" style="color:#fff; text-decoration:underline; opacity:0.5;">{{ item.fund.code }} — {{ item.fund.name|lower }}</a></td></tr>
+        {% endif %}
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- VK-Style Lightbox -->
+<div id="itemLightbox" class="lightbox-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:3000; flex-direction:column; align-items:center; justify-content:center;">
+  <div style="position:absolute; top:30px; right:40px; color:#fff; font-size:40px; cursor:pointer;" onclick="closeLightbox()">&times;</div>
+  
+  <div style="position:relative; max-width:90vw; max-height:80vh;">
+    <img id="lightboxImg" src="" style="max-width:100%; max-height:80vh; object-fit:contain;">
+    <div id="lightboxPrev" style="position:absolute; left:-60px; top:50%; transform:translateY(-50%); color:#fff; font-size:60px; cursor:pointer; opacity:0.3;" onclick="prevImg()">&lsaquo;</div>
+    <div id="lightboxNext" style="position:absolute; right:-60px; top:50%; transform:translateY(-50%); color:#fff; font-size:60px; cursor:pointer; opacity:0.3;" onclick="nextImg()">&rsaquo;</div>
+  </div>
+
+  <div id="lightboxCaption" style="margin-top:30px; color:rgba(255,255,255,0.7); font-size:16px; font-weight:300; max-width:800px; text-align:center; padding:0 20px;"></div>
+</div>
+
+<script>
+  let currentIdx = 0;
+  const media = [
+    {% if item.image %}{ url: "{{ item.image.url }}", desc: "{{ item.title }}" },{% endif %}
+    {% for m in item.media.all %}{ url: "{{ m.image.url }}", desc: "{{ m.description|escapejs }}" },{% endfor %}
+    {% if item.back_image %}{ url: "{{ item.back_image.url }}", desc: "Оборотная сторона" },{% endif %}
+  ];
+
+  function openLightbox(idx) {
+    if (idx === -1) idx = media.length - 1; // Back image
+    currentIdx = idx;
+    updateLightbox();
+    document.getElementById('itemLightbox').style.display = 'flex';
+  }
+
+  function closeLightbox() {
+    document.getElementById('itemLightbox').style.display = 'none';
+  }
+
+  function updateLightbox() {
+    const img = document.getElementById('lightboxImg');
+    const cap = document.getElementById('lightboxCaption');
+    img.src = media[currentIdx].url;
+    cap.innerText = media[currentIdx].desc;
+    
+    document.getElementById('lightboxPrev').style.opacity = media.length > 1 ? '0.3' : '0';
+    document.getElementById('lightboxNext').style.opacity = media.length > 1 ? '0.3' : '0';
+  }
+
+  function nextImg() {
+    currentIdx = (currentIdx + 1) % media.length;
+    updateLightbox();
+  }
+
+  function prevImg() {
+    currentIdx = (currentIdx - 1 + media.length) % media.length;
+    updateLightbox();
+  }
+
+  // Keyboard support
+  document.addEventListener('keydown', (e) => {
+    if (document.getElementById('itemLightbox').style.display === 'flex') {
+      if (e.key === 'ArrowRight') nextImg();
+      if (e.key === 'ArrowLeft') prevImg();
+      if (e.key === 'Escape') closeLightbox();
+    }
+  });
+</script>
+{% endblock %}

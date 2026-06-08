@@ -1,0 +1,247 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block body_class %}class="page-fond-dark"{% endblock %}
+
+{% block section_name %}фонд >>> список фондов >>>{% endblock %}
+{% block title %}Фонд — Список фондов{% endblock %}
+
+{% block content %}
+<div class="archive-list-wrapper">
+  <div class="archive-header-main">
+    <h1 class="main-title-1-1 lowercase" style="font-size: 80px; font-weight: 800; margin: 0 0 60px 0; line-height: 0.9; color: #fff;">фонд</h1>
+  </div>
+
+  <div class="toolbar-1-1" style="display: flex; align-items: center; gap: 50px; padding-bottom: 80px;">
+    <div class="view-toggle" style="display: flex; gap: 40px;">
+      <a href="{% url 'fond:catalog' %}" class="view-btn" style="font-size: 13px; font-weight: 900; text-transform: lowercase; letter-spacing: 0.3em; opacity: 0.2; border-bottom: 1px solid transparent; padding-bottom: 8px; color: #fff;">каталог</a>
+      <a href="{% url 'fond:funds_list' %}" class="view-btn active" style="font-size: 13px; font-weight: 900; text-transform: lowercase; letter-spacing: 0.3em; opacity: 1; border-bottom: 1px solid #fff; padding-bottom: 8px; color: #fff;">список фондов</a>
+    </div>
+    <div style="flex:1;"></div>
+  </div>
+
+  <div class="funds-list-custom">
+    
+    <!-- Documents & Items -->
+    <div style="margin-bottom: 100px;">
+      <span class="section-label-1-1" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.4em; opacity: 0.3; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 25px; margin-bottom: 40px; font-weight: 900; display: block; color: #fff;">документы и предметы</span>
+      {% for fund in funds %}
+        {% if fund.category == "documents" %}
+        <a href="{{ fund.get_absolute_url }}" class="fund-card-link">
+          <div class="fund-row-refined">
+            <div class="fund-left-col">
+              <div class="fund-id-label">{{ fund.code }}</div>
+              <div class="fund-year-label">{{ fund.dates_display }}</div>
+            </div>
+            <div class="fund-right-col">
+              <div class="fund-top-info">
+                <h2 class="fund-title-text">{{ fund.name|lower }}</h2>
+                <span class="fund-count-stats">описей: {{ fund.inventories.count }}</span>
+              </div>
+              <div class="fund-bottom-info">
+                <p class="fund-description-text">{{ fund.description|truncatewords:20|default:"описание данного фонда в настоящий момент подготавливается." }}</p>
+                <span class="fund-items-stats">предметов: {{ fund.items.count }}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- Photos by Periods -->
+    <div style="margin-bottom: 100px;">
+      <span class="section-label-1-1" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.4em; opacity: 0.3; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 25px; margin-bottom: 40px; font-weight: 900; display: block; color: #fff;">фотодокументы по периодам</span>
+      {% for fund in funds %}
+        {% if fund.category == "photo" %}
+        <a href="{{ fund.get_absolute_url }}" class="fund-card-link">
+          <div class="fund-row-refined">
+            <div class="fund-left-col">
+              <div class="fund-id-label">{{ fund.code }}</div>
+              <div class="fund-year-label">{{ fund.dates_display }}</div>
+            </div>
+            <div class="fund-right-col">
+              <div class="fund-top-info">
+                <h2 class="fund-title-text">{{ fund.name|lower }}</h2>
+                <span class="fund-count-stats">описей: {{ fund.inventories.count }}</span>
+              </div>
+              <div class="fund-bottom-info">
+                <p class="fund-description-text">{{ fund.description|truncatewords:20|default:"описание данного фонда в настоящий момент подготавливается." }}</p>
+                <span class="fund-items-stats">предметов: {{ fund.items.count }}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- Personal Funds -->
+    <div style="margin-bottom: 100px;">
+      <span class="section-label-1-1" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.4em; opacity: 0.3; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 25px; margin-bottom: 40px; font-weight: 900; display: block; color: #fff;">личные фонды</span>
+      {% for fund in funds %}
+        {% if fund.category == "personal" %}
+        <a href="{{ fund.get_absolute_url }}" class="fund-card-link">
+          <div class="fund-row-refined">
+            <div class="fund-left-col">
+              <div class="fund-id-label">{{ fund.code }}</div>
+              <div class="fund-year-label">{{ fund.dates_display }}</div>
+            </div>
+            <div class="fund-right-col">
+              <div class="fund-top-info">
+                <h2 class="fund-title-text">{{ fund.name|lower }}</h2>
+                <span class="fund-count-stats">описей: {{ fund.inventories.count }}</span>
+              </div>
+              <div class="fund-bottom-info">
+                <p class="fund-description-text">{{ fund.description|truncatewords:20|default:"описание данного фонда в настоящий момент подготавливается." }}</p>
+                <span class="fund-items-stats">предметов: {{ fund.items.count }}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  body.page-fond-dark {
+    background: #000 url('{% static "fond/fondBG.jpg" %}') no-repeat center top fixed !important;
+    background-size: cover !important;
+    color: #fff !important;
+  }
+  body.page-fond-dark::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
+
+  .archive-list-wrapper {
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 60px 100px;
+    font-family: 'TT Hoves', sans-serif;
+  }
+
+  .funds-list-custom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .fund-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease;
+    margin-bottom: 15px;
+  }
+  
+  .fund-card-link:hover {
+    transform: translateX(10px);
+  }
+
+  .fund-row-refined {
+    display: flex;
+    align-items: stretch;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 35px 40px;
+    gap: 50px;
+    position: relative;
+    min-height: 180px;
+  }
+
+  .fund-left-col {
+    width: 180px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding-right: 30px;
+  }
+
+  .fund-id-label {
+    font-size: 2.8rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #fff;
+    width: fit-content;
+    padding-bottom: 5px;
+    text-transform: lowercase;
+  }
+
+  .fund-year-label {
+    font-size: 1.1rem;
+    font-weight: 300;
+    opacity: 0.4;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .fund-right-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 5px;
+  }
+
+  .fund-top-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 15px;
+  }
+
+  .fund-title-text {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    text-transform: lowercase;
+    line-height: 1.1;
+  }
+
+  .fund-count-stats {
+    font-size: 14px;
+    opacity: 0.3;
+    font-weight: 300;
+  }
+
+  .fund-bottom-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 20px;
+  }
+
+  .fund-description-text {
+    font-size: 16px;
+    opacity: 0.6;
+    margin: 0;
+    font-weight: 300;
+    max-width: 80%;
+    line-height: 1.5;
+  }
+
+  .fund-items-stats {
+    font-size: 14px;
+    opacity: 0.2;
+    font-weight: 500;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 1000px) {
+    .archive-list-wrapper { padding: 40px 30px; }
+    .fund-row-refined { flex-direction: column; gap: 30px; padding: 30px; }
+    .fund-left-col { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-right: 0; padding-bottom: 20px; }
+    .fund-id-label { font-size: 2rem; margin-bottom: 10px; }
+    .fund-title-text { font-size: 1.6rem; }
+    .fund-bottom-info { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .fund-description-text { max-width: 100%; font-size: 14px; }
+  }
+</style>
+{% endblock %}

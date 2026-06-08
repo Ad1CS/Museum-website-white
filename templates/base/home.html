@@ -1,0 +1,49 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}Главная{% endblock %}
+
+{% block hero_area_start %}<div class="hero-area"><div class="hero-area__overlay"></div>{% endblock %}
+
+{% block hero_area_end %}
+<div class="home-hero-inner">
+  <div class="hero-title">Ленинградский<br>мясокомбинат<br>им. С.М. Кирова</div>
+  <div class="hero-right">
+    <div class="hero-icon"><img src="{% static 'img/logo2x.png' %}" alt="Логотип музея"></div>
+    <div class="hero-subtitle">
+      <span class="hs-big">Музей</span><br>
+      <span class="hs-sm">трудовой</span><br>
+      <span class="hs-sm">и воинской</span><br>
+      <span class="hs-big">славы</span>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if recent_items %}
+<div class="home-recent-strip">
+  <div class="home-recent-header">
+    <span class="recent-label">новые поступления:</span>
+    <a href="{% url 'fond:catalog' %}" class="recent-to-catalog">к каталогу <span class="recent-to-catalog-arrow">›</span></a>
+  </div>
+  <div class="recent-cards-wrap">
+    <div class="recent-cards-row" id="recent-carousel">
+      {% for item in recent_items %}
+      <a href="{{ item.get_absolute_url }}" class="recent-card">
+        <div class="rc-img-frame">
+          {% if item.image %}<img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">
+          {% else %}<span class="rc-img-empty">нет фото</span>{% endif %}
+        </div>
+        <div class="rc-title">{{ item.title|truncatewords:8 }}</div>
+        <div class="rc-year">{{ item.creation_date_text|default:"" }}</div>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="recent-arrow" onclick="scrollCarousel('recent-carousel', 460)">
+      <span class="recent-arrow-icon">›</span>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block section_name %}галерея >>>{% endblock %}
+{% block title %}Галерея — Фото/кино-документы{% endblock %}
+
+{% block content %}
+<div class="archive-list-wrapper">
+  <div class="archive-header-main">
+    <h1>Фото/кино-документы</h1>
+  </div>
+
+  <div class="funds-list-custom">
+    {% for period in periods %}
+      {% for album in period.albums %}
+      <a href="{{ album.get_absolute_url }}" class="fund-card-link">
+        <div class="fund-row-refined">
+          <!-- Left Stack: ID and Year -->
+          <div class="fund-left-col">
+            <div class="fund-id-label">Г{{ forloop.parentloop.counter }}</div>
+            <div class="fund-year-label">{{ period.years }}</div>
+          </div>
+
+          <!-- Right Stack: Title and Description -->
+          <div class="fund-right-col">
+            <div class="fund-top-info">
+              <h2 class="fund-title-text">{{ period.label }}</h2>
+              <span class="fund-count-stats">{{ album.media.count }} ссылок</span>
+            </div>
+            <div class="fund-bottom-info">
+              <p class="fund-description-text">{% if album.description %}{{ album.description }}{% else %}Фотохроника строительства, документы и приказы{% endif %}</p>
+              <span class="fund-items-stats">предметов: {{ album.media.count }}</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    {% empty %}
+      <div class="empty-state"><p>Разделы галереи пока не добавлены.</p></div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  body {
+    background: #1a1a1a url('{% static "gallery/galleryBG.jpg" %}') no-repeat center top fixed;
+    background-size: cover;
+    color: #fff;
+  }
+
+  .archive-list-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    font-family: 'TT Hoves', sans-serif;
+  }
+
+  .archive-header-main h1 { margin-top: 0; 
+    font-size: 2.6rem;
+    font-weight: 700;
+    margin-bottom: 60px;
+    letter-spacing: 0.5px;
+  }
+
+  .funds-list-custom {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .fund-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease;
+  }
+  
+  .fund-card-link:hover {
+    transform: translateX(5px);
+  }
+
+  .fund-row-refined {
+    display: flex;
+    align-items: stretch;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 25px 30px;
+    gap: 40px;
+    position: relative;
+  }
+
+  .fund-left-col {
+    width: 120px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding-right: 20px;
+  }
+
+  .fund-id-label {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 25px;
+    border-bottom: 3px solid #fff;
+    width: fit-content;
+    padding-bottom: 5px;
+  }
+
+  .fund-year-label {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.6;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .fund-right-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 5px;
+  }
+
+  .fund-top-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 15px;
+  }
+
+  .fund-title-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .fund-count-stats {
+    font-size: 1rem;
+    font-style: italic;
+    opacity: 0.6;
+  }
+
+  .fund-bottom-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .fund-description-text {
+    font-size: 1rem;
+    font-style: italic;
+    opacity: 0.8;
+    margin: 0;
+    font-weight: 300;
+    max-width: 70%;
+    line-height: 1.4;
+  }
+
+  .fund-items-stats {
+    font-size: 1rem;
+    font-style: italic;
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .fund-row-refined { flex-direction: column; gap: 20px; }
+    .fund-left-col { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+    .fund-id-label { margin-bottom: 10px; }
+    .fund-title-text { font-size: 1.4rem; }
+    .fund-bottom-info { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .fund-description-text { max-width: 100%; }
+  }
+</style>
+{% endblock %}

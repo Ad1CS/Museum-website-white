@@ -1,0 +1,176 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block body_class %}class="page-fond-dark"{% endblock %}
+
+{% block section_name %}<a href="{% url 'fond:catalog' %}">фонд</a> >>> <a href="{{ case.inventory.fund.get_absolute_url }}">{{ case.inventory.fund.code }}</a> >>> дело № {{ case.number }} >>>{% endblock %}
+{% block title %}Дело № {{ case.number }} — Музей{% endblock %}
+
+{% block content %}
+<style>
+  /* EMERGENCY INLINE CSS - FORCES 1:1 DESIGN */
+  
+  body.page-fond-dark {
+    background: #000 url('{% static "fond/fondBG.jpg" %}') no-repeat center top fixed !important;
+    background-size: cover !important;
+    color: #ffffff !important;
+    margin: 0; padding: 0;
+  }
+  
+  body.page-fond-dark::before {
+    content: ''; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: -1;
+  }
+
+  /* Force ALL text in body to be white, EXCEPT ACTION BUTTONS */
+  body.page-fond-dark, 
+  body.page-fond-dark *:not(.btn-luxury-1-1) {
+    color: #ffffff !important;
+    font-family: 'TT Hoves', sans-serif !important;
+  }
+
+  .page-margins-1-1 {
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 60px 100px;
+  }
+
+  /* Large Format Header */
+  .main-title-1-1 {
+    font-size: 80px;
+    font-weight: 800;
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+    margin: 40px 0 80px 0;
+    line-height: 0.9;
+  }
+
+  .detail-grid-1-1 {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 100px;
+  }
+
+  /* Main Info Plate */
+  .case-plate-1-1 {
+    padding: 80px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+  }
+
+  .case-meta-1-1 {
+    color: #ff4d4d !important;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    font-weight: 900;
+    margin-bottom: 30px;
+    display: block;
+  }
+
+  .info-table-1-1 { width: 100%; border-collapse: collapse; margin: 60px 0; }
+  .info-table-1-1 th {
+    text-align: left; padding: 20px 0; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.25em; opacity: 0.3; font-weight: 800;
+    border-bottom: 1px solid rgba(255,255,255,0.05); width: 220px;
+  }
+  .info-table-1-1 td {
+    padding: 20px 0; font-size: 20px; font-weight: 400;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* Composition Section */
+  .comp-title-1-1 {
+    font-size: 12px; text-transform: uppercase; font-weight: 900; letter-spacing: 0.4em;
+    opacity: 0.3; margin-bottom: 50px; display: flex; align-items: center; gap: 30px;
+  }
+  .comp-title-1-1::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+
+  .items-stack-1-1 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 30px;
+  }
+  .mini-card-1-1 {
+    text-decoration: none;
+    transition: 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .mini-card-1-1:hover { transform: translateY(-10px); }
+  .mini-card-img-1-1 { aspect-ratio: 1; overflow: hidden; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
+  .mini-card-img-1-1 img { width: 100%; height: 100%; object-fit: cover; }
+  .mini-card-title-1-1 { font-size: 14px; font-weight: 700; margin-top: 15px; display: block; text-transform: lowercase; }
+
+  /* Sidebar Box */
+  .sidebar-box-1-1 {
+    padding: 60px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 40px;
+  }
+  .sidebar-box-1-1 h3 { font-size: 11px; text-transform: uppercase; font-weight: 900; opacity: 0.3; letter-spacing: 0.3em; margin-bottom: 30px; }
+
+  .btn-luxury-1-1 {
+    display: block; background: #fff !important; color: #000 !important;
+    padding: 20px; text-decoration: none; font-weight: 900; text-align: center;
+    transition: 0.2s; text-transform: uppercase; font-size: 12px; letter-spacing: 0.2em; margin-top: 40px;
+    border: none !important;
+  }
+  .btn-luxury-1-1:hover { background: #e0e0e0 !important; transform: scale(1.02); }
+
+  @media (max-width: 1200px) {
+    .detail-grid-1-1 { grid-template-columns: 1fr; }
+    .page-margins-1-1 { padding: 40px; }
+    .main-title-1-1 { font-size: 40px; }
+  }
+</style>
+
+<div class="page-margins-1-1">
+  <div class="case-meta-1-1">архивное дело</div>
+  <h1 class="main-title-1-1">{{ case.title }}</h1>
+
+  <div class="detail-grid-1-1">
+    
+    <!-- LEFT: Main Plate -->
+    <div class="case-plate-1-1">
+      <span style="font-size: 11px; opacity: 0.3; text-transform: uppercase; font-weight: 900; letter-spacing: 0.3em;">информация о деле</span>
+      
+      <table class="info-table-1-1">
+        <tr><th>номер дела</th><td>№ {{ case.number }}</td></tr>
+        <tr><th>крайние даты</th><td>{{ case.date_start|date:"Y" }} — {{ case.date_end|date:"Y" }}</td></tr>
+        <tr><th>количество листов</th><td>{{ case.sheets_count|default:"не указано" }}</td></tr>
+        <tr><th>статус оцифровки</th><td>{% if case.digitized %}<span style="color:#ff4d4d !important;">● оцифровано</span>{% else %}в процессе{% endif %}</td></tr>
+        <tr><th>фонд</th><td><a href="{{ case.inventory.fund.get_absolute_url }}" style="color:#fff; text-decoration:underline; opacity:0.5;">{{ case.inventory.fund.code }}</a></td></tr>
+      </table>
+
+      {% if case.items.exists %}
+      <div class="comp-title-1-1">состав дела</div>
+      <div class="items-stack-1-1">
+        {% for item in case.items.all %}
+        <a href="{{ item.get_absolute_url }}" class="mini-card-1-1">
+          <div class="mini-card-img-1-1">
+            {% if item.image %}<img src="{{ item.image.url }}" alt="{{ item.title }}">{% else %}<div style="height:100%; display:flex; align-items:center; justify-content:center; opacity:0.05; font-size:14px; font-weight:900;">MUSEUM</div>{% endif %}
+          </div>
+          <span class="mini-card-title-1-1">{{ item.title|truncatewords:6 }}</span>
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- RIGHT: Sidebar -->
+    <aside>
+      <div class="sidebar-box-1-1">
+        <h3>архивная опись</h3>
+        <div style="font-size: 24px; font-weight: 900; margin-bottom: 10px;">№ {{ case.inventory.number }}</div>
+        <p style="font-size: 16px; font-weight: 300; opacity: 0.6; line-height: 1.8;">{{ case.inventory.name }}</p>
+        <a href="{{ case.inventory.fund.get_absolute_url }}" class="btn-luxury-1-1">описание фонда</a>
+      </div>
+    </aside>
+
+  </div>
+</div>
+{% endblock %}

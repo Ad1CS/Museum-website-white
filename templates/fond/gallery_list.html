@@ -1,0 +1,96 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block body_class %}class="page-fond-dark"{% endblock %}
+
+{% block section_name %}галерея >>>{% endblock %}
+{% block title %}Галерея — Музей{% endblock %}
+
+{% block content %}
+<style>
+  /* EMERGENCY INLINE CSS */
+  body.page-fond-dark {
+    background: #000 url('{% static "fond/fondBG.jpg" %}') no-repeat center top fixed !important;
+    background-size: cover !important;
+    color: #ffffff !important;
+    margin: 0; padding: 0; overflow: hidden;
+  }
+  body.page-fond-dark::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: -1; }
+  body.page-fond-dark, body.page-fond-dark * { color: #ffffff !important; font-family: 'TT Hoves', sans-serif !important; }
+
+  .page-margins-1-1 { max-width: 1700px; margin: 0 auto; padding: 0 100px; }
+  .main-title-1-1 { font-size: 80px; font-weight: 800; text-transform: lowercase; letter-spacing: -0.02em; margin: 60px 0 100px 0; line-height: 0.9; }
+
+  .viewport-1-1 { height: calc(100vh - 300px); overflow-y: auto; padding-bottom: 250px; scrollbar-width: none; }
+  .viewport-1-1::-webkit-scrollbar { display: none; }
+
+  .grid-2col-1-1 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+  .plate-1-1 {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 60px; text-decoration: none;
+    background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(35px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    min-height: 200px;
+  }
+  .plate-1-1:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.4); transform: translateX(15px); box-shadow: 0 40px 80px rgba(0,0,0,0.5); }
+
+  .plate-title-1-1 { font-size: 32px; font-weight: 800; line-height: 1.1; text-transform: lowercase; }
+  .plate-sub-1-1 { font-size: 16px; opacity: 0.3; font-weight: 300; margin-top: 15px; }
+  .plate-arrow-1-1 { font-size: 40px; opacity: 0.1; font-weight: 100; transition: 0.3s; }
+  .plate-1-1:hover .plate-arrow-1-1 { opacity: 1; transform: translateX(10px); }
+
+  @media (max-width: 1000px) { .grid-2col-1-1 { grid-template-columns: 1fr; } .page-margins-1-1 { padding: 0 40px; } .main-title-1-1 { font-size: 40px; } }
+</style>
+
+<div class="page-margins-1-1">
+  <h1 class="main-title-1-1">галерея</h1>
+
+  <div class="viewport-1-1">
+    <div class="grid-2col-1-1">
+      <!-- Mandatory Gallery Periods -->
+      <a href="?period=1880-1931" class="plate-1-1">
+        <div><div class="plate-title-1-1">скотопригонный двор</div><div class="plate-sub-1-1">1880–1931</div></div>
+        <div class="plate-arrow-1-1">→</div>
+      </a>
+      <a href="?period=1931-1935_project" class="plate-1-1">
+        <div><div class="plate-title-1-1">проектные материалы</div><div class="plate-sub-1-1">1931–1935</div></div>
+        <div class="plate-arrow-1-1">→</div>
+      </a>
+      <a href="?period=1931-1935_const" class="plate-1-1">
+        <div><div class="plate-title-1-1">строительство</div><div class="plate-sub-1-1">1931–1935</div></div>
+        <div class="plate-arrow-1-1">→</div>
+      </a>
+      <a href="?period=1933-1941" class="plate-1-1">
+        <div><div class="plate-title-1-1">довоенная эксплуатация</div><div class="plate-sub-1-1">1933–1941</div></div>
+        <div class="plate-arrow-1-1">→</div>
+      </a>
+      <a href="?period=1941-1945" class="plate-1-1">
+        <div><div class="plate-title-1-1">война</div><div class="plate-sub-1-1">1941–1945</div></div>
+        <div class="plate-arrow-1-1">→</div>
+      </a>
+      <a href="?period=1945-1991_dev" class="plate-1-1">
+        <div><div class="plate-title-1-1">послевоенное развитие</div><div class="plate-sub-1-1">1945–1991</div></div>
+        <div class="plate-arrow-1-1">→</div>
+      </a>
+      <a href="?period=1945-1991_const" class="plate-1-1">
+        <div><div class="plate-title-1-1">проектные материалы и строительство</div><div class="plate-sub-1-1">1945–1991</div></div>
+        <div class="plate-arrow-1-1">→</div>
+      </a>
+      <a href="?period=1991-2007" class="plate-1-1">
+        <div><div class="plate-title-1-1">постсоветский период</div><div class="plate-sub-1-1">1991–2007</div></div>
+        <div class="plate-arrow-1-1">→</div>
+      </a>
+      <a href="?period=2007-now" class="plate-1-1">
+        <div><div class="plate-title-1-1">наши дни</div><div class="plate-sub-1-1">2007–н.д.</div></div>
+        <div class="plate-arrow-1-1">→</div>
+      </a>
+      <a href="?category=cinema" class="plate-1-1" style="background: rgba(255, 255, 255, 0.08) !important;">
+        <div><div class="plate-title-1-1">кинохроника</div><div class="plate-sub-1-1">отдельная категория</div></div>
+        <div class="plate-arrow-1-1">→</div>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

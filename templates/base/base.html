@@ -1,0 +1,54 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Музей трудовой и воинской славы{% endblock %} — Ленинградский мясокомбинат им. С.М. Кирова</title>
+<link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
+<link rel="icon" type="image/png" href="{% static "img/favicon.png" %}">
+<link rel="stylesheet" href="{% static "css/museum.css" %}?v=1.17">
+<link rel="preload" href="{% static "fonts/TTHoves-Regular.woff2" %}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{% static "fonts/TTHoves-Bold.woff2" %}" as="font" type="font/woff2" crossorigin>
+<meta name="theme-color" content="#C8C4BB">
+{% block extra_head %}{% endblock %}
+</head>
+<body {% block body_class %}{% endblock %}>
+{% block hero_area_start %}{% endblock %}
+
+<header id="header">
+  <nav class="main-nav" aria-label="Основная навигация">
+    <div class="header-nav-row">
+      <a href="{% url "home" %}" {% if request.path == "/" %}class="active"{% endif %}>главная</a>
+      {% url "history" as history_url %}<a href="{{ history_url }}" {% if request.path == history_url %}class="active"{% endif %} style="line-height:1.1;">история<br>предприятия</a>      
+      <a href="{% url "fond:catalog" %}" {% if "fond" in request.resolver_match.namespace %}class="active"{% endif %}>фонд</a>
+      <a href="{% url "gallery:home" %}" {% if "gallery" in request.resolver_match.namespace %}class="active"{% endif %}>галерея</a>
+    </div>
+    <div class="header-nav-row">
+      <a href="{% url "staff:list" %}" {% if "staff" in request.resolver_match.namespace %}class="active"{% endif %}>отдел кадров</a>
+      {% url "library:home" as lib_url %}<a href="{{ lib_url }}" {% if "library" in request.resolver_match.namespace %}class="active"{% endif %}>библиотека</a>
+      <a href="{% url "mapblock:map" %}" {% if "mapblock" in request.resolver_match.namespace %}class="active"{% endif %} style="line-height:1.1;">интерактивная<br>карта</a>
+      {% url "about:page" as about_url %}<a href="{{ about_url }}" {% if "about" in request.resolver_match.namespace %}class="active"{% endif %}>о проекте</a>
+    </div>
+  </nav>
+  <div class="header-search-row">
+    <span class="header-section-name">{% block section_name %}{% endblock %}</span>
+    <form class="header-search" action="{% url "fond:catalog" %}" method="get">
+      <input type="text" name="q" placeholder="поиск по музею..." value="{{ request.GET.q|default:"" }}">
+    </form>
+  </div><div class="optic-line" style="height: 1px; background: rgba(255,255,255,0.15); width: 100%;"></div></header>
+
+{% block hero_area_end %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+<main id="main-content">{% block content %}{% endblock %}</main>
+
+{% block footer %}
+<footer id="site-footer" style="background:transparent !important; border:none !important; padding:40px 60px; text-align:left;">
+  <p class="footer-copy" style="color:rgba(255,255,255,0.6) !important; font-family:\"TT Hoves\", sans-serif; font-size:13px; margin:0;">Ленинградский мясокомбинат, Цифровой музей трудовой и воинской славы, 2026</p>
+</footer>
+{% endblock %}
+
+<script src="{% static "js/museum.js" %}" defer></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

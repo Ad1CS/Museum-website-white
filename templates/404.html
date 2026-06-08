@@ -1,0 +1,11 @@
+﻿{% extends "base/base.html" %}
+{% load static %}
+{% block title %}404 — Страница не найдена{% endblock %}
+{% block section_name %}ошибка 404{% endblock %}
+{% block content %}
+<div style="max-width:800px; margin:100px auto; text-align:center; padding:0 20px;">
+  <h1 style="font-size:120px; font-weight:800; color:var(--red); margin-bottom:20px;">404</h1>
+  <p style="font-size:24px; font-weight:600; margin-bottom:30px;">Страница, которую вы ищете, не существует.</p>
+  <a href="/" class="btn-reset">Вернуться на главную</a>
+</div>
+{% endblock %}

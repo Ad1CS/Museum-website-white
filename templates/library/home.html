@@ -1,0 +1,103 @@
+﻿{% extends "base/base.html" %}
+{% load static %}
+{% block section_name %}библиотека >>>{% endblock %}
+{% block title %}Библиотека{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Fix for the gap: ensure the dark background starts from the very top */
+  body {
+    background: #1a1a18 !important;
+  }
+  
+  .page-dark-bg {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  #header {
+    position: relative;
+    z-index: 10;
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .lib-page {
+    position: relative;
+    z-index: 5;
+    padding-top: 0px;
+  }
+  
+  .lib-quadrant h2 a, 
+  .lib-more a,
+  .lib-q-items a,
+  .lib-q-items p {
+    color: #ffffff !important;
+  }
+  
+  .lib-q-items p {
+    opacity: 0.9 !important;
+  }
+</style>
+{% endblock %}
+
+{% block hero_area_start %}
+<div class="page-dark-bg" style="background-image:url('{% static "img/library_bg.jpg" %}')">
+<div class="page-dark-bg__overlay"></div>
+</div>
+{% endblock %}
+
+{% block hero_area_end %}
+  <div class="lib-page page-margins-1-1">
+    <div class="lib-grid-4">
+
+      <div class="lib-quadrant lib-q-left">
+        <h2><a href="?cat=special">специальная литература</a></h2>
+        <div class="lib-q-items">
+          {% for item in items %}{% if item.category == "special" %}
+          <p><a href="{{ item.get_absolute_url }}">«{{ item.title }}»</a></p>
+          {% endif %}{% endfor %}
+        </div>
+        <p class="lib-more"><a href="?cat=special">(весь список)</a></p>
+      </div>
+
+      <div class="lib-quadrant lib-q-right">
+        <h2><a href="?cat=museum_fund">литфонд музея</a></h2>
+        <div class="lib-q-items">
+          {% for item in items %}{% if item.category == "museum_fund" %}
+          <p><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></p>
+          {% endif %}{% endfor %}
+        </div>
+        <p class="lib-more"><a href="?cat=museum_fund">(весь список)</a></p>
+      </div>
+
+      <div class="lib-quadrant lib-q-left">
+        <h2><a href="?cat=history">история предприятия</a></h2>
+        <div class="lib-q-items">
+          {% for item in items %}{% if item.category == "history" %}
+          <p><a href="{{ item.get_absolute_url }}">«{{ item.title }}»{% if item.year %} {{ item.year }}{% endif %}{% if item.author %}, {{ item.author }}{% endif %}</a></p>
+          {% endif %}{% endfor %}
+        </div>
+        <p class="lib-more"><a href="?cat=history">(весь список)</a></p>
+      </div>
+
+      <div class="lib-quadrant lib-q-right">
+        <h2><a href="?cat=periodical">периодика</a></h2>
+        <div class="lib-q-items">
+          {% for item in items %}{% if item.category == "periodical" %}
+          <p><a href="{{ item.get_absolute_url }}">{{ item.title }}............развернуть</a></p>
+          {% endif %}{% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}{% endblock %}

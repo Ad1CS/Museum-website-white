@@ -1,0 +1,39 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block section_name %}<a href="{% url 'library:home' %}">библиотека</a> >>> {{ item.title|truncatewords:6 }} >>>{% endblock %}
+{% block title %}{{ item.title }}{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="lib-detail-layout">
+    <div class="lib-detail-cover-col">
+      {% if item.cover %}
+        <img src="{{ item.cover.url }}" alt="{{ item.title }}" loading="lazy" class="lib-detail-cover" loading="lazy">
+      {% else %}
+        <div class="lib-detail-cover-empty">{{ item.file_ext|upper }}</div>
+      {% endif %}
+    </div>
+    <div class="lib-detail-info-col">
+      <span class="tag">{{ item.get_category_display }}</span>
+      <h1 class="item-detail-title">{{ item.title }}</h1>
+      <table class="item-fields-table">
+        {% if item.author %}<tr><th>Автор</th><td>{{ item.author }}</td></tr>{% endif %}
+        {% if item.year %}<tr><th>Год</th><td>{{ item.year }}</td></tr>{% endif %}
+        <tr><th>Формат</th><td>{{ item.file_ext|upper }}</td></tr>
+      </table>
+      {% if item.description %}<div class="lib-detail-desc">{{ item.description|linebreaks }}</div>{% endif %}
+      <a href="{{ item.file.url }}" download class="btn-secondary" style="margin-top:16px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Скачать {{ item.file_ext|upper }}
+      </a>
+    </div>
+  </div>
+
+  {% if item.is_viewable %}
+  <div class="lib-viewer-section">
+    <h2 class="about-section-label">просмотр</h2>
+    <iframe src="{{ item.file.url }}" class="lib-viewer-iframe" title="Просмотр {{ item.title }}"></iframe>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

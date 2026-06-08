@@ -1,0 +1,145 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block body_class %}class="page-fond-dark text-white-all"{% endblock %}
+
+{% block section_name %}<a href="{% url 'fond:gallery_list' %}">галерея</a> >>> {{ album_name }} >>>{% endblock %}
+{% block title %}{{ album_name }} — Музей{% endblock %}
+
+{% block content %}
+<style>
+  body.page-fond-dark {
+    background: #000 url('{% static "fond/fondBG.jpg" %}') no-repeat center top fixed !important;
+    background-size: cover !important;
+  }
+  body.page-fond-dark::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
+
+  .gallery-detail-wrap {
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 80px 100px;
+  }
+
+  .detail-header-1-1 { margin-bottom: 100px; }
+  .detail-title-1-1 { font-size: 52px; font-weight: 800; line-height: 1; text-transform: lowercase; letter-spacing: -0.02em; }
+  .detail-desc-1-1 { font-size: 18px; font-weight: 300; opacity: 0.4; margin-top: 20px; max-width: 800px; }
+
+  /* 1:1 Mosaic Layout */
+  .mosaic-masonry {
+    column-count: 4;
+    column-gap: 40px;
+  }
+  .mosaic-masonry-item {
+    break-inside: avoid;
+    margin-bottom: 40px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .mosaic-masonry-item img { width: 100%; height: auto; display: block; transition: transform 0.8s ease; }
+  .mosaic-masonry-item:hover { transform: scale(1.03); border-color: rgba(255,255,255,0.4); box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
+  .mosaic-masonry-item:hover img { transform: scale(1.05); }
+
+  /* Pro Viewer Overlay - 1:1 large format */
+  .viewer-1-1 {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.99);
+    z-index: 5000; display: none; flex-direction: column;
+    align-items: center; justify-content: center; backdrop-filter: blur(50px);
+  }
+  .viewer-1-1-img { max-width: 85%; max-height: 70vh; object-fit: contain; box-shadow: 0 50px 150px rgba(0,0,0,0.9); }
+  .viewer-1-1-footer {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 60px 100px;
+    background: linear-gradient(to top, #000, transparent); text-align: center;
+  }
+  .viewer-1-1-desc { font-size: 24px; font-weight: 300; margin-bottom: 25px; line-height: 1.4; }
+  .viewer-1-1-link {
+    color: #fff !important; text-decoration: none; font-weight: 800; text-transform: uppercase;
+    font-size: 11px; letter-spacing: 0.3em; border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 8px; transition: 0.2s;
+  }
+  .viewer-1-1-link:hover { border-bottom-color: #fff; opacity: 1; }
+
+  .viewer-1-1-nav { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; padding: 0 60px; pointer-events: none; }
+  .v-1-1-btn { cursor: pointer; font-size: 140px; font-weight: 100; opacity: 0.05; pointer-events: auto; transition: 0.3s; user-select: none; }
+  .v-1-1-btn:hover { opacity: 1; color: #ff4d4d; }
+
+  @media (max-width: 1200px) {
+    .mosaic-masonry { column-count: 3; }
+    .gallery-detail-wrap { padding: 40px; }
+  }
+  @media (max-width: 800px) {
+    .mosaic-masonry { column-count: 2; column-gap: 20px; }
+    .viewer-1-1-footer { padding: 30px; }
+    .viewer-1-1-desc { font-size: 18px; }
+  }
+</style>
+
+<div class="gallery-detail-wrap page-container-unified">
+  <div class="detail-header-1-1">
+    <h1 class="detail-title-1-1">{{ album_name }}</h1>
+    {% if album_description %}<p class="detail-desc-1-1">{{ album_description }}</p>{% endif %}
+  </div>
+
+  <div class="mosaic-masonry">
+    {% for photo in photos %}
+    <div class="mosaic-masonry-item" onclick="openGalleryV({{ forloop.counter0 }})">
+      <img src="{{ photo.file.url }}" alt="{{ photo.caption|default:album_name }}" loading="lazy">
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- 1:1 LARGE FORMAT VIEWER -->
+<div id="gv" class="viewer-1-1">
+  <span style="position:absolute; top:40px; right:60px; cursor:pointer; font-size:60px; font-weight:100; opacity:0.2;" onclick="closeGalleryV()">&times;</span>
+  <img id="gv-img" class="viewer-1-1-img" src="">
+  <div class="viewer-1-1-footer">
+    <p id="gv-desc" class="viewer-1-1-desc"></p>
+    <a id="gv-link" href="#" class="viewer-1-1-link">перейти к карточке в фонде →</a>
+  </div>
+  <div class="viewer-1-1-nav">
+    <span class="v-1-1-btn" onclick="moveGalleryV(-1)">‹</span>
+    <span class="v-1-1-btn" onclick="moveGalleryV(1)">›</span>
+  </div>
+</div>
+
+<script>
+  let gvIdx = 0;
+  const gvImages = [
+    {% for photo in photos %}
+    {
+      url: "{{ photo.file.url }}",
+      desc: "{{ photo.caption|escapejs }}",
+      link: "{{ photo.fond_item_url|default:'' }}"
+    },
+    {% endfor %}
+  ];
+
+  function openGalleryV(idx) {
+    if (gvImages.length === 0) return;
+    gvIdx = idx; updateGalleryV();
+    document.getElementById('gv').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeGalleryV() { document.getElementById('gv').style.display = 'none'; document.body.style.overflow = 'auto'; }
+  function moveGalleryV(step) { gvIdx = (gvIdx + step + gvImages.length) % gvImages.length; updateGalleryV(); }
+  function updateGalleryV() {
+    const img = gvImages[gvIdx];
+    document.getElementById('gv-img').src = img.url;
+    document.getElementById('gv-desc').innerText = img.desc || 'описание отсутствует';
+    const link = document.getElementById('gv-link');
+    if (img.link) { link.href = img.link; link.style.display = 'inline-block'; }
+    else { link.style.display = 'none'; }
+  }
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('gv').style.display === 'flex') {
+      if (e.key === 'Escape') closeGalleryV();
+      if (e.key === 'ArrowLeft') moveGalleryV(-1);
+      if (e.key === 'ArrowRight') moveGalleryV(1);
+    }
+  });
+</script>
+{% endblock %}
