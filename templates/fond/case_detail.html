@@ -24,10 +24,13 @@
 
   /* Force ALL text in body to be white, EXCEPT ACTION BUTTONS */
   body.page-fond-dark, 
-  body.page-fond-dark *:not(.btn-luxury-1-1) {
+  body.page-fond-dark *:not(.btn-luxury-1-1):not(.main-nav a) {
     color: #ffffff !important;
     font-family: 'TT Hoves', sans-serif !important;
   }
+  
+  /* Restore navbar hover */
+  .main-nav a:hover, .main-nav a.active { color:#e69291 !important; }
 
   .page-margins-1-1 {
     max-width: 1700px;

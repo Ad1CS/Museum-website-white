@@ -30,17 +30,23 @@
         <a href="{{ fund.get_absolute_url }}" class="fund-card-link">
           <div class="fund-row-refined">
             <div class="fund-left-col">
-              <div class="fund-id-label">{{ fund.code }}</div>
-              <div class="fund-year-label">{{ fund.dates_display }}</div>
+              <div class="fund-id-label" style="font-size: 1.8rem;">{{ fund.code }}</div>
+              <div class="fund-year-label" style="font-size: 0.9rem;">{{ fund.dates_display }}</div>
             </div>
             <div class="fund-right-col">
               <div class="fund-top-info">
-                <h2 class="fund-title-text">{{ fund.name|lower }}</h2>
-                <span class="fund-count-stats">описей: {{ fund.inventories.count }}</span>
+                <div style="display: flex; flex-direction: column;">
+                  <h2 class="fund-title-text" style="font-size: 1.5rem;">{{ fund.name|lower }}</h2>
+                </div>
+                <div style="text-align: right; font-size: 0.9rem; opacity: 0.4;">
+                  <div>{{ fund.display_pages_count }} с.</div>
+                </div>
               </div>
               <div class="fund-bottom-info">
-                <p class="fund-description-text">{{ fund.description|truncatewords:20|default:"описание данного фонда в настоящий момент подготавливается." }}</p>
-                <span class="fund-items-stats">предметов: {{ fund.items.count }}</span>
+                <div style="font-size: 0.9rem; opacity: 0.4;">{{ fund.accession_number|default:"—" }}</div>
+                <div style="text-align: right; font-size: 0.9rem; opacity: 0.4;">
+                  <div>{{ fund.admission_date|date:"d.m.Y"|default:"—" }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -57,17 +63,23 @@
         <a href="{{ fund.get_absolute_url }}" class="fund-card-link">
           <div class="fund-row-refined">
             <div class="fund-left-col">
-              <div class="fund-id-label">{{ fund.code }}</div>
-              <div class="fund-year-label">{{ fund.dates_display }}</div>
+              <div class="fund-id-label" style="font-size: 1.8rem;">{{ fund.code }}</div>
+              <div class="fund-year-label" style="font-size: 0.9rem;">{{ fund.dates_display }}</div>
             </div>
             <div class="fund-right-col">
               <div class="fund-top-info">
-                <h2 class="fund-title-text">{{ fund.name|lower }}</h2>
-                <span class="fund-count-stats">описей: {{ fund.inventories.count }}</span>
+                <div style="display: flex; flex-direction: column;">
+                  <h2 class="fund-title-text" style="font-size: 1.5rem;">{{ fund.name|lower }}</h2>
+                </div>
+                <div style="text-align: right; font-size: 0.9rem; opacity: 0.4;">
+                  <div>{{ fund.display_pages_count }} с.</div>
+                </div>
               </div>
               <div class="fund-bottom-info">
-                <p class="fund-description-text">{{ fund.description|truncatewords:20|default:"описание данного фонда в настоящий момент подготавливается." }}</p>
-                <span class="fund-items-stats">предметов: {{ fund.items.count }}</span>
+                <div style="font-size: 0.9rem; opacity: 0.4;">{{ fund.accession_number|default:"—" }}</div>
+                <div style="text-align: right; font-size: 0.9rem; opacity: 0.4;">
+                  <div>{{ fund.admission_date|date:"d.m.Y"|default:"—" }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -84,17 +96,23 @@
         <a href="{{ fund.get_absolute_url }}" class="fund-card-link">
           <div class="fund-row-refined">
             <div class="fund-left-col">
-              <div class="fund-id-label">{{ fund.code }}</div>
-              <div class="fund-year-label">{{ fund.dates_display }}</div>
+              <div class="fund-id-label" style="font-size: 1.8rem;">{{ fund.code }}</div>
+              <div class="fund-year-label" style="font-size: 0.9rem;">{{ fund.dates_display }}</div>
             </div>
             <div class="fund-right-col">
               <div class="fund-top-info">
-                <h2 class="fund-title-text">{{ fund.name|lower }}</h2>
-                <span class="fund-count-stats">описей: {{ fund.inventories.count }}</span>
+                <div style="display: flex; flex-direction: column;">
+                  <h2 class="fund-title-text" style="font-size: 1.5rem;">{{ fund.name|lower }}</h2>
+                </div>
+                <div style="text-align: right; font-size: 0.9rem; opacity: 0.4;">
+                  <div>{{ fund.display_pages_count }} с.</div>
+                </div>
               </div>
               <div class="fund-bottom-info">
-                <p class="fund-description-text">{{ fund.description|truncatewords:20|default:"описание данного фонда в настоящий момент подготавливается." }}</p>
-                <span class="fund-items-stats">предметов: {{ fund.items.count }}</span>
+                <div style="font-size: 0.9rem; opacity: 0.4;">{{ fund.accession_number|default:"—" }}</div>
+                <div style="text-align: right; font-size: 0.9rem; opacity: 0.4;">
+                  <div>{{ fund.admission_date|date:"d.m.Y"|default:"—" }}</div>
+                </div>
               </div>
             </div>
           </div>

@@ -33,6 +33,12 @@ class Fund(models.Model):
     description = models.TextField('Описание', blank=True)
     date_start = models.IntegerField('Год начала', null=True, blank=True)
     date_end = models.IntegerField('Год окончания', null=True, blank=True)
+
+    # New fields for museum card layout
+    accession_number = models.CharField('Номер книги поступлений', max_length=100, blank=True)
+    pages_count = models.PositiveIntegerField('К-во страниц', default=0)
+    admission_date = models.DateField('Дата поступления', null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -45,6 +51,16 @@ class Fund(models.Model):
 
     def get_absolute_url(self):
         return reverse('fond:fund_detail', args=[self.pk])
+
+    @property
+    def display_pages_count(self):
+        """Returns manual pages_count if set, otherwise calculates sum from cases."""
+        if self.pages_count > 0:
+            return self.pages_count
+        
+        # Calculate sum from cases
+        from django.db.models import Sum
+        return self.inventories.aggregate(total=Sum('cases__sheets_count'))['total'] or 0
 
     @property
     def dates_display(self):
