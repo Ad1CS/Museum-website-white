@@ -126,23 +126,23 @@
 
 <style>
   body.page-fond-dark {
-    background: #000 url('{% static "fond/fondBG.jpg" %}') no-repeat center top fixed !important;
+    background: #000 url('{% static "fond/fondBG.webp" %}') no-repeat center top fixed !important;
     background-size: cover !important;
     color: #fff !important;
   }
   body.page-fond-dark::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
 
   .archive-list-wrapper {
-    max-width: 1700px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 60px 100px;
+    padding: 60px 40px;
     font-family: 'TT Hoves', sans-serif;
   }
 
   .funds-list-custom {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
   }
 
   .fund-card-link {
@@ -150,33 +150,30 @@
     color: inherit;
     display: block;
     transition: transform 0.2s ease;
-    margin-bottom: 15px;
   }
   
   .fund-card-link:hover {
-    transform: translateX(10px);
+    transform: translateX(5px);
   }
 
   .fund-row-refined {
     display: flex;
     align-items: stretch;
     background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(30px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 35px 40px;
-    gap: 50px;
+    padding: 25px 30px;
+    gap: 40px;
     position: relative;
-    min-height: 180px;
   }
 
   .fund-left-col {
-    width: 180px;
+    width: 120px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
-    padding-right: 30px;
+    padding-right: 20px;
   }
 
   .fund-id-label {
@@ -191,9 +188,9 @@
   }
 
   .fund-year-label {
-    font-size: 1.1rem;
-    font-weight: 300;
-    opacity: 0.4;
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.6;
     letter-spacing: 1px;
     white-space: nowrap;
   }
@@ -214,11 +211,10 @@
   }
 
   .fund-title-text {
-    font-size: 2rem;
-    font-weight: 800;
+    font-size: 1.8rem;
+    font-weight: 700;
     margin: 0;
     text-transform: lowercase;
-    line-height: 1.1;
   }
 
   .fund-count-stats {
@@ -231,7 +227,6 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 20px;
   }
 
   .fund-description-text {
@@ -254,12 +249,12 @@
 
   @media (max-width: 1000px) {
     .archive-list-wrapper { padding: 40px 30px; }
-    .fund-row-refined { flex-direction: column; gap: 30px; padding: 30px; }
-    .fund-left-col { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-right: 0; padding-bottom: 20px; }
-    .fund-id-label { font-size: 2rem; margin-bottom: 10px; }
-    .fund-title-text { font-size: 1.6rem; }
-    .fund-bottom-info { flex-direction: column; align-items: flex-start; gap: 15px; }
-    .fund-description-text { max-width: 100%; font-size: 14px; }
+    .fund-row-refined { flex-direction: column; gap: 20px; }
+    .fund-left-col { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+    .fund-id-label { margin-bottom: 10px; }
+    .fund-title-text { font-size: 1.4rem; }
+    .fund-bottom-info { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .fund-description-text { max-width: 100%; }
   }
 </style>
 {% endblock %}
