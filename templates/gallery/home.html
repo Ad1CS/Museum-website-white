@@ -1,47 +1,49 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block section_name %}Ð³Ð°Ð»ÐµÑ€ÐµÑ >>>{% endblock %}
-{% block title %}Ð“Ð°Ð»ÐµÑ€ÐµÑ â€” Ð¤Ð¾Ñ‚Ð¾/ÐºÐ¸Ð½Ð¾-Ð´Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ñ‹{% endblock %}
+{% block section_name %}галерея >>>{% endblock %}
+{% block title %}Галерея — Фото/кино-документы{% endblock %}
 
 {% block content %}
 <div class="archive-list-wrapper">
   <div class="archive-header-main">
-    <h1>Ð¤Ð¾Ñ‚Ð¾/ÐºÐ¸Ð½Ð¾-Ð´Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ñ‹</h1>
+    <h1>Фото/кино-документы</h1>
   </div>
 
   <div class="funds-list-custom">
-    {% for card in archive_cards %}
-      <a href="{{ card.url }}" class="fund-card-link">
+    {% for period in periods %}
+      {% for album in period.albums %}
+      <a href="{{ album.get_absolute_url }}" class="fund-card-link">
         <div class="fund-row-refined">
           <!-- Left Stack: ID and Year -->
           <div class="fund-left-col">
-            <div class="fund-id-label">{{ card.code }}</div>
-            <div class="fund-year-label">{{ card.years }}</div>
+            <div class="fund-id-label">Г{{ forloop.parentloop.counter }}</div>
+            <div class="fund-year-label">{{ period.years }}</div>
           </div>
 
           <!-- Right Stack: Title and Description -->
           <div class="fund-right-col">
             <div class="fund-top-info">
-              <h2 class="fund-title-text">{{ card.title }}</h2>
-              <span class="fund-count-stats">{{ card.stats.0 }}</span>
+              <h2 class="fund-title-text">{{ period.label }}</h2>
+              <span class="fund-count-stats">{{ album.media.count }} ссылок</span>
             </div>
             <div class="fund-bottom-info">
-              <p class="fund-description-text">{{ card.description }}</p>
-              <span class="fund-items-stats">{{ card.stats.1 }}</span>
+              <p class="fund-description-text">{% if album.description %}{{ album.description }}{% else %}Фотохроника строительства, документы и приказы{% endif %}</p>
+              <span class="fund-items-stats">предметов: {{ album.media.count }}</span>
             </div>
           </div>
         </div>
       </a>
+      {% endfor %}
     {% empty %}
-      <div class="empty-state"><p>Ð Ð°Ð·Ð´ÐµÐ»Ñ‹ Ð³Ð°Ð»ÐµÑ€ÐµÐ¸ Ð¿Ð¾ÐºÐ° Ð½Ðµ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ñ‹.</p></div>
+      <div class="empty-state"><p>Разделы галереи пока не добавлены.</p></div>
     {% endfor %}
   </div>
 </div>
 
 <style>
   body {
-    background: #1a1a1a url('{% static "gallery/galleryBG.webp" %}') no-repeat center top fixed;
+    background: #1a1a1a url('{% static "gallery/galleryBG.jpg" %}') no-repeat center top fixed;
     background-size: cover;
     color: #fff;
   }

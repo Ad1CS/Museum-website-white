@@ -3,12 +3,11 @@
 
 {% block section_name %}
 <div class="map-path">
-  <span>главная</span>
-  >>>
-  <span>интерактивная карта</span>
-  <span id="breadcrumb-building-sep" style="display:none">>>></span>
+  <a href="{% url 'home' %}">главная</a>
+  <span class="sep">>>></span>
+  <a href="{% url 'mapblock:map' %}">интерактивная карта</a>
+  <span id="breadcrumb-building-sep" class="sep" style="display:none">>>></span>
   <span id="breadcrumb-building" class="current-item" style="display:none"></span>
-  <span id="breadcrumb-building-tail" style="display:none">>>></span>
 </div>
 {% endblock %}
 {% block title %}Интерактивная карта{% endblock %}
@@ -17,14 +16,12 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="preload" as="image" href="{% static 'img/map2002_fast.webp' %}">
+<link rel="preload" as="image" href="{% static 'img/map2002.webp' %}">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 /* Fullscreen background map layout */
 #main-content {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  height: 100dvh;
   z-index: 1;
 }
 #header {
@@ -35,14 +32,13 @@
 
 /* Path styling inside header-sub-row */
 .map-path {
-  display: inline;
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: lowercase;
-  color: inherit;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 16px; letter-spacing: 0.05em; text-transform: lowercase;
 }
-.map-path span { color: inherit; transition: color 0.2s; }
-.map-path .current-item { color: inherit !important; font-weight: inherit; }
+.map-path a, .map-path span { color: rgba(255,255,255,0.6); transition: color 0.2s; }
+.map-path a:hover { color: #fff; }
+.map-path .sep { opacity: 0.4; font-size: 14px; }
+.map-path .current-item { color: #E69291 !important; font-weight: 700; }
 
 .header-search input {
   font-size: 16px !important;
@@ -52,7 +48,6 @@
 #leaflet-map {
   width:100%; height: 100%;
   background:#1a1815;
-  touch-action: pan-x pan-y;
 }
 .map-wrapper {
   width:100%; height: 100%; position: relative;
@@ -224,6 +219,7 @@ footer#site-footer { display: none !important; }
 @media(max-width:600px) {
   /* Header adjustments */
   .map-path { font-size: 11px; gap: 5px; }
+  .map-path .sep { font-size: 9px; }
   .header-search input { font-size: 11px !important; width: 120px !important; }
   .header-sub-row { padding: 10px 20px; }
 
@@ -277,7 +273,7 @@ footer#site-footer { display: none !important; }
       <div class="map-nav-item active" data-year="2002">спутниковый<br>снимок 2002</div>
       <div class="map-nav-item" data-year="1966">спутниковый<br>снимок 1966</div>
       <div class="map-nav-item" data-year="1943">аэрофотосъемка<br>люфтваффе 1943</div>
-      <a href="{% url 'fond:catalog' %}?q=план" class="map-nav-item">карты и планы<br>предприятия</a>
+      <a href="{% url 'mapblock:plans' %}" class="map-nav-item">карты и планы<br>предприятия</a>
     </div>
   </div>
 
@@ -307,7 +303,18 @@ footer#site-footer { display: none !important; }
       </div>
       <div class="b-list-content">
         <div class="b-list-inner">
+          {% if building.main_image %}
+          <img src="{{ building.main_image.url }}" class="b-list-img" alt="{{ building.name }}" onclick="openLightbox('{{ building.main_image.url }}')">
+          {% endif %}
           <div class="b-list-desc">{{ building.description|linebreaks }}</div>
+          
+          {% if building.photos.exists %}
+          <div class="b-list-photos">
+            {% for photo in building.photos.all %}
+            <img src="{{ photo.image.url }}" alt="{{ building.name }}" onclick="openLightbox('{{ photo.image.url }}')">
+            {% endfor %}
+          </div>
+          {% endif %}
           
           <a href="{{ building.get_absolute_url }}" class="b-list-link">Подробнее о здании →</a>
         </div>
@@ -376,14 +383,14 @@ footer#site-footer { display: none !important; }
   // Map layers data
   const mapLayers = {
     "2002": {
-      url: '{% static "img/map2002_fast.webp" %}',
-      fallback: '{% static "img/map2002.webp" %}'
+      url: '{% static "img/map2002_new.jpg" %}',
+      fallback: '{% static "img/map2002.jpg" %}'
     },
     "1966": {
-      url: '{% static "img/1966.webp" %}'
+      url: '{% static "img/1966.jpg" %}'
     },
     "1943": {
-      url: '{% static "img/1943.webp" %}'
+      url: '{% static "img/1943.jpg" %}'
     }
   };
 
@@ -705,10 +712,8 @@ footer#site-footer { display: none !important; }
     // Clear breadcrumb
     const bcSep = document.getElementById('breadcrumb-building-sep');
     const bcText = document.getElementById('breadcrumb-building');
-    const bcTail = document.getElementById('breadcrumb-building-tail');
     if (bcSep) bcSep.style.display = 'none';
     if (bcText) bcText.style.display = 'none';
-    if (bcTail) bcTail.style.display = 'none';
   };
 
   // Bottom navigation switching
@@ -784,12 +789,10 @@ footer#site-footer { display: none !important; }
     // Update breadcrumb
     const bcSep = document.getElementById('breadcrumb-building-sep');
     const bcText = document.getElementById('breadcrumb-building');
-    const bcTail = document.getElementById('breadcrumb-building-tail');
     if (bcSep && bcText) {
       bcSep.style.display = 'inline';
       bcText.style.display = 'inline';
       bcText.textContent = b.name;
-      if (bcTail) bcTail.style.display = 'inline';
     }
 
     // Update and show popup

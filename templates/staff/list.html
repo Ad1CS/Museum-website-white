@@ -3,20 +3,9 @@
 
 {% block section_name %}отдел кадров >>>{% endblock %}
 {% block title %}Отдел кадров{% endblock %}
-{% block body_class %}class="page-staff-list"{% endblock %}
-{% block extra_head %}<link rel="preload" href="{% static 'img/staffBG.jpg' %}" as="image" fetchpriority="high">{% endblock %}
 
 {% block content %}
-<div class="staff-search-row">
-  <div class="staff-section-label">отдел кадров &gt;&gt;&gt; личная карточка</div>
-  <form class="staff-search-form" method="get" role="search">
-    <input type="text" name="q" class="staff-search-input"
-           placeholder="поиск &gt;&gt;&gt;"
-           value="{{ q }}" aria-label="Поиск по сотрудникам">
-    {% if selected_letter %}<input type="hidden" name="letter" value="{{ selected_letter }}">{% endif %}
-  </form>
-</div>
-
+<!-- ALPHABET INDEX -->
 <div class="staff-alpha" role="navigation" aria-label="Алфавитный указатель">
   {% for letter in alphabet %}
   <a href="{% if selected_letter == letter %}{% url 'staff:list' %}{% else %}?letter={{ letter }}{% endif %}"
@@ -25,32 +14,54 @@
     {{ letter|lower }}
   </a>
   {% endfor %}
+  {% if selected_letter %}
+  <a href="{% url 'staff:list' %}" class="alpha-btn alpha-reset">✕</a>
+  {% endif %}
 </div>
 
+<!-- SEARCH -->
+<div class="staff-search-row">
+  <form class="staff-search-form" method="get" role="search">
+    <input type="text" name="q" class="staff-search-input"
+           placeholder="поиск по сотрудникам.."
+           value="{{ q }}" aria-label="Поиск по сотрудникам">
+    {% if selected_letter %}<input type="hidden" name="letter" value="{{ selected_letter }}">{% endif %}
+  </form>
+</div>
+
+<!-- STAFF TABLE -->
 <div class="staff-table">
   {% for member in members %}
   <a href="{{ member.get_absolute_url }}" class="staff-row">
-    <div class="sr-id">
-      <span>{{ member.card_id }}</span>
+    <div class="sr-photo">
+      {% if member.photo %}
+        <img src="{{ member.photo.url }}" alt="{{ member.full_name }}" loading="lazy">
+      {% else %}
+        <div class="sr-photo-empty">нет<br>фото</div>
+      {% endif %}
     </div>
-
     <div class="sr-name">
       <div class="sr-last">{{ member.last_name }}</div>
       <div class="sr-first">{{ member.first_name }}{% if member.patronymic %} {{ member.patronymic }}{% endif %}</div>
+      {% if member.years_of_life %}<div class="sr-years">{{ member.years_of_life }}</div>{% endif %}
     </div>
-
-    <div class="sr-years-cell">
-      {{ member.life_display }}
+    <div class="sr-col">
+      {% if member.role %}
+        <div class="sr-col-value">{{ member.role }}</div>
+        {% if member.role_years %}<div class="sr-col-years">{{ member.role_years }}</div>{% endif %}
+      {% endif %}
     </div>
-
-    <div class="sr-positions">
-      {% for position in member.positions %}
-      <div class="sr-position">
-        <div class="sr-position-title">{{ position.title }}</div>
-        {% if position.department %}<div class="sr-position-dept">{{ position.department }}</div>{% endif %}
-        {% if position.period %}<div class="sr-position-years">{{ position.period }}</div>{% endif %}
-      </div>
-      {% endfor %}
+    <div class="sr-col">
+      {% if member.role2 %}
+        <div class="sr-col-value">{{ member.role2 }}</div>
+        {% if member.role2_years %}<div class="sr-col-years">{{ member.role2_years }}</div>{% endif %}
+      {% endif %}
+    </div>
+    <div class="sr-col">
+      {% if member.role3 %}
+        <div class="sr-col-value">{{ member.role3 }}</div>
+        {% if member.role3_years %}<div class="sr-col-years">{{ member.role3_years }}</div>{% endif %}
+      {% endif %}
     </div>
   </a>
   {% empty %}

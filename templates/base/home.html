@@ -1,6 +1,5 @@
 {% extends "base/base.html" %}
 {% load static %}
-{% block extra_head %}<link rel="preload" href="{% static 'img/hero_bg.webp' %}" as="image" fetchpriority="high">{% endblock %}
 {% block title %}Главная{% endblock %}
 
 {% block hero_area_start %}<div class="hero-area"><div class="hero-area__overlay"></div>{% endblock %}
@@ -9,7 +8,7 @@
 <div class="home-hero-inner">
   <div class="hero-title">Ленинградский<br>мясокомбинат<br>им. С.М. Кирова</div>
   <div class="hero-right">
-    <div class="hero-icon"><img src="{% static 'img/logo2x.webp' %}" alt="Логотип музея" width="240" height="240" decoding="async"></div>
+    <div class="hero-icon"><img src="{% static 'img/logo2x.png' %}" alt="Логотип музея"></div>
     <div class="hero-subtitle">
       <span class="hs-big">Музей</span><br>
       <span class="hs-sm">трудовой</span><br>
@@ -33,7 +32,7 @@
       {% for item in recent_items %}
       <a href="{{ item.get_absolute_url }}" class="recent-card">
         <div class="rc-img-frame">
-          {% if item.image %}<img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy" decoding="async">
+          {% if item.image %}<img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">
           {% else %}<span class="rc-img-empty">нет фото</span>{% endif %}
         </div>
         <div class="rc-title">{{ item.title|truncatewords:8 }}</div>
