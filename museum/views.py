@@ -8,19 +8,11 @@ class HomeView(TemplateView):
     template_name = 'base/home.html'
 
     def get_context_data(self, **kwargs):
+        print("HomeView.get_context_data called")
         ctx = super().get_context_data(**kwargs)
-        try:
-            ctx['latest_news'] = list(NewsPost.objects.filter(published=True).order_by('-date')[:3])
-        except Exception:
-            ctx['latest_news'] = []
-        try:
-            ctx['recent_items'] = list(FondItem.objects.filter(published=True).select_related('fund').order_by('-created_at')[:6])
-        except Exception:
-            ctx['recent_items'] = []
-        try:
-            ctx['random_photos'] = list(Photo.objects.filter(published=True).order_by('?')[:8])
-        except Exception:
-            ctx['random_photos'] = []
+        ctx['latest_news'] = list(NewsPost.objects.filter(published=True).order_by('-date')[:3])
+        ctx['recent_items'] = list(FondItem.objects.filter(published=True).select_related('fund').order_by('-created_at')[:6])
+        ctx['random_photos'] = list(Photo.objects.filter(published=True).order_by('-created_at')[:8])
         return ctx
 
 

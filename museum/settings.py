@@ -145,3 +145,4 @@ CACHES = {
 
 # ── WHITENOISE ────────────────────────────────────────────────
 WHITENOISE_MAX_AGE = 31536000  # 1 year for static files
+DEFAULT_CHARSET = 'utf-8'
