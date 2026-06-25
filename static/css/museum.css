@@ -469,3 +469,292 @@ body.page-fond-dark::before { content: ''; position: fixed; inset: 0; background
 .recent-arrow-icon {
   color:var(--red)
 }
+
+/* Staff list mockup */
+body.page-staff-list {
+  min-height: 100vh;
+  background: #171717 url('../img/staffBG.jpg') center top / cover fixed no-repeat !important;
+  color: #fff;
+}
+
+body.page-staff-list::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.20), rgba(0,0,0,0.08) 36%, rgba(0,0,0,0.28)),
+    rgba(0,0,0,0.08);
+  pointer-events: none;
+}
+
+body.page-staff-list #header {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+body.page-staff-list #main-content {
+  width: min(88.5vw, 1810px);
+  margin: 28px auto 72px;
+}
+
+body.page-staff-list .staff-alpha {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 1.65vw, 34px);
+  min-height: 55px;
+  padding: 0 84px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+body.page-staff-list .alpha-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 14px;
+  color: rgba(255,255,255,0.95);
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: lowercase;
+  opacity: 0.94;
+  transition: color .15s ease, opacity .15s ease;
+}
+
+body.page-staff-list .alpha-btn:not(.has-entries) {
+  opacity: 0.86;
+}
+
+body.page-staff-list .alpha-btn:hover,
+body.page-staff-list .alpha-btn.active {
+  color: #e69291;
+  opacity: 1;
+}
+
+body.page-staff-list .empty-state {
+  padding: 48px;
+  color: #fff;
+  background: rgba(76,76,76,0.62);
+  text-align: center;
+}
+
+body.page-staff-list .staff-table {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: min(1400px, calc(100% - 104px));
+  margin: 56px auto 0;
+  border-bottom: 0;
+}
+
+body.page-staff-list .staff-row {
+  display: grid;
+  grid-template-columns: 104px minmax(280px, 1.55fr) minmax(150px, .7fr) minmax(520px, 3fr);
+  align-items: stretch;
+  column-gap: 28px;
+  row-gap: 0;
+  min-height: 0;
+  padding: 25px 30px;
+  gap: 40px;
+  position: relative;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+  backdrop-filter: none;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+body.page-staff-list .staff-row:hover {
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+body.page-staff-list .sr-id,
+body.page-staff-list .sr-name,
+body.page-staff-list .sr-years-cell,
+body.page-staff-list .sr-position {
+  min-width: 0;
+}
+
+body.page-staff-list .sr-id {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0;
+  color: #fff;
+  font-size: 2.15rem;
+  font-weight: 900;
+  line-height: .95;
+}
+
+body.page-staff-list .sr-id span {
+  display: inline-block;
+  width: fit-content;
+  padding-bottom: 6px;
+  border-bottom: 5px solid rgba(255,255,255,.94);
+  text-align: left;
+}
+
+body.page-staff-list .sr-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 1px 0 0;
+}
+
+body.page-staff-list .sr-last {
+  color: #fff;
+  font-size: 1.9rem;
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: .01em;
+}
+
+body.page-staff-list .sr-first {
+  margin-top: 14px;
+  color: rgba(255,255,255,.82);
+  font-size: 1.38rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.14;
+}
+
+body.page-staff-list .sr-years-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,.94);
+  font-size: 1.22rem;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+}
+
+body.page-staff-list .sr-positions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 32px;
+  min-width: 0;
+}
+
+body.page-staff-list .sr-position {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  text-align: center;
+}
+
+body.page-staff-list .sr-position-title {
+  color: rgba(255,255,255,.96);
+  font-size: 1.02rem;
+  font-weight: 900;
+  line-height: 1.28;
+  text-wrap: balance;
+}
+
+body.page-staff-list .sr-position-dept {
+  margin-top: 7px;
+  color: rgba(255,255,255,.88);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.24;
+}
+
+body.page-staff-list .sr-position-years {
+  margin-top: 24px;
+  color: rgba(255,255,255,.72);
+  font-size: .9rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.15;
+}
+
+@media (max-width: 1100px) {
+  body.page-staff-list #main-content {
+    width: calc(100vw - 28px);
+    margin-top: 18px;
+  }
+
+  body.page-staff-list .staff-alpha {
+    padding-left: 14px;
+    padding-right: 14px;
+    gap: 13px;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  body.page-staff-list .staff-table {
+    width: 100%;
+    margin-top: 28px;
+  }
+
+  body.page-staff-list .staff-row {
+    grid-template-columns: 76px minmax(220px, 1.4fr) minmax(120px, .7fr) minmax(180px, 1fr);
+  }
+
+  body.page-staff-list .sr-positions {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 720px) {
+  body.page-staff-list {
+    background-attachment: scroll !important;
+  }
+
+  body.page-staff-list .staff-row {
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+  }
+
+  body.page-staff-list .sr-id,
+  body.page-staff-list .sr-years-cell,
+  body.page-staff-list .sr-position {
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  body.page-staff-list .sr-positions {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  body.page-staff-list .sr-id {
+    font-size: 1.7rem;
+  }
+
+  body.page-staff-list .sr-last {
+    font-size: 1.45rem;
+  }
+
+  body.page-staff-list .sr-first {
+    margin-top: 8px;
+    font-size: 1.15rem;
+  }
+
+  body.page-staff-list .sr-years-cell {
+    font-size: 1rem;
+  }
+
+  body.page-staff-list .sr-position {
+    display: flex;
+    padding: 12px 0 0;
+    border-top: 1px solid rgba(255,255,255,.1);
+  }
+
+  body.page-staff-list .sr-position-years {
+    margin-top: 8px;
+  }
+}

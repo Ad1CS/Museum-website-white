@@ -46,5 +46,38 @@ class StaffMember(models.Model):
     def first_letter(self):
         return self.last_name[0].upper() if self.last_name else '?'
 
+    @property
+    def life_display(self):
+        return self.years_of_life.strip()
+
+    @staticmethod
+    def _position_parts(title):
+        lines = [line.strip() for line in title.splitlines() if line.strip()]
+        if not lines:
+            return '', ''
+        if len(lines) == 1:
+            return lines[0], ''
+        return lines[0], ' '.join(lines[1:])
+
+    @property
+    def positions(self):
+        items = []
+        role_fields = (
+            (self.role, self.role_years or self.years_worked),
+            (self.role2, self.role2_years),
+            (self.role3, self.role3_years),
+        )
+        for title, period in role_fields:
+            title = title.strip()
+            if not title:
+                continue
+            position_title, department = self._position_parts(title)
+            items.append({
+                'title': position_title,
+                'department': department,
+                'period': period.strip(),
+            })
+        return items
+
     def get_absolute_url(self):
         return reverse('staff:detail', args=[self.pk])

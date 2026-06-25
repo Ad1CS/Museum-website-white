@@ -1,0 +1,45 @@
+/* Header layout override for the live port-8000 pages. */
+#header .header-search-row {
+  min-height: 46px;
+  margin-top: 0 !important;
+}
+
+@media (min-width: 1001px) {
+  #header .header-search-row {
+    height: 46px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    box-sizing: border-box;
+  }
+
+  #header .header-section-name {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    line-height: 1 !important;
+  }
+
+  #header .header-section-name * {
+    line-height: inherit !important;
+  }
+
+  #header .header-search {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  #header .header-search input {
+    display: block;
+    height: 28px;
+    line-height: 28px;
+    box-sizing: border-box;
+  }
+}
+
+#header .header-section-name {
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

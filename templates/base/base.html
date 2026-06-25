@@ -6,7 +6,8 @@
 <title>{% block title %}Музей трудовой и воинской славы{% endblock %} — Ленинградский мясокомбинат им. С.М. Кирова</title>
 <link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
 <link rel="icon" type="image/png" href="{% static "img/favicon.png" %}">
-<link rel="stylesheet" href="{% static "css/museum.css" %}?v=1.17">
+<link rel="stylesheet" href="{% static "css/museum.css" %}?v=1.52">
+<link rel="stylesheet" href="{% static "css/header-fix.css" %}?v=1.4">
 <link rel="preload" href="{% static "fonts/TTHoves-Regular.woff2" %}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{% static "fonts/TTHoves-Bold.woff2" %}" as="font" type="font/woff2" crossorigin>
 <meta name="theme-color" content="#C8C4BB">
@@ -32,9 +33,11 @@
   </nav>
   <div class="header-search-row">
     <span class="header-section-name">{% block section_name %}{% endblock %}</span>
+    {% block header_search %}
     <form class="header-search" action="{% url "fond:catalog" %}" method="get">
       <input type="text" name="q" placeholder="поиск по музею..." value="{{ request.GET.q|default:"" }}">
     </form>
+    {% endblock %}
   </div><div class="optic-line" style="height: 1px; background: rgba(255,255,255,0.15); width: 100%;"></div></header>
 
 {% block hero_area_end %}{% endblock %}
@@ -44,7 +47,7 @@
 
 {% block footer %}
 <footer id="site-footer" style="background:transparent !important; border:none !important; padding:40px 60px; text-align:left;">
-  <p class="footer-copy" style="color:rgba(255,255,255,0.6) !important; font-family:\"TT Hoves\", sans-serif; font-size:13px; margin:0;">Ленинградский мясокомбинат, Цифровой музей трудовой и воинской славы, 2026</p>
+  <p class="footer-copy" style="color:rgba(255,255,255,0.6) !important; font-family:&quot;TT Hoves&quot;, sans-serif; font-size:13px; margin:0;">Ленинградский мясокомбинат, цифровой музей трудовой и воинской славы, 2026</p>
 </footer>
 {% endblock %}
 
