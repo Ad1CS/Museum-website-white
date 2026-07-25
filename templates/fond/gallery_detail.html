@@ -3,14 +3,15 @@
 
 {% block body_class %}class="page-fond-dark text-white-all"{% endblock %}
 
-{% block section_name %}<a href="{% url 'fond:gallery_list' %}">галерея</a> >>> {{ album_name }} >>>{% endblock %}
+{% block section_name %}<span>галерея >>> {{ album_name }} >>></span>{% endblock %}
 {% block title %}{{ album_name }} — Музей{% endblock %}
 
 {% block content %}
 <style>
   body.page-fond-dark {
-    background: #000 url('{% static "fond/fondBG.jpg" %}') no-repeat center top fixed !important;
+    background: #000 url('{% static "fond/fondBG.webp" %}?v=2') no-repeat center top !important;
     background-size: cover !important;
+    background-attachment: scroll !important;
   }
   body.page-fond-dark::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: -1; }
 

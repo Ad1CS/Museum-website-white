@@ -2,10 +2,12 @@
 Django settings for Leningrad Meat Plant Digital Museum
 """
 import os
+import mimetypes
 from pathlib import Path
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+mimetypes.add_type('image/webp', '.webp', True)
 
 env = environ.Env(
     DEBUG=(bool, False),

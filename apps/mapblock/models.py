@@ -80,7 +80,7 @@ class Building(models.Model):
         upload_to='map/buildings/backgrounds/',
         blank=True,
         null=True,
-        help_text='Если не указано, используется стандартный buildingBG.jpg.'
+        help_text='Если не указано, используется стандартный buildingBG.webp.'
     )
 
     # Automated cropping for the map popup (16:9 ratio)

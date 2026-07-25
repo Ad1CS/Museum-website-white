@@ -3,7 +3,7 @@
 
 {% block body_class %}class="page-fond-dark"{% endblock %}
 
-{% block section_name %}<a href="{% url 'fond:catalog' %}">фонд</a> >>> <a href="{{ case.inventory.fund.get_absolute_url }}">{{ case.inventory.fund.code }}</a> >>> дело № {{ case.number }} >>>{% endblock %}
+{% block section_name %}<span>фонд >>> {{ case.inventory.fund.code }} >>> дело № {{ case.number }} >>></span>{% endblock %}
 {% block title %}Дело № {{ case.number }} — Музей{% endblock %}
 
 {% block content %}
@@ -11,8 +11,9 @@
   /* EMERGENCY INLINE CSS - FORCES 1:1 DESIGN */
   
   body.page-fond-dark {
-    background: #000 url('{% static "fond/fondBG.jpg" %}') no-repeat center top fixed !important;
+    background: #000 url('{% static "fond/fondBG.webp" %}?v=2') no-repeat center top !important;
     background-size: cover !important;
+    background-attachment: scroll !important;
     color: #ffffff !important;
     margin: 0; padding: 0;
   }

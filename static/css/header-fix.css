@@ -1,45 +1,204 @@
-/* Header layout override for the live port-8000 pages. */
-#header .header-search-row {
-  min-height: 46px;
-  margin-top: 0 !important;
+/* Final global header pass: keep every page aligned with the Fond item mockup. */
+#header,
+body[class] #header {
+  position: relative !important;
+  z-index: 500 !important;
+  width: 100% !important;
+  padding-top: 40px !important;
+  background: transparent !important;
+  border: 0 !important;
 }
 
-@media (min-width: 1001px) {
-  #header .header-search-row {
-    height: 46px;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    box-sizing: border-box;
-  }
-
-  #header .header-section-name {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    line-height: 1 !important;
-  }
-
-  #header .header-section-name * {
-    line-height: inherit !important;
-  }
-
-  #header .header-search {
-    display: flex;
-    align-items: center;
-    height: 100%;
-  }
-
-  #header .header-search input {
-    display: block;
-    height: 28px;
-    line-height: 28px;
-    box-sizing: border-box;
-  }
+#header .main-nav,
+body[class] #header .main-nav {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 10px 40px !important;
+  background: transparent !important;
+  border: 0 !important;
 }
 
-#header .header-section-name {
-  max-width: 320px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+#header .header-nav-row,
+body[class] #header .header-nav-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 0 !important;
+  width: auto !important;
+}
+
+#header .main-nav a,
+body[class] #header .main-nav a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 42px !important;
+  padding: 0 44px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #fff !important;
+  font-family: "TT Hoves", sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.08 !important;
+  text-align: center !important;
+  text-transform: lowercase !important;
+  white-space: nowrap !important;
+}
+
+#header .main-nav a:hover,
+#header .main-nav a.active,
+body[class] #header .main-nav a:hover,
+body[class] #header .main-nav a.active {
+  color: #e69291 !important;
+}
+
+#header .header-search-row,
+body[class] #header .header-search-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 20px !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  margin: 0 !important;
+  padding: 0 92px !important;
+  box-sizing: border-box !important;
+}
+
+#header .header-section-name,
+body[class] #header .header-section-name {
+  display: block !important;
+  position: static !important;
+  inset: auto !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  max-width: none !important;
+  height: auto !important;
+  overflow: visible !important;
+  color: rgba(255,255,255,0.86) !important;
+  font-size: 16px !important;
+  font-style: italic !important;
+  font-weight: 300 !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  text-overflow: clip !important;
+  text-transform: lowercase !important;
+  white-space: nowrap !important;
+}
+
+#header .header-section-name *,
+body[class] #header .header-section-name * {
+  line-height: inherit !important;
+}
+
+#header .header-search,
+body[class] #header .header-search {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  height: 100% !important;
+  margin: 0 !important;
+}
+
+#header .header-search input,
+body[class] #header .header-search input {
+  display: block !important;
+  width: 145px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: rgba(255,255,255,0.94) !important;
+  font-family: "TT Hoves", sans-serif !important;
+  font-size: 16px !important;
+  font-style: italic !important;
+  font-weight: 300 !important;
+  letter-spacing: 0 !important;
+  line-height: 28px !important;
+  outline: 0 !important;
+  text-align: left !important;
+}
+
+#header .header-search input::placeholder,
+body[class] #header .header-search input::placeholder {
+  color: rgba(255,255,255,0.94) !important;
+  opacity: 1 !important;
+}
+
+#header .optic-line,
+body[class] #header .optic-line {
+  display: block !important;
+  position: static !important;
+  inset: auto !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  height: 1px !important;
+  width: calc(100% - 184px) !important;
+  margin: 0 92px !important;
+  background: rgba(255,255,255,0.62) !important;
+}
+
+@media (max-width: 1000px) {
+  #header,
+  body[class] #header {
+    padding-top: 22px !important;
+  }
+
+  #header .main-nav,
+  body[class] #header .main-nav {
+    flex-direction: column !important;
+    padding: 0 !important;
+  }
+
+  #header .header-nav-row,
+  body[class] #header .header-nav-row {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  #header .main-nav a,
+  body[class] #header .main-nav a {
+    flex: 1 1 25% !important;
+    width: 25% !important;
+    min-height: 48px !important;
+    padding: 10px 2px !important;
+    font-size: 10px !important;
+    white-space: normal !important;
+  }
+
+  #header .header-search-row,
+  body[class] #header .header-search-row {
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0 30px !important;
+  }
+
+  #header .header-section-name,
+  body[class] #header .header-section-name {
+    max-width: calc(100vw - 170px) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-size: 12px !important;
+  }
+
+  #header .header-search input,
+  body[class] #header .header-search input {
+    width: 100px !important;
+    font-size: 12px !important;
+  }
+
+  #header .optic-line,
+  body[class] #header .optic-line {
+    width: calc(100% - 60px) !important;
+    margin: 0 30px !important;
+  }
 }

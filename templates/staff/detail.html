@@ -1,82 +1,308 @@
 {% extends "base/base.html" %}
 {% load static %}
 
+{% block body_class %}class="page-staff-member"{% endblock %}
 {% block title %}{{ member.full_name }}{% endblock %}
 
-{% block section_name %}<a href="{% url 'staff:list' %}">сотрудники</a> >>> {{ member.full_name }} >>>{% endblock %}
+{% block section_name %}<span class="staff-member-path">отдел кадров &gt;&gt;&gt; профиль сотрудника</span>{% endblock %}
+
+{% block header_search %}
+<form class="header-search" action="{% url 'staff:list' %}" method="get" role="search">
+  <input type="text" name="q" placeholder="поиск &gt;&gt;&gt;" aria-label="Поиск по сотрудникам">
+</form>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="preload" href="{% static 'fond/fondBG.webp' %}?v=2" as="image" fetchpriority="high">
+<style>
+body.page-staff-member {
+  min-height: 100vh;
+  background: #4a4a49 url('{% static "fond/fondBG.webp" %}?v=2') center top / cover fixed no-repeat !important;
+  color: #fff;
+}
+
+body.page-staff-member::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(0,0,0,0.06);
+  pointer-events: none;
+}
+
+body.page-staff-member #header {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+body.page-staff-member #header .header-search-row {
+  height: 66px !important;
+  min-height: 66px !important;
+  padding-top: 18px !important;
+  padding-bottom: 0 !important;
+  align-items: flex-start;
+}
+
+body.page-staff-member #header .optic-line {
+  width: calc(100% - 200px) !important;
+  margin: 0 100px;
+  background: rgba(255,255,255,0.58) !important;
+}
+
+body.page-staff-member .main-nav a.active {
+  color: #e69291 !important;
+}
+
+body.page-staff-member .header-section-name {
+  max-width: none !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+body.page-staff-member .header-search input {
+  width: 170px !important;
+  border: 0 !important;
+  color: rgba(255,255,255,0.95) !important;
+  text-align: left;
+  font-size: 16px !important;
+  font-style: italic;
+}
+
+body.page-staff-member .header-search input::placeholder {
+  color: rgba(255,255,255,0.95) !important;
+  opacity: 1;
+}
+
+.staff-member-path {
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(255,255,255,0.84);
+  text-transform: lowercase;
+}
+
+#main-content {
+  position: relative;
+  z-index: 2;
+}
+
+.staff-member-page {
+  min-height: calc(100vh - 151px);
+  padding: 78px 100px 31px;
+  display: flex;
+  flex-direction: column;
+}
+
+.staff-member-shell {
+  width: 100%;
+  max-width: 1508px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(360px, 585px) minmax(520px, 810px);
+  column-gap: 113px;
+  align-items: start;
+}
+
+.staff-member-left {
+  text-align: center;
+  padding-top: 2px;
+}
+
+.staff-member-name {
+  margin: 0;
+  color: #fff;
+  font-size: 44px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.58;
+  letter-spacing: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.staff-member-name span {
+  display: block;
+}
+
+.staff-member-life {
+  margin-top: 10px;
+  color: rgba(255,255,255,0.94);
+  font-size: 28px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.staff-member-fund-link {
+  display: inline-block;
+  margin-top: 23px;
+  color: rgba(255,255,255,0.94);
+  border-bottom: 1px solid rgba(255,255,255,0.82);
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.2;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.staff-member-fund-link:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+.staff-member-fund-link.is-disabled {
+  cursor: default;
+  opacity: 0.58;
+}
+
+.staff-member-fund-link.is-disabled:hover {
+  color: rgba(255,255,255,0.94);
+  border-color: rgba(255,255,255,0.82);
+}
+
+.staff-member-positions {
+  width: 100%;
+  max-width: 548px;
+  margin: 99px auto 0;
+  text-align: left;
+}
+
+.staff-member-position {
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+  margin-bottom: 21px;
+  color: rgba(255,255,255,0.96);
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.staff-member-position-period {
+  flex: 0 0 auto;
+  font-weight: 300;
+}
+
+.staff-member-position-title {
+  font-weight: 800;
+}
+
+.staff-member-bio {
+  padding-top: 18px;
+  color: rgba(255,255,255,0.94);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 2.02;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.20);
+}
+
+.staff-member-bio p {
+  margin: 0 0 17px;
+}
+
+.staff-member-bio p:last-child {
+  margin-bottom: 0;
+}
+
+.staff-member-rule {
+  width: 100%;
+  max-width: 1718px;
+  height: 1px;
+  margin: auto auto 0;
+  background: rgba(255,255,255,0.64);
+}
+
+footer#site-footer {
+  display: none !important;
+}
+
+@media (max-width: 1100px) {
+  .staff-member-page {
+    padding: 54px 40px 28px;
+  }
+
+  .staff-member-shell {
+    grid-template-columns: 1fr;
+    row-gap: 42px;
+  }
+
+  .staff-member-name {
+    font-size: 36px;
+  }
+
+  .staff-member-positions {
+    margin-top: 52px;
+  }
+
+  .staff-member-bio {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+}
+
+@media (max-width: 600px) {
+  .staff-member-page {
+    padding: 38px 20px 24px;
+  }
+
+  .staff-member-name {
+    font-size: 30px;
+  }
+
+  .staff-member-life {
+    font-size: 22px;
+  }
+
+  .staff-member-position {
+    flex-direction: column;
+    gap: 2px;
+    font-size: 14px;
+  }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="page-container">
-  <div class="item-detail-layout">
+<section class="staff-member-page">
+  <div class="staff-member-shell">
+    <div class="staff-member-left">
+      <h1 class="staff-member-name">
+        <span>{{ member.last_name }}</span>
+        <span>{{ member.first_name }}{% if member.patronymic %} {{ member.patronymic }}{% endif %}</span>
+      </h1>
 
-    <!-- LEFT: Photo -->
-    <div class="item-detail-image-col item-detail-image-col--portrait">
-      {% if member.photo %}
-        <img src="{{ member.photo.url }}" alt="{{ member.full_name }}" class="staff-detail-photo">
-      {% else %}
-        <div class="item-detail-photo-placeholder item-detail-photo-placeholder--portrait">Нет фото</div>
-      {% endif %}
-    </div>
-
-    <!-- RIGHT: Bio -->
-    <div class="item-detail-info-col white-text">
-      <span class="tag">Сотрудник</span>
-      <h1 class="item-detail-title">{{ member.full_name }}</h1>
-
-      {% if member.role or member.years_worked %}
-      <table class="item-fields-table">
-        {% if member.years_of_life %}<tr><th>Годы жизни</th><td>{{ member.years_of_life }}</td></tr>{% endif %}
-        {% if member.role %}<tr><th>Должность</th><td>{{ member.role }} {% if member.role_years %}({{ member.role_years }}){% endif %}</td></tr>{% endif %}
-        {% if member.role2 %}<tr><th>Должность 2</th><td>{{ member.role2 }} {% if member.role2_years %}({{ member.role2_years }}){% endif %}</td></tr>{% endif %}
-        {% if member.role3 %}<tr><th>Должность 3</th><td>{{ member.role3 }} {% if member.role3_years %}({{ member.role3_years }}){% endif %}</td></tr>{% endif %}
-        {% if member.years_worked %}<tr><th>Общий стаж</th><td>{{ member.years_worked }}</td></tr>{% endif %}
-        {% if member.personal_fund %}
-        <tr>
-          <th>Личный фонд</th>
-          <td><a href="{{ member.personal_fund.get_absolute_url }}" class="table-link">{{ member.personal_fund.code }} — {{ member.personal_fund.name|truncatewords:8 }}</a></td>
-        </tr>
-        {% endif %}
-      </table>
-      {% endif %}
-
-      {% if member.biography %}
-      <div class="staff-biography">
-        <h2 class="bio-heading">Биография</h2>
-        <div class="bio-text">{{ member.biography|linebreaks }}</div>
-      </div>
+      {% if member.years_of_life %}
+        <div class="staff-member-life">род. {{ member.years_of_life }}</div>
       {% endif %}
 
       {% if member.personal_fund %}
-      <a href="{{ member.personal_fund.get_absolute_url }}" class="btn-secondary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Перейти к личному фонду
-      </a>
+        <a href="{{ member.personal_fund.get_absolute_url }}" class="staff-member-fund-link">личный фонд</a>
+      {% else %}
+        <span class="staff-member-fund-link is-disabled">личный фонд</span>
+      {% endif %}
+
+      {% if member.positions %}
+        <div class="staff-member-positions">
+          {% for position in member.positions %}
+            <div class="staff-member-position">
+              {% if position.period %}<span class="staff-member-position-period">{{ position.period }} -</span>{% endif %}
+              <span class="staff-member-position-title">{{ position.title }}{% if position.department %} {{ position.department }}{% endif %}</span>
+            </div>
+          {% endfor %}
+        </div>
       {% endif %}
     </div>
+
+    <article class="staff-member-bio">
+      {% if member.biography %}
+        {{ member.biography|linebreaks }}
+      {% endif %}
+    </article>
   </div>
 
-  <!-- RELATED FOND ITEMS -->
-  {% if related_items %}
-  <div class="related-section">
-    <div class="section-header">
-      <h2>Предметы, связанные с биографией</h2>
-      <a href="{% url 'fond:catalog' %}" class="section-more">В каталог →</a>
-    </div>
-    <div class="catalog-grid">
-      {% for item in related_items %}
-      <a href="{{ item.get_absolute_url }}" class="catalog-card">
-        <div class="catalog-card-img">
-          {% if item.image %}<img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">{% else %}<span>Нет фото</span>{% endif %}
-          <span class="item-type-badge">{{ item.get_item_type_display }}</span>
-        </div>
-        <div class="catalog-card-info">
-          <h4>{{ item.title|truncatewords:10 }}</h4>
-          <p>{{ item.creation_date_text|default:"—" }}</p>
-        </div>
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-</div>
+  <div class="staff-member-rule"></div>
+</section>
 {% endblock %}

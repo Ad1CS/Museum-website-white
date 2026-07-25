@@ -1,162 +1,120 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block body_class %}class="page-fond-dark"{% endblock %}
+{% block body_class %}class="page-fond-dark{% if personal_owner %} page-self-fond{% endif %}"{% endblock %}
+{% block section_name %}
+  {% if personal_owner %}
+    <span>отдел кадров &gt;&gt;&gt; личная карточка &gt;&gt;&gt; личный фонд</span>
+  {% else %}
+    <span>фонд &gt;&gt;&gt; {{ fund.code }}</span>
+  {% endif %}
+{% endblock %}
+{% block title %}{{ fund.code }} — {{ fund.name }}{% endblock %}
 
-{% block section_name %}<a href="{% url 'fond:funds_list' %}">фонды</a> >>> {{ fund.code }} >>>{% endblock %}
-{% block title %}{{ fund.code }} — Музей{% endblock %}
+{% block header_search %}
+<form class="header-search" action="{% url 'fond:funds_list' %}" method="get" role="search">
+  <input type="text" name="q" placeholder="поиск &gt;&gt;&gt;" aria-label="Поиск по фондам">
+</form>
+{% endblock %}
 
 {% block content %}
-<style>
-  /* EMERGENCY INLINE CSS - FORCES 1:1 DESIGN */
-  
-  body.page-fond-dark {
-    background: #000 url('{% static "fond/fondBG.jpg" %}') no-repeat center top fixed !important;
-    background-size: cover !important;
-    color: #ffffff !important;
-    margin: 0; padding: 0;
-    overflow: hidden;
-  }
-  
-  body.page-fond-dark::before {
-    content: ''; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5); z-index: -1;
-  }
+{% if personal_owner %}
+<section class="self-fond-page">
+  <h1 class="self-fond-title">
+    {{ fund.code }} / Личный фонд {{ personal_owner.last_name }} {{ personal_owner.first_name|first }}.{% if personal_owner.patronymic %}{{ personal_owner.patronymic|first }}.{% endif %}
+  </h1>
 
-  /* Force ALL text in body to be white */
-  body.page-fond-dark, 
-  body.page-fond-dark *:not(.main-nav a) {
-    color: #ffffff !important;
-    font-family: 'TT Hoves', sans-serif !important;
-  }
-  
-  /* Restore navbar hover */
-  .main-nav a:hover, .main-nav a.active { color:#e69291 !important; }
-
-  .page-margins-1-1 {
-    max-width: 1700px;
-    margin: 0 auto;
-    padding: 0 100px;
-  }
-
-  /* Large Format Header */
-  .main-title-1-1 {
-    font-size: 80px;
-    font-weight: 800;
-    text-transform: lowercase;
-    letter-spacing: -0.02em;
-    margin: 60px 0 100px 0;
-    line-height: 0.9;
-  }
-
-  .viewport-1-1 {
-    height: calc(100vh - 300px);
-    overflow-y: auto;
-    padding-bottom: 250px;
-    scrollbar-width: none;
-  }
-  .viewport-1-1::-webkit-scrollbar { display: none; }
-
-  /* Info Plate */
-  .fund-plate-1-1 {
-    padding: 80px;
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(35px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 120px;
-  }
-  .fund-code-label-1-1 {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.4em;
-    opacity: 0.3;
-    font-weight: 900;
-    margin-bottom: 30px;
-    display: block;
-  }
-  .fund-name-master-1-1 { font-size: 44px; font-weight: 800; line-height: 1.1; text-transform: lowercase; margin-bottom: 30px; }
-  .fund-desc-master-1-1 { font-size: 18px; font-weight: 300; opacity: 0.6; line-height: 1.8; max-width: 900px; }
-
-  /* Inventory Section */
-  .inventory-wrap-1-1 { margin-bottom: 100px; }
-  .inventory-title-1-1 {
-    font-size: 12px; text-transform: uppercase; font-weight: 900; letter-spacing: 0.4em;
-    opacity: 0.3; margin-bottom: 50px; display: flex; align-items: center; gap: 30px;
-  }
-  .inventory-title-1-1::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
-
-  .cases-stack-1-1 { display: flex; flex-direction: column; gap: 25px; }
-
-  .case-row-1-1 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 40px 60px;
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.4s ease;
-  }
-  .case-row-1-1:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.3);
-    transform: translateX(15px);
-  }
-
-  .case-num-1-1 { font-size: 36px; font-weight: 900; width: 100px; opacity: 0.1; flex-shrink: 0; }
-  .case-info-1-1 { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-  .case-title-1-1 { font-size: 22px; font-weight: 800; text-transform: lowercase; }
-  .case-meta-1-1 { font-size: 13px; opacity: 0.3; font-weight: 300; }
-  .case-arrow-1-1 { font-size: 40px; opacity: 0.1; transition: 0.3s; }
-  .case-row-1-1:hover .case-arrow-1-1 { opacity: 1; transform: translateX(10px); }
-
-  @media (max-width: 1000px) {
-    .page-margins-1-1 { padding: 40px; }
-    .main-title-1-1 { font-size: 40px; }
-    .fund-plate-1-1 { padding: 40px; }
-    .case-row-1-1 { padding: 30px; }
-    .case-num-1-1 { width: 60px; font-size: 24px; }
-  }
-</style>
-
-<div class="page-margins-1-1">
-  <h1 class="main-title-1-1">{{ fund.code }}</h1>
-
-  <div class="viewport-1-1">
-    
-    <!-- Fund Info -->
-    <div class="fund-plate-1-1">
-      <span class="fund-code-label-1-1">архивный фонд</span>
-      <h2 class="fund-name-master-1-1">{{ fund.name }}</h2>
-      <div class="fund-desc-master-1-1">
-        {% if fund.dates_display != '—' %}<p style="margin-bottom: 20px; font-weight: 700;">{{ fund.dates_display }}</p>{% endif %}
-        {{ fund.description|default:"описание фонда в процессе подготовки." }}
+  <div class="self-fond-list" aria-label="Личный фонд сотрудника">
+    {% for item in items %}
+    <a href="{{ item.get_absolute_url }}" class="self-fond-row">
+      <div class="self-fond-row__left">
+        <div class="self-fond-row__code">{{ item.kp_number|default:item.inventory_number|default:"П1"|truncatechars:8 }}</div>
+        <div class="self-fond-row__year">{{ item.year|default:item.display_year }}</div>
       </div>
-    </div>
+      <div class="self-fond-row__body">
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.source|default:item.fund.accession_number|default:item.get_item_type_display }}</p>
+      </div>
+      <div class="self-fond-row__meta">
+        <span>{{ item.pages|default:"—" }} с.</span>
+        <span>{{ item.acquisition_date|date:"d.m.y"|default:"—" }}</span>
+      </div>
+    </a>
+    {% empty %}
+    <div class="self-fond-empty">Материалы личного фонда пока не добавлены.</div>
+    {% endfor %}
+  </div>
 
-    <!-- Inventories & Cases -->
-    {% for inventory in inventories %}
-    <div class="inventory-wrap-1-1">
-      <h3 class="inventory-title-1-1">опись № {{ inventory.number }} {% if inventory.name %}• {{ inventory.name|lower }}{% endif %}</h3>
-      <div class="cases-stack-1-1">
-        {% for case in inventory.cases.all %}
-        <a href="{{ case.get_absolute_url }}" class="case-row-1-1">
-          <div class="case-num-1-1">#{{ case.number }}</div>
-          <div class="case-info-1-1">
-            <span class="case-title-1-1">{{ case.title }}</span>
-            <div class="case-meta-1-1">
-              {% if case.date_start %}{{ case.date_start|date:"Y" }}{% if case.date_end %} — {{ case.date_end|date:"Y" }}{% endif %} • {% endif %}
-              листов: {{ case.sheets_count|default:"—" }}
-              {% if case.digitized %} • <span style="color:#ff4d4d !important; font-weight:900;">● оцифровано</span>{% endif %}
+  <div class="self-fond-rule"></div>
+</section>
+{% else %}
+<section class="fond-detail-page">
+  <div class="fond-item-type">{{ fund.get_category_display|lower }}</div>
+  <h1 class="fond-detail-title">{{ fund.code }} / {{ fund.name }}</h1>
+
+  <div class="fond-detail-layout">
+    <article>
+      {% if fund.description %}
+        <p class="fond-item-description">{{ fund.description }}</p>
+      {% endif %}
+
+      <table class="fond-meta-table">
+        <tr><th>Период</th><td>{{ fund.get_period_display|default:fund.dates_display }}</td></tr>
+        <tr><th>Крайние даты</th><td>{{ fund.dates_display }}</td></tr>
+        <tr><th>Номер книги поступлений</th><td>{{ fund.accession_number|default:"—" }}</td></tr>
+        <tr><th>Страницы</th><td>{{ fund.display_pages_count|default:"—" }}</td></tr>
+        <tr><th>Дата поступления</th><td>{{ fund.admission_date|date:"d.m.Y"|default:"—" }}</td></tr>
+      </table>
+    </article>
+
+    <aside>
+      {% if inventories %}
+      <h2 class="fond-section-kicker">описи</h2>
+      <div class="fond-related-stack" style="margin-top:0;">
+        {% for inventory in inventories %}
+          {% for case in inventory.cases.all %}
+          <a href="{{ case.get_absolute_url }}" class="archive-plate">
+            <div class="archive-plate__left">
+              <div class="archive-plate__code">Д{{ case.number }}</div>
+              <div class="archive-plate__years">{% if case.date_start %}{{ case.date_start|date:"Y" }}{% if case.date_end %}–{{ case.date_end|date:"Y" }}{% endif %}{% endif %}</div>
             </div>
-          </div>
-          <div class="case-arrow-1-1">→</div>
-        </a>
+            <div class="archive-plate__body">
+              <h3 class="archive-plate__title">{{ case.title }}</h3>
+              <p class="archive-plate__desc">опись № {{ inventory.number }}{% if inventory.name %}: {{ inventory.name }}{% endif %}</p>
+            </div>
+            <div class="archive-plate__stats">
+              <span>листов: {{ case.sheets_count|default:"—" }}</span>
+              <span>{% if case.digitized %}оцифровано{% else %}в процессе{% endif %}</span>
+            </div>
+          </a>
+          {% endfor %}
         {% endfor %}
       </div>
-    </div>
-    {% endfor %}
-
+      {% endif %}
+    </aside>
   </div>
-</div>
+
+  {% if items %}
+  <div class="fond-related-stack">
+    <h2 class="fond-section-kicker">предметы фонда</h2>
+    {% for item in items %}
+    <a href="{{ item.get_absolute_url }}" class="archive-plate">
+      <div class="archive-plate__left">
+        <div class="archive-plate__code">{{ item.inventory_number|default:item.kp_number|default:"К" }}</div>
+        <div class="archive-plate__years">{{ item.display_year }}</div>
+      </div>
+      <div class="archive-plate__body">
+        <h3 class="archive-plate__title">{{ item.title }}</h3>
+        <p class="archive-plate__desc">{{ item.description|default:item.get_item_type_display|truncatechars:120 }}</p>
+      </div>
+      <div class="archive-plate__stats">
+        <span>{{ item.get_item_type_display|lower }}</span>
+        <span>{{ fund.code }}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}
 {% endblock %}

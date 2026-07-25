@@ -6,12 +6,12 @@
 <title>{% block title %}Музей трудовой и воинской славы{% endblock %} — Ленинградский мясокомбинат им. С.М. Кирова</title>
 <link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
 <link rel="icon" type="image/png" href="{% static "img/favicon.png" %}">
-<link rel="stylesheet" href="{% static "css/museum.css" %}?v=1.52">
-<link rel="stylesheet" href="{% static "css/header-fix.css" %}?v=1.4">
+<link rel="stylesheet" href="{% static "css/museum.css" %}?v=1.69">
 <link rel="preload" href="{% static "fonts/TTHoves-Regular.woff2" %}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{% static "fonts/TTHoves-Bold.woff2" %}" as="font" type="font/woff2" crossorigin>
 <meta name="theme-color" content="#C8C4BB">
 {% block extra_head %}{% endblock %}
+<link rel="stylesheet" href="{% static "css/header-fix.css" %}?v=1.9">
 </head>
 <body {% block body_class %}{% endblock %}>
 {% block hero_area_start %}{% endblock %}
@@ -35,10 +35,10 @@
     <span class="header-section-name">{% block section_name %}{% endblock %}</span>
     {% block header_search %}
     <form class="header-search" action="{% url "fond:catalog" %}" method="get">
-      <input type="text" name="q" placeholder="поиск по музею..." value="{{ request.GET.q|default:"" }}">
+      <input type="text" name="q" placeholder="поиск &gt;&gt;&gt;" value="{{ request.GET.q|default:"" }}">
     </form>
     {% endblock %}
-  </div><div class="optic-line" style="height: 1px; background: rgba(255,255,255,0.15); width: 100%;"></div></header>
+  </div><div class="optic-line"></div></header>
 
 {% block hero_area_end %}{% endblock %}
 

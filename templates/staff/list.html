@@ -5,17 +5,12 @@
 {% block title %}Отдел кадров{% endblock %}
 {% block body_class %}class="page-staff-list"{% endblock %}
 {% block extra_head %}
-<link rel="preload" href="{% static 'img/staffBG.jpg' %}" as="image" fetchpriority="high">
-<style>
-  #header {
-    padding-top: 46px !important;
-  }
-</style>
+<link rel="preload" href="{% static 'img/staffBG.webp' %}?v=2" as="image" fetchpriority="high">
 {% endblock %}
 
 {% block header_search %}
 <form class="header-search" method="get" role="search">
-  <input type="text" name="q" placeholder="поиск по музею..." value="{{ q }}" aria-label="Поиск по сотрудникам">
+  <input type="text" name="q" placeholder="поиск &gt;&gt;&gt;" value="{{ q }}" aria-label="Поиск по сотрудникам">
   {% if selected_letter %}<input type="hidden" name="letter" value="{{ selected_letter }}">{% endif %}
 </form>
 {% endblock %}

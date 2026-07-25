@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
-{% block section_name %}<a href="{% url 'about:page' %}">о проекте</a> >>>{% endblock %}
+{% block section_name %}<span>о проекте >>></span>{% endblock %}
 {% block title %}О проекте{% endblock %}
 
 {% block extra_head %}
@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block hero_area_start %}
-<div class="page-dark-bg" style="background-image:url('{% static 'img/about_bg.jpg' %}')">
+<div class="page-dark-bg" style="background-image:url('{% static 'img/about_bg.webp' %}?v=2')">
 <div class="page-dark-bg__overlay"></div>
 </div>
 {% endblock %}

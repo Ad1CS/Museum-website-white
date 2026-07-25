@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Fund, Inventory, ArchiveCase, FondItem, FondItemMedia
+from .models import Fund, Inventory, ArchiveCase, FondItem, FondItemDetailText, FondItemMedia
+from apps.gallery.models import Media as GalleryMedia
 
 
 # ─────────────────────────── FUND ────────────────────────────────────────────
@@ -14,11 +15,11 @@ class InventoryInline(admin.TabularInline):
 
 @admin.register(Fund)
 class FundAdmin(admin.ModelAdmin):
-    list_display  = ['code', 'name', 'category', 'date_start', 'date_end', 'accession_number', 'pages_count', 'item_count']
-    list_filter   = ['category']
+    list_display  = ['code', 'name', 'category', 'period', 'date_start', 'date_end', 'accession_number', 'pages_count', 'item_count']
+    list_filter   = ['category', 'period']
     search_fields = ['code', 'name', 'description', 'accession_number']
     inlines       = [InventoryInline]
-    fields        = ['category', 'code', 'name', 'description', 'date_start', 'date_end', 'accession_number', 'pages_count', 'admission_date']
+    fields        = ['category', 'period', 'code', 'name', 'description', 'date_start', 'date_end', 'accession_number', 'pages_count', 'admission_date']
 
     def item_count(self, obj):
         return obj.items.count()
@@ -62,16 +63,43 @@ class FondItemMediaInline(admin.TabularInline):
     fields = ['image', 'description', 'order']
 
 
+class FondItemDetailTextInline(admin.TabularInline):
+    model = FondItemDetailText
+    extra = 0
+    fields = ['order', 'label', 'value', 'visible']
+    verbose_name = 'Текст на странице'
+    verbose_name_plural = 'Текст на странице предмета'
+
+
+class GalleryMediaInline(admin.StackedInline):
+    model = GalleryMedia
+    fk_name = 'fond_item'
+    extra = 0
+    fields = ['thumb_preview', 'album', 'image', 'caption', 'date_text', 'photographer', 'order', 'published']
+    readonly_fields = ['thumb_preview']
+    raw_id_fields = ['album']
+    verbose_name = 'Фото альбома'
+    verbose_name_plural = 'Альбомные фото предмета (как в Галерее)'
+
+    def thumb_preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html('<img src="{}" style="max-width:180px;max-height:120px;object-fit:contain;" />', obj.image.url)
+        return '—'
+    thumb_preview.short_description = 'Превью'
+
+
 @admin.register(FondItem)
 class FondItemAdmin(admin.ModelAdmin):
-    list_display  = ['thumbnail', 'title', 'item_type', 'period', 'kp_number',
+    list_display  = ['thumbnail', 'title', 'item_type', 'period', 'display_layout', 'kp_number',
                      'fund', 'gallery_photos_count', 'bulk_upload_link', 'staff_count', 'published']
     list_display_links = ['thumbnail', 'title']
-    list_filter   = ['item_type', 'period', 'published', 'fund']
+    list_filter   = ['item_type', 'period', 'display_layout', 'published', 'fund']
     list_editable = ['published']
-    search_fields = ['title', 'description', 'kp_number', 'inventory_number', 'goskatalog_number']
+    search_fields = ['title', 'description', 'detail_path_text', 'register_text',
+                     'kp_number', 'inventory_number', 'goskatalog_number',
+                     'author', 'source', 'location']
     filter_horizontal = ['linked_staff']
-    inlines = [FondItemMediaInline]
+    inlines = [FondItemDetailTextInline, GalleryMediaInline]
     readonly_fields   = ['created_at', 'updated_at', 'image_preview', 'video_preview',
                          'gallery_photos_links', 'staff_links_display']
     save_on_top = True
@@ -99,20 +127,27 @@ class FondItemAdmin(admin.ModelAdmin):
         return format_html(
             '<a href="{}" style="background:#417690;color:white;padding:4px 10px;'
             'border-radius:3px;font-size:12px;text-decoration:none;white-space:nowrap;">'
-            '📷 Загрузить фото</a>', url)
+            'Загрузить фото</a>', url)
     bulk_upload_link.short_description = 'Массовая загрузка'
 
     fieldsets = (
         ('Основное', {
-            'fields': ('title', 'description', 'item_type', 'period', 'published'),
+            'fields': ('title', 'description', 'item_type', 'period', 'display_layout', 'published'),
         }),
         ('Учётные номера', {
-            'fields': ('kp_number', 'inventory_number', 'goskatalog_number'),
+            'fields': ('kp_number', 'inventory_number', 'goskatalog_number', 'acquisition_date'),
             'classes': ('collapse',),
         }),
-        ('Физические характеристики', {
-            'fields': ('size', 'material', 'creation_place', 'creation_date_text'),
-            'classes': ('collapse',),
+        ('Метаданные макета', {
+            'fields': ('year', 'author', 'source', 'location', 'pages', 'size', 'material',
+                       'creation_place', 'creation_date_text', 'metadata_template'),
+        }),
+        ('Текст страницы предмета', {
+            'fields': ('detail_path_text', 'register_text', 'empty_media_text'),
+            'description': (
+                'Подробные строки справа редактируются ниже в блоке '
+                '«Текст на странице предмета»: подпись, текст, порядок и видимость.'
+            ),
         }),
         ('Хранение', {
             'fields': ('fund', 'archive_case'),
@@ -133,6 +168,10 @@ class FondItemAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
         }),
     )
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        obj.create_default_detail_text_rows()
 
     # ── Thumbnails ──────────────────────────────────────────────────────────
 
@@ -211,7 +250,7 @@ class FondItemAdmin(admin.ModelAdmin):
                 '«Предмет фонда».</span>')
         rows = []
         for p in photos[:12]:
-            url   = f'/admin/gallery/photo/{p.pk}/change/'
+            url   = f'/admin/gallery/media/{p.pk}/change/'
             label = (p.caption or f'Фото #{p.pk}')[:55]
             rows.append(f'<a href="{url}" target="_blank" style="color:#e74c3c">↗ {label}</a>')
         if photos.count() > 12:

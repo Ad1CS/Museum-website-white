@@ -1,0 +1,91 @@
+<div class="media-lightbox-modal" id="museumLightbox" aria-hidden="true">
+  <div class="media-lightbox-stage-wrap">
+    <button class="media-lightbox-nav media-lightbox-prev" type="button" onclick="changeMuseumLightboxPhoto(-1)" aria-label="Предыдущее изображение">&lt;</button>
+    <div class="media-lightbox-stage">
+      <img id="museumLightboxImg" src="" alt="">
+      <div id="museumLightboxVideo"></div>
+    </div>
+    <button class="media-lightbox-nav media-lightbox-next" type="button" onclick="changeMuseumLightboxPhoto(1)" aria-label="Следующее изображение">&gt;</button>
+  </div>
+  <div class="media-lightbox-info">
+    <div id="museumLightboxCaption" class="media-lightbox-caption"></div>
+    <div id="museumLightboxMeta" class="media-lightbox-meta"></div>
+    <div id="museumLightboxFondLink"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const mediaItems = window.museumMediaItems || [];
+  let currentIdx = 0;
+
+  function modal() {
+    return document.getElementById('museumLightbox');
+  }
+
+  function updateLightbox() {
+    if (!mediaItems.length) return;
+    const item = mediaItems[currentIdx];
+    const imgEl = document.getElementById('museumLightboxImg');
+    const videoEl = document.getElementById('museumLightboxVideo');
+    const captionEl = document.getElementById('museumLightboxCaption');
+    const metaEl = document.getElementById('museumLightboxMeta');
+    const fondEl = document.getElementById('museumLightboxFondLink');
+
+    imgEl.style.display = 'none';
+    imgEl.removeAttribute('src');
+    videoEl.innerHTML = '';
+
+    if (item.type === 'video' && item.videoEmbed) {
+      videoEl.innerHTML = `<iframe src="${item.videoEmbed}" width="900" height="506" frameborder="0" allowfullscreen></iframe>`;
+    } else if (item.src) {
+      imgEl.src = item.src;
+      imgEl.alt = item.caption || '';
+      imgEl.style.display = 'block';
+    }
+
+    captionEl.textContent = item.caption || '';
+    const meta = [];
+    if (item.year) meta.push(`год: ${item.year}`);
+    if (item.photographer) meta.push(`автор: ${item.photographer}`);
+    metaEl.innerHTML = meta.join('<br>');
+    fondEl.innerHTML = item.fondUrl ? `<a href="${item.fondUrl}" class="media-lightbox-fond-link">перейти к предмету в фонде &rarr;</a>` : '';
+
+    const navDisplay = mediaItems.length > 1 ? '' : 'none';
+    document.querySelector('.media-lightbox-prev').style.display = navDisplay;
+    document.querySelector('.media-lightbox-next').style.display = navDisplay;
+  }
+
+  window.openMuseumLightbox = function(idx) {
+    if (!mediaItems.length) return;
+    currentIdx = idx;
+    updateLightbox();
+    modal().classList.add('open');
+    modal().setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeMuseumLightbox = function() {
+    modal().classList.remove('open');
+    modal().setAttribute('aria-hidden', 'true');
+    document.getElementById('museumLightboxVideo').innerHTML = '';
+    document.body.style.overflow = '';
+  };
+
+  window.changeMuseumLightboxPhoto = function(dir) {
+    currentIdx = (currentIdx + dir + mediaItems.length) % mediaItems.length;
+    updateLightbox();
+  };
+
+  document.addEventListener('keydown', function(e) {
+    if (!modal().classList.contains('open')) return;
+    if (e.key === 'ArrowLeft') changeMuseumLightboxPhoto(-1);
+    if (e.key === 'ArrowRight') changeMuseumLightboxPhoto(1);
+    if (e.key === 'Escape') closeMuseumLightbox();
+  });
+
+  modal().addEventListener('click', function(e) {
+    if (e.target === this) closeMuseumLightbox();
+  });
+})();
+</script>

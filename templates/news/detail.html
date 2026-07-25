@@ -1,5 +1,5 @@
 {% extends "base/base.html" %}
-{% block section_name %}<a href="{% url 'news:list' %}">новости</a> >>> {{ post.title|truncatewords:6 }} >>>{% endblock %}
+{% block section_name %}<span>новости >>> {{ post.title|truncatewords:6 }} >>></span>{% endblock %}
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}

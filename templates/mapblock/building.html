@@ -1,8 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block section_name %}<span class="building-breadcrumb">интерактивная карта&gt;&gt;&gt; здание</span>{% endblock %}
-{% block header_search %}{% endblock %}
+{% block section_name %}<span class="building-breadcrumb">интерактивная карта &gt;&gt;&gt; здание</span>{% endblock %}
 {% block title %}{{ building.name }}{% endblock %}
 
 {% block extra_head %}
@@ -224,7 +223,7 @@ footer#site-footer {
 {% endblock %}
 
 {% block hero_area_start %}
-<div class="page-dark-bg building-bg" style="background-image:url('{% if building.page_background %}{{ building.page_background.url }}{% else %}{% static 'img/buildingBG.jpg' %}{% endif %}')">
+<div class="page-dark-bg building-bg" style="background-image:url('{% if building.page_background %}{{ building.page_background.url }}{% else %}{% static 'img/buildingBG.webp' %}?v=2{% endif %}')">
   <div class="page-dark-bg__overlay"></div>
 </div>
 {% endblock %}
@@ -247,7 +246,7 @@ footer#site-footer {
             {% if first_photo and first_photo.image %}
               <img src="{{ first_photo.image.url }}" alt="{{ building.page_title|default:building.name }}" class="building-photo" loading="lazy">
             {% else %}
-              <img src="{% static 'img/buildingPhotoFallback.jpg' %}" alt="{{ building.page_title|default:building.name }}" class="building-photo" loading="lazy">
+              <img src="{% static 'img/buildingPhotoFallback.webp' %}?v=2" alt="{{ building.page_title|default:building.name }}" class="building-photo" loading="lazy">
             {% endif %}
           {% endwith %}
         {% endif %}

@@ -1,11 +1,13 @@
 {% extends "base/base.html" %}
 {% load static l10n %}
 
+{% block body_class %}class="page-map"{% endblock %}
+
 {% block section_name %}
 <div class="map-path">
-  <a href="{% url 'home' %}">главная</a>
+  <span>главная</span>
   <span class="sep">>>></span>
-  <a href="{% url 'mapblock:map' %}">интерактивная карта</a>
+  <span>интерактивная карта</span>
   <span id="breadcrumb-building-sep" class="sep" style="display:none">>>></span>
   <span id="breadcrumb-building" class="current-item" style="display:none"></span>
 </div>
@@ -16,7 +18,7 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<link rel="preload" as="image" href="{% static 'img/newmap2002.jpg' %}">
+<link rel="preload" as="image" href="{% static 'img/newmap2002.webp' %}">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 /* Fullscreen background map layout */
@@ -26,19 +28,40 @@
 }
 #header {
   position: absolute; top: 0; left: 0; right: 0; z-index: 5000;
+  min-height: 168px;
   background: transparent !important;
 }
-.header-sub-row { border-bottom: 1px solid rgba(255,255,255,0.15) !important; }
-
-/* Path styling inside header-sub-row */
-.map-path {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 16px; letter-spacing: 0.05em; text-transform: lowercase;
+#header .header-search-row {
+  height: 64px !important;
+  min-height: 64px !important;
+  padding: 20px 100px 0 !important;
+  align-items: flex-start;
 }
-.map-path a, .map-path span { color: rgba(255,255,255,0.6); transition: color 0.2s; }
+#header .header-section-name {
+  max-width: none;
+  opacity: 1;
+  overflow: visible;
+  text-overflow: clip;
+}
+#header .optic-line {
+  position: absolute;
+  top: 104px;
+  left: 100px;
+  right: 100px;
+  width: auto !important;
+  background: rgba(255,255,255,0.58) !important;
+}
+
+/* Path styling aligned with the other dark detail pages */
+.map-path {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 16px; font-style: italic; font-weight: 300;
+  line-height: 1; letter-spacing: 0; text-transform: lowercase;
+  color: rgba(255,255,255,0.84);
+}
+.map-path a, .map-path span { color: inherit; transition: color 0.2s; }
 .map-path a:hover { color: #fff; }
-.map-path .sep { opacity: 0.4; font-size: 14px; }
-.map-path .current-item { color: #E69291 !important; font-weight: 700; }
+.map-path .current-item { font-weight: 300; }
 
 .header-search input {
   font-size: 16px !important;
@@ -227,12 +250,57 @@ footer#site-footer { display: none !important; }
   border: 1px solid rgba(255,255,255,0.1) !important;
 }
 
+@media(max-width:1000px) {
+  #header {
+    min-height: 198px;
+  }
+  #header .optic-line {
+    top: 140px;
+    left: 30px;
+    right: 30px;
+  }
+  #header .header-search-row {
+    height: 58px !important;
+    min-height: 58px !important;
+    padding: 16px 30px 0 !important;
+  }
+  .map-path {
+    font-size: 14px;
+  }
+  .header-search input {
+    width: 200px !important;
+  }
+}
+
 @media(max-width:600px) {
   /* Header adjustments */
-  .map-path { font-size: 11px; gap: 5px; }
-  .map-path .sep { font-size: 9px; }
-  .header-search input { font-size: 11px !important; width: 120px !important; }
-  .header-sub-row { padding: 10px 20px; }
+  #header {
+    min-height: 194px;
+  }
+  #header .optic-line {
+    left: 14px;
+    right: 14px;
+  }
+  #header .header-search-row {
+    height: 54px !important;
+    min-height: 54px !important;
+    padding: 13px 14px 0 !important;
+    gap: 10px;
+  }
+  #header .header-section-name {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .map-path {
+    max-width: 100%;
+    font-size: 11px;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .header-search {
+    flex: 0 0 auto;
+  }
+  .header-search input { font-size: 11px !important; width: 100px !important; }
 
   /* Popup adjustments - centered at bottom */
   .building-popup-panel {
@@ -394,14 +462,14 @@ footer#site-footer { display: none !important; }
   // Map layers data
   const mapLayers = {
     "2002": {
-      url: '{% static "img/newmap2002.jpg" %}',
-      fallback: '{% static "img/newmap2002.jpg" %}'
+      url: '{% static "img/newmap2002.webp" %}',
+      fallback: '{% static "img/newmap2002.webp" %}'
     },
     "1966": {
-      url: '{% static "img/newmap1966.jpg" %}'
+      url: '{% static "img/newmap1966.webp" %}'
     },
     "1943": {
-      url: '{% static "img/newmap1943.jpg" %}'
+      url: '{% static "img/newmap1943.webp" %}'
     }
   };
 

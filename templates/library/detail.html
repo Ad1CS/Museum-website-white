@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
-{% block section_name %}<a href="{% url 'library:home' %}">библиотека</a> >>> {{ item.title|truncatewords:6 }} >>>{% endblock %}
+{% block section_name %}<span>библиотека >>> {{ item.title|truncatewords:6 }} >>></span>{% endblock %}
 {% block title %}{{ item.title }}{% endblock %}
 
 {% block content %}
