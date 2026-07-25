@@ -68,6 +68,20 @@ class Building(models.Model):
     slug = models.SlugField('Slug', unique=True)
     name = models.CharField('Название', max_length=300)
     main_image = models.ImageField('Главное фото', upload_to='map/buildings/', blank=True, null=True)
+    page_image = models.ImageField(
+        'Фото на странице здания',
+        upload_to='map/buildings/pages/',
+        blank=True,
+        null=True,
+        help_text='Основное фото для публичной страницы здания. Если не указано, используется главное фото.'
+    )
+    page_background = models.ImageField(
+        'Фон страницы здания',
+        upload_to='map/buildings/backgrounds/',
+        blank=True,
+        null=True,
+        help_text='Если не указано, используется стандартный buildingBG.jpg.'
+    )
 
     # Automated cropping for the map popup (16:9 ratio)
     main_image_cropped = ImageSpecField(source='main_image',
@@ -76,6 +90,24 @@ class Building(models.Model):
                                       options={'quality': 90})
 
     built_years = models.CharField('Год постройки', max_length=100, blank=True)
+    page_title = models.CharField(
+        'Заголовок на странице',
+        max_length=300,
+        blank=True,
+        help_text='Например: «Лайв-стак». Если пусто, используется название здания.'
+    )
+    page_subtitle = models.CharField(
+        'Подзаголовок на странице',
+        max_length=500,
+        blank=True,
+        help_text='Например: (корпус предубойного содержания скота).'
+    )
+    page_status = models.CharField('Статус на странице', max_length=100, blank=True, default='ОКН')
+    page_description = models.TextField(
+        'Описание на странице здания',
+        blank=True,
+        help_text='Если пусто, используется основное описание здания.'
+    )
     manual_crop_data = models.CharField('Данные обрезки', max_length=500, blank=True, default='')
     description = models.TextField('Описание')
     # Map position — geographic coordinates

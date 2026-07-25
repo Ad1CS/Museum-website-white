@@ -16,7 +16,7 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<link rel="preload" as="image" href="{% static 'img/map2002.webp' %}">
+<link rel="preload" as="image" href="{% static 'img/newmap2002.jpg' %}">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 /* Fullscreen background map layout */
@@ -193,8 +193,19 @@ footer#site-footer { display: none !important; }
   color: #fff; font-size: 24px; font-weight: 800; text-transform: lowercase;
   cursor: pointer; transition: color 0.2s; opacity: 0.85;
   letter-spacing: 0.02em; text-align: center; line-height: 1.1;
+  white-space: nowrap;
+  position: relative;
 }
 .map-nav-item:hover, .map-nav-item.active { color: #E69291; opacity: 1; }
+.map-nav-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 4px;
+  background: #fff;
+}
 
 /* Custom Map Controls */
 .leaflet-control-zoom { border: none !important; margin-top: 180px !important; margin-left: 30px !important; }
@@ -270,10 +281,10 @@ footer#site-footer { display: none !important; }
 
 
     <!-- Bottom Map Navigation -->    <div class="map-bottom-nav">
-      <div class="map-nav-item active" data-year="2002">спутниковый<br>снимок 2002</div>
-      <div class="map-nav-item" data-year="1966">спутниковый<br>снимок 1966</div>
-      <div class="map-nav-item" data-year="1943">аэрофотосъемка<br>люфтваффе 1943</div>
-      <a href="{% url 'mapblock:plans' %}" class="map-nav-item">карты и планы<br>предприятия</a>
+      <div class="map-nav-item active" data-year="2002">2002</div>
+      <div class="map-nav-item" data-year="1966">1966</div>
+      <div class="map-nav-item" data-year="1943">1943</div>
+      <a href="{% url 'mapblock:plans' %}" class="map-nav-item">карты и планы предприятия</a>
     </div>
   </div>
 
@@ -383,14 +394,14 @@ footer#site-footer { display: none !important; }
   // Map layers data
   const mapLayers = {
     "2002": {
-      url: '{% static "img/map2002_new.jpg" %}',
-      fallback: '{% static "img/map2002.jpg" %}'
+      url: '{% static "img/newmap2002.jpg" %}',
+      fallback: '{% static "img/newmap2002.jpg" %}'
     },
     "1966": {
-      url: '{% static "img/1966.jpg" %}'
+      url: '{% static "img/newmap1966.jpg" %}'
     },
     "1943": {
-      url: '{% static "img/1943.jpg" %}'
+      url: '{% static "img/newmap1943.jpg" %}'
     }
   };
 
@@ -759,82 +770,11 @@ footer#site-footer { display: none !important; }
     });
   });
 
-  // Sidebar click → fly to building & open/toggle accordion
+  // Building click opens the dedicated building detail page.
   window.flyToBuilding = function(slug) {
-    if (currentSelectedSlug === slug) {
-      closePopup();
-      return;
-    }
-    
     const b = buildings[slug];
     if (!b) return;
-
-    currentSelectedSlug = slug;
-    const target = [IMG_H - b.y, b.x];
-    const targetZoom = Math.max(map.getZoom(), BUILDING_ZOOM + 1.2);
-    
-    map.flyTo(target, targetZoom, { duration: 0.8 });
-
-    // Mark as selected
-    Object.keys(markers).forEach(s => {
-      const poly = markers[s];
-      if (s === slug) {
-        poly.setStyle({ fillOpacity: 0.4, stroke: '#E69291', weight: 1.0 });
-        poly.bringToFront();
-      } else {
-        poly.setStyle({ fillOpacity: 0, stroke: '#FFFFFF', weight: 0.4 });
-      }
-    });
-
-    // Update breadcrumb
-    const bcSep = document.getElementById('breadcrumb-building-sep');
-    const bcText = document.getElementById('breadcrumb-building');
-    if (bcSep && bcText) {
-      bcSep.style.display = 'inline';
-      bcText.style.display = 'inline';
-      bcText.textContent = b.name;
-    }
-
-    // Update and show popup
-    const popup = document.getElementById('building-popup');
-    if (popup) {
-      document.getElementById('popup-title').textContent = b.name;
-      document.getElementById('popup-desc').innerHTML = b.desc; 
-      document.getElementById('popup-link').href = b.url;
-      if (b.mainImage) {
-        const imgEl = document.getElementById('popup-img');
-        imgEl.src = b.mainImage;
-        imgEl.parentElement.style.display = 'block';
-        
-        // Apply manual crop if exists (x,y,w,h in %)
-        if (b.crop) {
-          const [x, y, w, h] = b.crop.split(',').map(parseFloat);
-          imgEl.style.objectFit = 'none';
-          imgEl.style.objectPosition = `${x}% ${y}%`;
-          imgEl.style.width = (10000 / w) + '%';
-          imgEl.style.height = (10000 / h) + '%';
-          imgEl.style.transform = `scale(${w/100})`;
-          imgEl.style.transformOrigin = 'top left';
-          // Actually, a simpler way to do manual crop with CSS is using percentages on object-position
-          // but that requires fixed container aspect ratio.
-          // Better approach for water-like see through:
-          imgEl.style.objectFit = 'cover';
-          imgEl.style.objectPosition = `${x + w/2}% ${y + h/2}%`;
-          // If w/h are provided, we can simulate zoom
-          imgEl.style.transform = `scale(${100/w})`;
-          imgEl.style.transformOrigin = `${x}% ${y}%`;
-        } else {
-          imgEl.style.objectFit = 'cover';
-          imgEl.style.objectPosition = 'center';
-          imgEl.style.transform = 'none';
-          imgEl.style.width = '100%';
-          imgEl.style.height = '100%';
-        }
-      } else {
-        document.getElementById('popup-img').parentElement.style.display = 'none';
-      }
-      popup.classList.add('active');
-    }
+    window.location.href = b.url;
   };
 })();
 </script>

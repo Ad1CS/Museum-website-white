@@ -12,7 +12,7 @@
 <meta name="theme-color" content="#C8C4BB">
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<link rel="preload" as="image" href="/static/img/map2002.webp">
+<link rel="preload" as="image" href="/static/img/newmap2002.jpg">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 /* Fullscreen background map layout */
@@ -188,7 +188,7 @@ footer#site-footer { display: none !important; }
 .map-nav-item {
   color: #fff; font-size: 24px; font-weight: 800; text-transform: lowercase;
   cursor: pointer; transition: color 0.2s; opacity: 0.85;
-  letter-spacing: 0.02em; text-align: center; line-height: 1.1;
+  letter-spacing: 0.02em; text-align: center; line-height: 1.1; white-space: nowrap;
 }
 .map-nav-item:hover, .map-nav-item.active { color: #E69291; opacity: 1; }
 
@@ -497,14 +497,14 @@ footer#site-footer { display: none !important; }
   // Map layers data
   const mapLayers = {
     "2002": {
-      url: '/static/img/2002%20new.jpg',
-      fallback: '/static/img/map2002.jpg'
+      url: '/static/img/newmap2002.jpg',
+      fallback: '/static/img/newmap2002.jpg'
     },
     "1966": {
-      url: '/static/img/1966.jpg'
+      url: '/static/img/newmap1966.jpg'
     },
     "1943": {
-      url: '/static/img/1943.jpg'
+      url: '/static/img/newmap1943.jpg'
     }
   };
 

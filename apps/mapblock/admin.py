@@ -9,7 +9,7 @@ class BuildingAdmin(admin.ModelAdmin):
                      'pos_display', 'order', 'published']
     list_display_links = ['map_preview_thumb', 'name']
     list_editable = ['order', 'published']
-    search_fields = ['name', 'description']
+    search_fields = ['name', 'description', 'page_title', 'page_subtitle', 'page_description']
     prepopulated_fields = {'slug': ('name',)}
     filter_horizontal   = ['photos']
     readonly_fields     = ['map_shape_editor', 'cropped_preview', 'manual_crop_tool']
@@ -18,6 +18,17 @@ class BuildingAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Основное', {
             'fields': ('name', 'slug', 'main_image', 'cropped_preview', 'manual_crop_tool', 'built_years', 'description', 'published'),
+        }),
+        ('Страница здания', {
+            'fields': (
+                'page_title',
+                'page_subtitle',
+                'page_image',
+                'page_background',
+                'page_status',
+                'page_description',
+            ),
+            'description': 'Эти поля управляют публичной страницей здания, которая открывается при клике по зданию на карте.',
         }),
         ('📸 Галерея (Дополнительные фото)', {
             'fields': ('photos',),
@@ -38,7 +49,7 @@ class BuildingAdmin(admin.ModelAdmin):
 
     def map_preview_thumb(self, obj):
         from django.templatetags.static import static
-        bg_url = static('img/map2002_new.jpg')
+        bg_url = static('img/newmap2002.jpg')
         rotation_style = f'transform:rotate({obj.map_rotation}deg);transform-origin:center;'
         clip_style = f'clip-path:polygon({obj.map_clip_path});' if obj.map_clip_path else ''
         return format_html(
@@ -176,7 +187,7 @@ class BuildingAdmin(admin.ModelAdmin):
 
     def map_shape_editor(self, obj):
         from django.templatetags.static import static
-        map_url = static('img/map2002_new.jpg')
+        map_url = static('img/newmap2002.jpg')
         
         # Pre-load existing data
         existing_points = []
@@ -476,7 +487,7 @@ class MapSettingsAdmin(admin.ModelAdmin):
 
     def map_shape_editor(self, obj):
         from django.templatetags.static import static
-        map_url = static('img/map2002_new.jpg')
+        map_url = static('img/newmap2002.jpg')
         
         # Pre-load existing data
         existing_points = []

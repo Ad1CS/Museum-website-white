@@ -1,53 +1,273 @@
 {% extends "base/base.html" %}
 {% load static %}
-{% block section_name %}<a href="{% url 'mapblock:map' %}">карта</a> >>> {{ building.name }} >>>{% endblock %}
+
+{% block section_name %}<span class="building-breadcrumb">интерактивная карта&gt;&gt;&gt; здание</span>{% endblock %}
+{% block header_search %}{% endblock %}
 {% block title %}{{ building.name }}{% endblock %}
 
+{% block extra_head %}
+<style>
+body {
+  background: #1f1f1d !important;
+  color: #fff;
+}
+
+#header .optic-line {
+  width: calc(100% - 200px) !important;
+  margin: 0 100px;
+  background: rgba(255,255,255,0.42) !important;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 116px;
+}
+
+#header {
+  padding-top: 16px;
+}
+
+.main-nav a.active {
+  color: #fff !important;
+}
+
+.header-search-row {
+  padding: 58px 100px 0;
+  justify-content: flex-start;
+}
+
+.header-section-name {
+  position: absolute;
+  left: 100px;
+  top: 68px;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(255,255,255,0.82);
+  opacity: 1;
+}
+
+.building-bg {
+  background-position: center center;
+  filter: grayscale(100%);
+}
+
+.building-bg .page-dark-bg__overlay {
+  background: rgba(22,22,21,0.38);
+}
+
+#main-content {
+  position: relative;
+  z-index: 2;
+}
+
+.building-detail-page {
+  min-height: calc(100vh - 154px);
+  padding: 42px 100px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.building-detail-shell {
+  width: 100%;
+  max-width: 1484px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 500px minmax(0, 708px);
+  column-gap: 244px;
+  align-items: start;
+}
+
+.building-left {
+  width: 500px;
+}
+
+.building-title {
+  width: 660px;
+  font-family: var(--font);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.22;
+  color: #fff;
+  margin: 0 0 24px;
+  letter-spacing: 0;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+}
+
+.building-title span {
+  display: inline-block;
+  font-weight: 500;
+}
+
+.building-photo-frame {
+  width: 500px;
+  height: 494px;
+  padding: 8px;
+  margin: 0;
+  border: 1px solid rgba(255,255,255,0.20);
+  background: rgba(255,255,255,0.12);
+}
+
+.building-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(100%);
+}
+
+.building-meta {
+  width: 500px;
+  margin-top: 13px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 28px;
+  font-size: 15px;
+  line-height: 1.2;
+  color: rgba(255,255,255,0.92);
+}
+
+.building-meta strong {
+  font-weight: 800;
+}
+
+.building-meta span {
+  font-style: italic;
+  font-weight: 300;
+}
+
+.building-copy {
+  padding-top: 18px;
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 2.03;
+  color: rgba(255,255,255,0.88);
+  text-align: justify;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+
+.building-copy p {
+  margin: 0;
+}
+
+.building-bottom-rule {
+  width: 100%;
+  max-width: 1484px;
+  height: 1px;
+  margin: auto auto 0;
+  background: rgba(255,255,255,0.42);
+}
+
+footer#site-footer {
+  display: none !important;
+}
+
+@media (max-width: 1200px) {
+  #header .optic-line {
+    width: calc(100% - 60px) !important;
+    margin: 0 30px;
+  }
+
+  .header-search-row {
+    padding: 8px 30px 0;
+  }
+
+  .header-section-name {
+    left: 30px;
+  }
+
+  .building-detail-page {
+    padding: 42px 30px 16px;
+  }
+
+  .building-detail-shell {
+    grid-template-columns: minmax(320px, 500px) minmax(0, 1fr);
+    column-gap: 64px;
+  }
+
+  .building-left,
+  .building-photo-frame,
+  .building-meta {
+    width: 100%;
+  }
+}
+
+@media (max-width: 800px) {
+  .building-detail-shell {
+    grid-template-columns: 1fr;
+    row-gap: 32px;
+  }
+
+  .building-title {
+    font-size: 25px;
+  }
+
+  .building-photo-frame {
+    height: auto;
+    aspect-ratio: 500 / 494;
+  }
+
+  .building-meta {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .building-copy {
+    padding-top: 0;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+}
+</style>
+{% endblock %}
+
+{% block hero_area_start %}
+<div class="page-dark-bg building-bg" style="background-image:url('{% if building.page_background %}{{ building.page_background.url }}{% else %}{% static 'img/buildingBG.jpg' %}{% endif %}')">
+  <div class="page-dark-bg__overlay"></div>
+</div>
+{% endblock %}
+
 {% block content %}
-<div class="page-container">
-  <div class="item-detail-layout">
-    <div class="item-detail-image-col">
-      {% if building.main_image %}
-        <img src="{{ building.main_image.url }}" alt="{{ building.name }}" loading="lazy" class="item-detail-photo" loading="lazy">
-      {% else %}
-        {% with first_photo=building.photos.first %}
-          {% if first_photo and first_photo.image %}
-            <img src="{{ first_photo.image.url }}" alt="{{ building.name }}" loading="lazy" class="item-detail-photo" loading="lazy">
-          {% else %}
-            <div class="item-detail-photo-placeholder">Нет фото</div>
-          {% endif %}
-        {% endwith %}
-      {% endif %}
-    </div>
-    <div class="item-detail-info-col">
-      <span class="tag">Здание</span>
-      <h1 class="item-detail-title">{{ building.name }}</h1>
-      {% if building.built_years %}
-      <table class="item-fields-table">
-        <tr><th>Построено</th><td>{{ building.built_years }}</td></tr>
-      </table>
-      {% endif %}
-      <div class="staff-biography">
-        <div class="bio-text">{{ building.description|linebreaks }}</div>
+<section class="building-detail-page">
+  <div class="building-detail-shell">
+    <div class="building-left">
+      <h1 class="building-title">
+        {{ building.page_title|default:building.name }}{% if building.page_subtitle %}<br><span>{{ building.page_subtitle }}</span>{% endif %}
+      </h1>
+
+      <figure class="building-photo-frame">
+        {% if building.page_image %}
+          <img src="{{ building.page_image.url }}" alt="{{ building.page_title|default:building.name }}" class="building-photo" loading="lazy">
+        {% elif building.main_image %}
+          <img src="{{ building.main_image.url }}" alt="{{ building.page_title|default:building.name }}" class="building-photo" loading="lazy">
+        {% else %}
+          {% with first_photo=building.photos.first %}
+            {% if first_photo and first_photo.image %}
+              <img src="{{ first_photo.image.url }}" alt="{{ building.page_title|default:building.name }}" class="building-photo" loading="lazy">
+            {% else %}
+              <img src="{% static 'img/buildingPhotoFallback.jpg' %}" alt="{{ building.page_title|default:building.name }}" class="building-photo" loading="lazy">
+            {% endif %}
+          {% endwith %}
+        {% endif %}
+      </figure>
+
+      <div class="building-meta">
+        <div><strong>Годы строительства:</strong> <span>{{ building.built_years|default:"—" }}</span></div>
+        <div><strong>Статус:</strong> <span>{{ building.page_status|default:"—" }}</span></div>
       </div>
-      <a href="{% url 'mapblock:map' %}" class="btn-secondary">← На карту</a>
     </div>
+
+    <article class="building-copy">
+      {% if building.page_description %}
+        {{ building.page_description|linebreaks }}
+      {% else %}
+        {{ building.description|linebreaks }}
+      {% endif %}
+    </article>
   </div>
 
-  {% if building.photos.exists %}
-  <div class="related-section">
-    <div class="section-header"><h2>Фотографии здания</h2></div>
-    <div class="photo-masonry">
-      {% for photo in building.photos.all %}
-      <div class="photo-thumb-wrap">
-        <div class="photo-thumb">
-          {% if photo.image %}<img src="{{ photo.image.url }}" alt="{{ photo.caption }}" loading="lazy">{% endif %}
-        </div>
-        {% if photo.caption %}<div class="photo-caption-bar"><span>{{ photo.caption }}</span></div>{% endif %}
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-</div>
+  <div class="building-bottom-rule"></div>
+</section>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.views.generic import TemplateView, DetailView, ListView
+
 from .models import Building, MapSettings
 
 
@@ -14,7 +15,6 @@ class MapView(TemplateView):
         try:
             ctx['map_settings'] = MapSettings.get()
         except Exception:
-            # Fallback if migration hasn't run yet
             class _FallbackSettings:
                 zoom = 0
                 center_x = 3684
@@ -22,6 +22,7 @@ class MapView(TemplateView):
                 min_zoom = -2
                 max_zoom = 3
                 building_zoom = 1
+
             ctx['map_settings'] = _FallbackSettings()
         return ctx
 
@@ -35,15 +36,7 @@ class BuildingDetailView(DetailView):
 
 class PlansView(ListView):
     template_name = 'mapblock/plans.html'
-    context_object_name = 'items'
+    context_object_name = 'buildings'
 
     def get_queryset(self):
-        from apps.fond.models import FondItem
-        # Assuming documents or specific tag/category represents maps and plans
-        return FondItem.objects.filter(
-            published=True,
-            title__icontains='план'
-        ) | FondItem.objects.filter(
-            published=True,
-            title__icontains='карта'
-        )
+        return Building.objects.filter(published=True).order_by('order', 'name')
