@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block body_class %}class="page-fond-dark"{% endblock %}
+{% block body_class %}class="page-fond-dark page-card-scroll-page page-fond-index page-fond-funds"{% endblock %}
 {% block section_name %}<span>фонд &gt;&gt;&gt; список фондов</span>{% endblock %}
 {% block title %}Фонд — Список фондов{% endblock %}
 
@@ -34,7 +34,7 @@
         </p>
       </div>
       <div class="archive-plate__stats">
-        <span>описей: {{ fund.inventories.count }}</span>
+        <span>описей: {{ fund.inventories_count }}</span>
         <span>предметов: {{ fund.items.count }}</span>
       </div>
     </a>
@@ -46,7 +46,7 @@
 
 <nav class="fond-period-nav" aria-label="Исторические периоды фонда">
   {% for period in period_nav %}
-    <a href="?period={{ period.value }}{% if q %}&amp;q={{ q|urlencode }}{% endif %}"
+    <a href="{% if selected_period == period.value %}{% url 'fond:funds_list' %}{% if q %}?q={{ q|urlencode }}{% endif %}{% else %}?period={{ period.value }}{% if q %}&amp;q={{ q|urlencode }}{% endif %}{% endif %}"
        class="{% if selected_period == period.value %}active{% endif %}">
       {{ period.label }} ({{ period.years }})
     </a>

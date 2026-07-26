@@ -151,16 +151,6 @@ body.page-staff-member .header-search input::placeholder {
   border-color: #fff;
 }
 
-.staff-member-fund-link.is-disabled {
-  cursor: default;
-  opacity: 0.58;
-}
-
-.staff-member-fund-link.is-disabled:hover {
-  color: rgba(255,255,255,0.94);
-  border-color: rgba(255,255,255,0.82);
-}
-
 .staff-member-positions {
   width: 100%;
   max-width: 548px;
@@ -274,14 +264,12 @@ footer#site-footer {
         <span>{{ member.first_name }}{% if member.patronymic %} {{ member.patronymic }}{% endif %}</span>
       </h1>
 
-      {% if member.years_of_life %}
-        <div class="staff-member-life">род. {{ member.years_of_life }}</div>
+      {% if member.life_display %}
+        <div class="staff-member-life">{{ member.life_display }}</div>
       {% endif %}
 
       {% if member.personal_fund %}
-        <a href="{{ member.personal_fund.get_absolute_url }}" class="staff-member-fund-link">личный фонд</a>
-      {% else %}
-        <span class="staff-member-fund-link is-disabled">личный фонд</span>
+        <a href="{{ member.personal_fund.get_absolute_url }}" class="staff-member-fund-link">Нажмите, чтобы войти в личный фонд</a>
       {% endif %}
 
       {% if member.positions %}

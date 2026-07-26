@@ -2,7 +2,9 @@
 from django.urls import reverse
 
 class GalleryPeriod(models.Model):
-    title = models.CharField("Название", max_length=200); date_range = models.CharField("Годы (текст)", max_length=100, blank=True)
+    title = models.CharField("Название", max_length=200)
+    card_code = models.CharField("Код на карточке", max_length=20, blank=True, help_text="Например: Г1")
+    date_range = models.CharField("Годы (текст)", max_length=100, blank=True)
     order = models.PositiveIntegerField("Порядок", default=0)
 
     class Meta:
@@ -24,6 +26,9 @@ class Album(models.Model):
     is_newsreel = models.BooleanField("Кинохроника", default=False, help_text="Если отмечено, альбом попадет в отдельную категорию")
     description = models.TextField("Описание", blank=True)
     cover       = models.ImageField("Обложка", upload_to="gallery/covers/", blank=True, null=True)
+    card_links_count = models.PositiveIntegerField("Ссылок на карточке", null=True, blank=True)
+    card_inventories_count = models.PositiveIntegerField("Описей на карточке", null=True, blank=True)
+    card_photos_count = models.PositiveIntegerField("Фотографий на карточке", null=True, blank=True)
     order       = models.PositiveIntegerField("Порядок", default=0)
     published   = models.BooleanField("Опубликован", default=True)
     created_at  = models.DateTimeField(auto_now_add=True)
@@ -38,6 +43,22 @@ class Album(models.Model):
 
     def get_absolute_url(self):
         return reverse("gallery:album_detail", args=[self.pk])
+
+    @property
+    def card_top_stats(self):
+        parts = []
+        if self.card_links_count is not None:
+            parts.append(f"{self.card_links_count} ссылок")
+        if self.card_inventories_count is not None:
+            parts.append(f"описей: {self.card_inventories_count}")
+        return ", ".join(parts)
+
+    @property
+    def card_bottom_stats(self):
+        prefix = ""
+        if self.card_photos_count is not None:
+            prefix = f"{self.card_photos_count} фотографий, "
+        return f"{prefix}предметов: {self.media.count()}"
 
 class Media(models.Model):
     album      = models.ForeignKey(Album, on_delete=models.CASCADE,
@@ -88,4 +109,3 @@ class Media(models.Model):
         return url
 
 Photo = Media
-

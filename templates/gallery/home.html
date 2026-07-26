@@ -1,6 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 
+{% block body_class %}class="page-gallery-list page-card-scroll-page"{% endblock %}
 {% block section_name %}<span>галерея &gt;&gt;&gt;</span>{% endblock %}
 {% block title %}Галерея — Фото/кино-документы{% endblock %}
 
@@ -25,7 +26,7 @@
 
 {% block content %}
 <section class="archive-index-page">
-  <h1 class="fond-mode-title">
+  <h1 class="fond-mode-title gallery-mode-title">
     <span class="active">Фото/кино-документы</span>
   </h1>
 
@@ -34,7 +35,7 @@
       {% for album in period.albums %}
       <a href="{{ album.get_absolute_url }}" class="archive-plate">
         <div class="archive-plate__left">
-          <div class="archive-plate__code">Г{{ forloop.parentloop.counter }}</div>
+          <div class="archive-plate__code">{{ period.code }}</div>
           <div class="archive-plate__years">{{ period.years }}</div>
         </div>
         <div class="archive-plate__body">
@@ -44,8 +45,8 @@
           </p>
         </div>
         <div class="archive-plate__stats">
-          <span>{{ album.media.count }} ссылок</span>
-          <span>предметов: {{ album.media.count }}</span>
+          <span>{{ album.card_top_stats }}</span>
+          <span>{{ album.card_bottom_stats }}</span>
         </div>
       </a>
       {% endfor %}

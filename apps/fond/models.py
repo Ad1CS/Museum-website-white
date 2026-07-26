@@ -71,6 +71,11 @@ class Fund(models.Model):
 
     # New fields for museum card layout
     accession_number = models.CharField('Номер книги поступлений', max_length=100, blank=True)
+    inventories_count = models.PositiveIntegerField(
+        'Описей на карточке',
+        default=0,
+        help_text='Редактируемое число для строки "описей" на карточке фонда.',
+    )
     pages_count = models.PositiveIntegerField('К-во страниц', default=0)
     admission_date = models.DateField('Дата поступления', null=True, blank=True)
 

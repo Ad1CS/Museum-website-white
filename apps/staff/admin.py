@@ -4,12 +4,12 @@ from .models import StaffMember
 
 @admin.register(StaffMember)
 class StaffMemberAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name', 'patronymic', 'role', 'years_of_life', 'published')
+    list_display = ('card_id', 'last_name', 'first_name', 'patronymic', 'role', 'years_of_life', 'published')
     list_filter = ('published',)
     search_fields = ('last_name', 'first_name', 'patronymic', 'role')
     list_editable = ('published',)
     fieldsets = (
-        ('Имя', {'fields': ('last_name', 'first_name', 'patronymic')}),
+        ('Имя', {'fields': ('card_id', 'last_name', 'first_name', 'patronymic')}),
         ('Основные данные', {'fields': ('years_of_life', 'photo', 'biography')}),
         ('Должность 1', {'fields': ('role', 'role_years')}),
         ('Должность 2', {'fields': ('role2', 'role2_years'), 'classes': ('collapse',)}),

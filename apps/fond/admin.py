@@ -15,11 +15,11 @@ class InventoryInline(admin.TabularInline):
 
 @admin.register(Fund)
 class FundAdmin(admin.ModelAdmin):
-    list_display  = ['code', 'name', 'category', 'period', 'date_start', 'date_end', 'accession_number', 'pages_count', 'item_count']
+    list_display  = ['code', 'name', 'category', 'period', 'date_start', 'date_end', 'accession_number', 'inventories_count', 'pages_count', 'item_count']
     list_filter   = ['category', 'period']
     search_fields = ['code', 'name', 'description', 'accession_number']
     inlines       = [InventoryInline]
-    fields        = ['category', 'period', 'code', 'name', 'description', 'date_start', 'date_end', 'accession_number', 'pages_count', 'admission_date']
+    fields        = ['category', 'period', 'code', 'name', 'description', 'date_start', 'date_end', 'accession_number', 'inventories_count', 'pages_count', 'admission_date']
 
     def item_count(self, obj):
         return obj.items.count()

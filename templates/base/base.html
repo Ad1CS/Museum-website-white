@@ -6,12 +6,12 @@
 <title>{% block title %}Музей трудовой и воинской славы{% endblock %} — Ленинградский мясокомбинат им. С.М. Кирова</title>
 <link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
 <link rel="icon" type="image/png" href="{% static "img/favicon.png" %}">
-<link rel="stylesheet" href="{% static "css/museum.css" %}?v=1.69">
+<link rel="stylesheet" href="{% static "css/museum.css" %}?v=2.01">
 <link rel="preload" href="{% static "fonts/TTHoves-Regular.woff2" %}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{% static "fonts/TTHoves-Bold.woff2" %}" as="font" type="font/woff2" crossorigin>
 <meta name="theme-color" content="#C8C4BB">
 {% block extra_head %}{% endblock %}
-<link rel="stylesheet" href="{% static "css/header-fix.css" %}?v=1.9">
+<link rel="stylesheet" href="{% static "css/header-fix.css" %}?v=2.2">
 </head>
 <body {% block body_class %}{% endblock %}>
 {% block hero_area_start %}{% endblock %}
@@ -45,11 +45,7 @@
 {% block breadcrumbs %}{% endblock %}
 <main id="main-content">{% block content %}{% endblock %}</main>
 
-{% block footer %}
-<footer id="site-footer" style="background:transparent !important; border:none !important; padding:40px 60px; text-align:left;">
-  <p class="footer-copy" style="color:rgba(255,255,255,0.6) !important; font-family:&quot;TT Hoves&quot;, sans-serif; font-size:13px; margin:0;">Ленинградский мясокомбинат, цифровой музей трудовой и воинской славы, 2026</p>
-</footer>
-{% endblock %}
+{% block footer %}{% endblock %}
 
 <script src="{% static "js/museum.js" %}" defer></script>
 {% block extra_scripts %}{% endblock %}

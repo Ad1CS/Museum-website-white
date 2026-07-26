@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block body_class %}class="page-fond-dark{% if personal_owner %} page-self-fond{% endif %}"{% endblock %}
+{% block body_class %}class="page-fond-dark{% if personal_owner %} page-self-fond page-card-scroll-page{% endif %}"{% endblock %}
 {% block section_name %}
   {% if personal_owner %}
     <span>отдел кадров &gt;&gt;&gt; личная карточка &gt;&gt;&gt; личный фонд</span>
@@ -36,7 +36,7 @@
         <p>{{ item.source|default:item.fund.accession_number|default:item.get_item_type_display }}</p>
       </div>
       <div class="self-fond-row__meta">
-        <span>{{ item.pages|default:"—" }} с.</span>
+        <span>{% if item.pages %}{{ item.pages }} с.{% else %}—{% endif %}</span>
         <span>{{ item.acquisition_date|date:"d.m.y"|default:"—" }}</span>
       </div>
     </a>

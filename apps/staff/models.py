@@ -3,6 +3,8 @@ from django.urls import reverse
 
 
 class StaffMember(models.Model):
+    card_id = models.CharField('Номер на карточке', max_length=30, blank=True)
+
     # Name
     last_name = models.CharField('Фамилия', max_length=100)
     first_name = models.CharField('Имя', max_length=100)
@@ -48,7 +50,10 @@ class StaffMember(models.Model):
 
     @property
     def life_display(self):
-        return self.years_of_life.strip()
+        value = self.years_of_life.strip()
+        if len(value) == 4 and value.isdigit():
+            return f'род.{value}'
+        return value
 
     @staticmethod
     def _position_parts(title):

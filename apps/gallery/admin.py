@@ -4,7 +4,7 @@ from .models import Album, Media, GalleryPeriod
 
 @admin.register(GalleryPeriod)
 class GalleryPeriodAdmin(admin.ModelAdmin):
-    list_display = ["title", "order"]
+    list_display = ["title", "card_code", "date_range", "order"]
     list_editable = ["order"]
 
 class MediaInline(admin.StackedInline):
@@ -24,6 +24,10 @@ class MediaInline(admin.StackedInline):
 class AlbumAdmin(admin.ModelAdmin):
     list_display = ["cover_thumb", "title", "gallery_period", "is_newsreel", "published", "order"]
     list_filter = ["gallery_period", "is_newsreel", "published"]
+    fieldsets = (
+        (None, {"fields": ("title", "gallery_period", "is_newsreel", "description", "cover", "order", "published")}),
+        ("Текст карточки", {"fields": ("card_links_count", "card_inventories_count", "card_photos_count")}),
+    )
     inlines = [MediaInline]
 
     def cover_thumb(self, obj):

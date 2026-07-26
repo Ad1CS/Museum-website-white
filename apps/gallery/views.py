@@ -13,7 +13,7 @@ class GalleryHomeView(TemplateView):
             albums = gp.albums.filter(published=True, is_newsreel=False)
             if albums.exists():
                 # Extract year range from title if present, e.g. "Name (1880-1931)"
-                periods.append({"label": gp.title, "years": gp.date_range, "albums": albums})
+                periods.append({"label": gp.title, "code": gp.card_code, "years": gp.date_range, "albums": albums})
         
         # Get newsreel albums separately
         newsreel_albums = Album.objects.filter(published=True, is_newsreel=True)
@@ -32,4 +32,3 @@ class AlbumDetailView(DetailView):
         ctx = super().get_context_data(**kwargs)
         ctx["photos"] = self.object.media.filter(published=True).order_by("order", "created_at")
         return ctx
-

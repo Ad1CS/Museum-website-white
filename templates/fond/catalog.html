@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block body_class %}class="page-fond-dark"{% endblock %}
+{% block body_class %}class="page-fond-dark page-card-scroll-page page-fond-index page-fond-catalog"{% endblock %}
 {% block section_name %}<span>фонд &gt;&gt;&gt; каталог</span>{% endblock %}
 {% block title %}Фонд — Каталог{% endblock %}
 
@@ -31,11 +31,12 @@
       <div class="archive-plate__body">
         <h2 class="archive-plate__title">{{ item.title }}</h2>
         <p class="archive-plate__desc">
-          {% if item.description %}{{ item.description|truncatechars:130 }}{% elif item.fund %}{{ item.fund.name }}{% else %}{{ item.get_item_type_display }}{% endif %}
+          {{ item.kp_number|default:item.inventory_number }}
         </p>
       </div>
       <div class="archive-plate__stats">
-        <span>{{ item.get_item_type_display|lower }}</span>
+        <span>{% if item.pages %}{{ item.pages }} с.{% endif %}</span>
+        <span>{{ item.acquisition_date|date:"d.m.y" }}</span>
         <span>{% if item.fund %}{{ item.fund.code }}{% else %}предмет фонда{% endif %}</span>
       </div>
     </a>
@@ -47,7 +48,7 @@
 
 <nav class="fond-period-nav" aria-label="Исторические периоды фонда">
   {% for period in period_nav %}
-    <a href="?period={{ period.value }}{% if q %}&amp;q={{ q|urlencode }}{% endif %}{% if selected_type %}&amp;type={{ selected_type }}{% endif %}"
+    <a href="{% if selected_period == period.value %}{% url 'fond:catalog' %}{% if q or selected_type %}?{% if q %}q={{ q|urlencode }}{% endif %}{% if selected_type %}{% if q %}&amp;{% endif %}type={{ selected_type }}{% endif %}{% endif %}{% else %}?period={{ period.value }}{% if q %}&amp;q={{ q|urlencode }}{% endif %}{% if selected_type %}&amp;type={{ selected_type }}{% endif %}{% endif %}"
        class="{% if selected_period == period.value %}active{% endif %}">
       {{ period.label }} ({{ period.years }})
     </a>
