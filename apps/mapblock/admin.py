@@ -12,19 +12,18 @@ class BuildingAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description', 'page_title', 'page_subtitle', 'page_description']
     prepopulated_fields = {'slug': ('name',)}
     filter_horizontal   = ['photos']
-    readonly_fields     = ['map_shape_editor', 'cropped_preview', 'manual_crop_tool']
+    readonly_fields     = ['map_shape_editor', 'cropped_preview']
     save_on_top = True
 
     fieldsets = (
         ('Основное', {
-            'fields': ('name', 'slug', 'main_image', 'cropped_preview', 'manual_crop_tool', 'built_years', 'description', 'published'),
+            'fields': ('name', 'slug', 'main_image', 'cropped_preview', 'built_years', 'description', 'published'),
         }),
         ('Страница здания', {
             'fields': (
                 'page_title',
                 'page_subtitle',
                 'page_image',
-                'page_background',
                 'page_status',
                 'page_description',
             ),

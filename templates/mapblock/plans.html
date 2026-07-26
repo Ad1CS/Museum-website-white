@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block body_class %}class="buildings-index-body"{% endblock %}
+{% block body_class %}class="buildings-index-body page-buildings-list page-card-scroll-page"{% endblock %}
 
 {% block section_name %}
 <span class="buildings-index-path">
@@ -281,6 +281,155 @@ footer#site-footer {
     font-size: 13px;
   }
 }
+
+body.page-buildings-list .buildings-index-page {
+  --archive-plate-height: 105px;
+  --archive-plate-gap: 10px;
+  position: relative;
+  z-index: 2;
+  width: min(1400px, calc(88.5vw - 104px));
+  min-height: 0;
+  margin: 68px auto 0;
+  padding: 0 0 112px;
+  color: #fff;
+  font-family: var(--font);
+}
+
+body.page-buildings-list .buildings-index-list {
+  width: 100%;
+  max-width: none;
+}
+
+body.page-buildings-list .building-index-card {
+  width: 100%;
+  height: var(--archive-plate-height);
+  min-height: var(--archive-plate-height);
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) minmax(72px, 110px);
+  grid-template-rows: 1fr auto;
+  column-gap: 20px;
+  row-gap: 0;
+  margin-bottom: 0;
+  padding: 8px 12px;
+  color: rgba(255,255,255,0.94);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  text-decoration: none;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+
+body.page-buildings-list .building-index-card:hover {
+  background: rgba(255,255,255,0.065);
+  border-color: rgba(255,255,255,0.16);
+  color: #fff;
+}
+
+body.page-buildings-list .building-index-card + .building-index-card {
+  margin-top: var(--archive-plate-gap);
+}
+
+body.page-buildings-list .building-index-number {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  padding: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+body.page-buildings-list .building-index-number::after {
+  content: none;
+  display: none;
+}
+
+body.page-buildings-list .building-index-title {
+  grid-column: 2 / 4;
+  grid-row: 1;
+  align-self: start;
+  display: -webkit-box;
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.28);
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+body.page-buildings-list .building-index-years {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: end;
+  padding: 0;
+  color: rgba(255,255,255,0.82);
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+body.page-buildings-list .building-index-status {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: end;
+  justify-self: end;
+  padding: 0;
+  color: rgba(255,255,255,0.9);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: right;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+body.page-buildings-list .buildings-index-empty {
+  min-height: var(--archive-plate-height);
+  padding: 34px 24px;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.84);
+  font-size: 16px;
+  font-style: italic;
+}
+
+@media (min-width: 1001px) {
+  body.page-buildings-list {
+    --card-section-top: 20px;
+    --card-title-block: 0px;
+    --card-scroll-bottom: calc(var(--card-footer-line-bottom) + 10px);
+  }
+
+  body.page-buildings-list #header {
+    min-height: 0 !important;
+  }
+
+  body.page-buildings-list .buildings-index-page {
+    margin-top: var(--card-section-top);
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  body.page-buildings-list .buildings-index-page {
+    width: calc(100% - 40px);
+    margin-top: 10px;
+    padding-bottom: 40px;
+  }
+
+  body.page-buildings-list .building-index-card {
+    grid-template-columns: 54px minmax(0, 1fr) 62px;
+  }
+}
 </style>
 {% endblock %}
 
@@ -291,10 +440,10 @@ footer#site-footer {
 {% endblock %}
 
 {% block content %}
-<section class="buildings-index-page">
-  <div class="buildings-index-list">
+<section class="archive-index-page buildings-index-page">
+  <div class="archive-flow-list buildings-index-list">
     {% for building in buildings %}
-      <a class="building-index-card" href="{{ building.get_absolute_url }}">
+      <a class="archive-plate building-index-card" href="{{ building.get_absolute_url }}">
         <span class="building-index-number">{{ forloop.counter }}</span>
         <span class="building-index-title">{{ building.page_title|default:building.name|cut:"«"|cut:"»" }}{% if building.page_subtitle %} {{ building.page_subtitle }}{% endif %}</span>
         <span class="building-index-years">{{ building.built_years|default:"-" }}</span>

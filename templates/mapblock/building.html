@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% block body_class %}class="page-building-detail"{% endblock %}
 
 {% block section_name %}<span class="building-breadcrumb">интерактивная карта &gt;&gt;&gt; здание</span>{% endblock %}
 {% block title %}{{ building.name }}{% endblock %}
@@ -219,11 +220,236 @@ footer#site-footer {
     line-height: 1.75;
   }
 }
+
+html:has(body.page-building-detail) {
+  height: 100vh;
+  overflow: hidden;
+}
+
+body.page-building-detail {
+  background: #1f1f1d !important;
+  color: #fff;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+body.page-building-detail #main-content {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+body.page-building-detail .building-breadcrumb {
+  color: rgba(255,255,255,0.84);
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1;
+  text-transform: lowercase;
+}
+
+body.page-building-detail .building-detail-page {
+  --building-header-height: 149px;
+  --building-top-gap: 18px;
+  --building-title-area: 64px;
+  --building-title-gap: 12px;
+  --building-meta-area: 24px;
+  --building-meta-gap: 10px;
+  --building-bottom-space: 32px;
+  height: calc(100vh - var(--building-header-height));
+  min-height: 0;
+  padding: var(--building-top-gap) 92px var(--building-bottom-space);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+body.page-building-detail .building-detail-shell {
+  width: min(1400px, calc(100vw - 184px));
+  max-width: 1484px;
+  min-height: 0;
+  flex: 0 1 auto;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 39%) minmax(0, 49%);
+  column-gap: 12%;
+  align-items: start;
+}
+
+body.page-building-detail .building-left {
+  min-width: 0;
+  width: 100%;
+}
+
+body.page-building-detail .building-title {
+  width: min(680px, calc(100vw - 184px)) !important;
+  max-width: none !important;
+  margin: 0 0 var(--building-title-gap);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: 0;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+}
+
+body.page-building-detail .building-title span {
+  display: block !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  line-height: 1.18 !important;
+  white-space: nowrap !important;
+}
+
+body.page-building-detail .building-photo-frame {
+  width: fit-content;
+  height: auto !important;
+  max-width: 100%;
+  max-height: calc(
+    100vh - var(--building-header-height) - var(--building-top-gap) -
+    var(--building-title-area) - var(--building-title-gap) -
+    var(--building-meta-area) - var(--building-meta-gap) -
+    var(--building-bottom-space) - 16px
+  );
+  padding: 3px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+
+body.page-building-detail .building-photo {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(
+    100vh - var(--building-header-height) - var(--building-top-gap) -
+    var(--building-title-area) - var(--building-title-gap) -
+    var(--building-meta-area) - var(--building-meta-gap) -
+    var(--building-bottom-space) - 32px
+  );
+  object-fit: contain;
+  object-position: center;
+  filter: grayscale(100%);
+}
+
+body.page-building-detail .building-meta {
+  width: 100%;
+  margin-top: var(--building-meta-gap);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  color: rgba(255,255,255,0.92);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+body.page-building-detail .building-meta strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+body.page-building-detail .building-meta span {
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 300;
+}
+
+body.page-building-detail .building-copy {
+  min-width: 0;
+  padding-top: 22px;
+  color: rgba(255,255,255,0.88);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.9;
+  text-align: justify;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  overflow: visible;
+}
+
+body.page-building-detail .building-copy p {
+  margin: 0;
+}
+
+body.page-building-detail .building-bottom-rule {
+  width: min(1400px, calc(100vw - 184px));
+  max-width: 1400px;
+  height: 1px;
+  margin: auto auto 0;
+  background: rgba(255,255,255,0.42);
+}
+
+@media (max-width: 1200px) {
+  body.page-building-detail .building-detail-page {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  body.page-building-detail .building-detail-shell {
+    width: 100%;
+    grid-template-columns: minmax(0, 40%) minmax(0, 50%);
+    column-gap: 10%;
+  }
+
+  body.page-building-detail .building-bottom-rule {
+    width: 100%;
+  }
+}
+
+@media (max-width: 800px) {
+  html:has(body.page-building-detail),
+  body.page-building-detail {
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
+  }
+
+  body.page-building-detail #main-content,
+  body.page-building-detail .building-detail-page {
+    overflow: visible;
+  }
+
+  body.page-building-detail .building-detail-page {
+    height: auto;
+    min-height: calc(100vh - 138px);
+  }
+
+  body.page-building-detail .building-photo-frame,
+  body.page-building-detail .building-photo {
+    max-height: none;
+  }
+
+  body.page-building-detail .building-photo {
+    width: 100%;
+  }
+
+  body.page-building-detail .building-title {
+    width: 100% !important;
+    max-width: none !important;
+    font-size: 22px;
+  }
+
+  body.page-building-detail .building-title span {
+    font-size: 20px !important;
+    white-space: normal !important;
+  }
+}
 </style>
 {% endblock %}
 
 {% block hero_area_start %}
-<div class="page-dark-bg building-bg" style="background-image:url('{% if building.page_background %}{{ building.page_background.url }}{% else %}{% static 'img/buildingBG.webp' %}?v=2{% endif %}')">
+<div class="page-dark-bg building-bg" style="background-image:url('{% static 'img/buildingBG.webp' %}?v=2')">
   <div class="page-dark-bg__overlay"></div>
 </div>
 {% endblock %}
