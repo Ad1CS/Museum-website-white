@@ -23,6 +23,13 @@ def robots_txt(request):
     return HttpResponse(body, content_type='text/plain; charset=utf-8')
 
 
+def google_site_verification(request):
+    return HttpResponse(
+        'google-site-verification: google0efda1dccc19138d.html\n',
+        content_type='text/html; charset=utf-8',
+    )
+
+
 def sitemap_xml(request, sitemaps):
     page = request.GET.get('p', 1)
     canonical_site = CanonicalSite(

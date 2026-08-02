@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve
 from . import views
-from .seo import robots_txt, sitemap_xml
+from .seo import google_site_verification, robots_txt, sitemap_xml
 from .sitemaps import sitemaps
 
 admin.site.site_header = 'Музей трудовой и воинской славы'
@@ -23,6 +23,7 @@ urlpatterns = [
     path('library/', include('apps.library.urls', namespace='library')),
     path('sitemap.xml', sitemap_xml, {'sitemaps': sitemaps}, name='sitemap_xml'),
     path('robots.txt', robots_txt, name='robots_txt'),
+    path('google0efda1dccc19138d.html', google_site_verification, name='google_site_verification'),
     path('admin/', admin.site.urls),
     path('404/', views.page_404, name='page_404'),
     path('404-preview/', views.legacy_404_preview_redirect),
