@@ -11,3 +11,25 @@ venv/
 .venv/
 env/
 node_modules/
+
+# Local development files
+.edge-cdp-profile*/
+.edge-check-profile/
+.brave-check-profile/
+.tmp-edge-*/
+.venv/
+.agents/
+.env
+db.sqlite3
+media/
+*.log
+
+# Local reference screenshots and dropped design examples
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp
+/templates/**/*.png
+/templates/**/*.jpg
+/templates/**/*.jpeg
+/templates/**/*.webp
