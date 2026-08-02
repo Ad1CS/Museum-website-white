@@ -32,6 +32,7 @@ class BuildingDetailView(DetailView):
     model = Building
     context_object_name = 'building'
     slug_url_kwarg = 'slug'
+    queryset = Building.objects.filter(published=True)
 
 
 class PlansView(ListView):

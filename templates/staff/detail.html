@@ -3,6 +3,7 @@
 
 {% block body_class %}class="page-staff-member"{% endblock %}
 {% block title %}{{ member.full_name }}{% endblock %}
+{% block meta_description %}{{ member.biography|striptags|truncatechars:155|default:member.full_name }}{% endblock %}
 
 {% block section_name %}<span class="staff-member-path">отдел кадров &gt;&gt;&gt; профиль сотрудника</span>{% endblock %}
 

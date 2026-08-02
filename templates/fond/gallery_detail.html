@@ -5,6 +5,7 @@
 
 {% block section_name %}<span>галерея >>> {{ album_name }} >>></span>{% endblock %}
 {% block title %}{{ album_name }} — Музей{% endblock %}
+{% block meta_description %}{{ album_name }}: museum fond materials from the Leningrad Meat Processing Plant named after S.M. Kirov.{% endblock %}
 
 {% block extra_head %}
 <link rel="preload" href="{% static 'fond/fondBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">

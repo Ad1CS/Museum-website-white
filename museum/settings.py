@@ -19,6 +19,7 @@ environ.Env.read_env(BASE_DIR / '.env')
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-replace-in-production-with-a-real-secret-key-123456')
 DEBUG = env('DEBUG', default=False)
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '.onrender.com', '*'])
+ALLOWED_HOSTS = list(dict.fromkeys([*ALLOWED_HOSTS, 'www.lmk-museum.ru', 'lmk-museum.ru']))
 
 INSTALLED_APPS = [
     # Custom admin theme must come before django.contrib.admin
@@ -31,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
 
     # Third party
     'imagekit',
@@ -148,3 +150,7 @@ CACHES = {
 # ── WHITENOISE ────────────────────────────────────────────────
 WHITENOISE_MAX_AGE = 31536000  # 1 year for static files
 DEFAULT_CHARSET = 'utf-8'
+
+SEO_CANONICAL_SCHEME = 'https'
+SEO_CANONICAL_DOMAIN = 'www.lmk-museum.ru'
+SEO_CANONICAL_URL = f'{SEO_CANONICAL_SCHEME}://{SEO_CANONICAL_DOMAIN}'

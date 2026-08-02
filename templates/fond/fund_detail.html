@@ -10,6 +10,7 @@
   {% endif %}
 {% endblock %}
 {% block title %}{{ fund.code }} — {{ fund.name }}{% endblock %}
+{% block meta_description %}{{ fund.description|striptags|truncatechars:155|default:fund.name }}{% endblock %}
 
 {% block extra_head %}
 <link rel="preload" href="{% static 'fond/fondBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">

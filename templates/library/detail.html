@@ -2,6 +2,7 @@
 {% load static %}
 {% block section_name %}<span>библиотека >>> {{ item.title|truncatewords:6 }} >>></span>{% endblock %}
 {% block title %}{{ item.title }}{% endblock %}
+{% block meta_description %}{{ item.description|striptags|truncatechars:155|default:item.title }}{% endblock %}
 
 {% block content %}
 <div class="page-container">

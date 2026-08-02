@@ -1,4 +1,4 @@
-﻿from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView
 from .models import Album, Media, GalleryPeriod
 import re
 
@@ -27,6 +27,7 @@ class AlbumDetailView(DetailView):
     model = Album
     template_name = "gallery/album_detail.html"
     context_object_name = "album"
+    queryset = Album.objects.filter(published=True)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.cache import cache
 from apps.news.models import NewsPost
 
@@ -12,4 +13,5 @@ def museum_context(request):
         'latest_ticker_news': ticker,
         'MUSEUM_NAME': 'Ленинградский мясокомбинат им. С.М. Кирова',
         'MUSEUM_SUBTITLE': 'Музей трудовой и воинской славы',
+        'SEO_CANONICAL_URL': settings.SEO_CANONICAL_URL,
     }

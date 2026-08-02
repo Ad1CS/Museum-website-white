@@ -4,6 +4,7 @@
 {% block body_class %}class="page-fond-dark page-fond-item-detail"{% endblock %}
 {% block section_name %}<span>{{ item.detail_path_text }}</span>{% endblock %}
 {% block title %}Предмет: {{ item.title }}{% endblock %}
+{% block meta_description %}{{ item.description|striptags|truncatechars:155|default:item.title }}{% endblock %}
 
 {% block extra_head %}
 <link rel="preload" href="{% static 'fond/fondBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">

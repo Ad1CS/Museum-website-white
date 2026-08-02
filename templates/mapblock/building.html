@@ -4,6 +4,7 @@
 
 {% block section_name %}<span class="building-breadcrumb">интерактивная карта &gt;&gt;&gt; здание</span>{% endblock %}
 {% block title %}{{ building.name }}{% endblock %}
+{% block meta_description %}{{ building.page_description|default:building.description|striptags|truncatechars:155 }}{% endblock %}
 
 {% block extra_head %}
 <link rel="preload" href="{% static 'img/buildingBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
