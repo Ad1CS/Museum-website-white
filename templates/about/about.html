@@ -4,6 +4,7 @@
 {% block title %}О проекте{% endblock %}
 
 {% block extra_head %}
+<link rel="preload" href="{% static 'img/about_bg.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
 <style>
   body {
     background: #1a1a18 !important;

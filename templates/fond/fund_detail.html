@@ -11,6 +11,10 @@
 {% endblock %}
 {% block title %}{{ fund.code }} — {{ fund.name }}{% endblock %}
 
+{% block extra_head %}
+<link rel="preload" href="{% static 'fond/fondBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endblock %}
+
 {% block header_search %}
 <form class="header-search" action="{% url 'fond:funds_list' %}" method="get" role="search">
   <input type="text" name="q" placeholder="поиск &gt;&gt;&gt;" aria-label="Поиск по фондам">

@@ -1,5 +1,8 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% block extra_head %}
+<link rel="preload" href="{% static 'img/hero_bg.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endblock %}
 {% block title %}Главная{% endblock %}
 
 {% block hero_area_start %}<div class="hero-area"><div class="hero-area__overlay"></div>{% endblock %}

@@ -6,6 +6,7 @@
 {% block title %}{{ building.name }}{% endblock %}
 
 {% block extra_head %}
+<link rel="preload" href="{% static 'img/buildingBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
 <style>
 body {
   background: #1f1f1d !important;

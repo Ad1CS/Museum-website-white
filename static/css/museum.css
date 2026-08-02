@@ -1910,7 +1910,7 @@ body.page-staff-list {
   --staff-card-height: 108px;
   --staff-row-gap: 10px;
   min-height: 100vh;
-  background: #171717 url('../img/staffBG.webp?v=2') center top / cover fixed no-repeat !important;
+  background: #171717 url('../img/staffBG.webp?v=2') center top / cover no-repeat !important;
   color: #fff;
 }
 

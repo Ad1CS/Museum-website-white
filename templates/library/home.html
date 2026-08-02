@@ -4,6 +4,7 @@
 {% block title %}Библиотека{% endblock %}
 
 {% block extra_head %}
+<link rel="preload" href="{% static 'img/library_bg.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
 <style>
   /* Fix for the gap: ensure the dark background starts from the very top */
   body {

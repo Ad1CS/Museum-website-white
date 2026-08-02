@@ -6,6 +6,7 @@
 {% block title %}Галерея — Фото/кино-документы{% endblock %}
 
 {% block extra_head %}
+<link rel="preload" href="{% static 'gallery/galleryBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
 <style>
   body {
     background: #1a1a1a url('{% static "gallery/galleryBG.webp" %}?v=2') no-repeat center top;

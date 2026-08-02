@@ -6,6 +6,10 @@
 {% block section_name %}<span>фонд >>> {{ case.inventory.fund.code }} >>> дело № {{ case.number }} >>></span>{% endblock %}
 {% block title %}Дело № {{ case.number }} — Музей{% endblock %}
 
+{% block extra_head %}
+<link rel="preload" href="{% static 'fond/fondBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endblock %}
+
 {% block content %}
 <style>
   /* EMERGENCY INLINE CSS - FORCES 1:1 DESIGN */

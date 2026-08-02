@@ -13,11 +13,11 @@
 {% endblock %}
 
 {% block extra_head %}
-<link rel="preload" href="{% static 'fond/fondBG.webp' %}?v=2" as="image" fetchpriority="high">
+<link rel="preload" href="{% static 'fond/fondBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
 <style>
 body.page-staff-member {
   min-height: 100vh;
-  background: #4a4a49 url('{% static "fond/fondBG.webp" %}?v=2') center top / cover fixed no-repeat !important;
+  background: #4a4a49 url('{% static "fond/fondBG.webp" %}?v=2') center top / cover no-repeat !important;
   color: #fff;
 }
 

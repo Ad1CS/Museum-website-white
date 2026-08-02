@@ -12,7 +12,7 @@
 {% block title %}Здания на карте{% endblock %}
 
 {% block extra_head %}
-<link rel="preload" as="image" href="{% static 'img/buildingBG.webp' %}?v=2">
+<link rel="preload" href="{% static 'img/buildingBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
 <style>
 body.buildings-index-body {
   background: #20201f !important;
