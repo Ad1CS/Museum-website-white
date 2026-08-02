@@ -2,16 +2,12 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
-from django.shortcuts import render
 from django.views.static import serve
 from . import views
 
 admin.site.site_header = 'Музей трудовой и воинской славы'
 admin.site.site_title = 'Администрирование музея'
 admin.site.index_title = 'Управление контентом'
-
-def preview_404(request):
-    return render(request, '404.html', status=200)
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
@@ -24,7 +20,13 @@ urlpatterns = [
     path('about/', include('apps.about.urls', namespace='about')),
     path('library/', include('apps.library.urls', namespace='library')),
     path('admin/', admin.site.urls),
-    path('404-preview/', preview_404),
+    path('404/', views.page_404, name='page_404'),
+    path('404-preview/', views.legacy_404_preview_redirect),
     # Explicitly serve media files in production
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
+
+handler404 = 'museum.views.page_not_found'
+
+if settings.DEBUG:
+    urlpatterns.append(re_path(r'^.*$', views.page_not_found))

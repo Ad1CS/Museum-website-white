@@ -159,45 +159,63 @@ body[class] #header .optic-line {
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
+    min-width: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
+    overflow: hidden !important;
   }
 
   #header .header-nav-row,
   body[class] #header .header-nav-row {
-    display: flex !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
     width: 100% !important;
-    justify-content: space-between !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
   }
 
   #header .main-nav a,
   body[class] #header .main-nav a {
-    flex: 1 1 25% !important;
-    width: 25% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     min-height: 48px !important;
     padding: 10px 2px !important;
     font-size: 10px !important;
+    overflow: hidden !important;
+    overflow-wrap: break-word !important;
     white-space: normal !important;
   }
 
   #header .header-search-row,
   body[class] #header .header-search-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 10px !important;
     height: 42px !important;
     min-height: 42px !important;
+    min-width: 0 !important;
     padding: 0 30px !important;
   }
 
   #header .header-section-name,
   body[class] #header .header-section-name {
-    max-width: calc(100vw - 170px) !important;
+    min-width: 0 !important;
+    max-width: none !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     font-size: 12px !important;
   }
 
+  #header .header-search,
+  body[class] #header .header-search {
+    min-width: 0 !important;
+  }
+
   #header .header-search input,
   body[class] #header .header-search input {
-    width: 100px !important;
+    width: clamp(92px, 28vw, 128px) !important;
     font-size: 12px !important;
   }
 
@@ -205,5 +223,35 @@ body[class] #header .optic-line {
   body[class] #header .optic-line {
     width: calc(100% - 60px) !important;
     margin: 0 30px !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  html body #header .main-nav {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  html body #header .header-nav-row {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  html body #header .header-nav-row > a {
+    flex: none !important;
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
   }
 }
