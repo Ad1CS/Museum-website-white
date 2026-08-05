@@ -26,7 +26,7 @@
   body.about-home-page .about-page {
     position: relative;
     z-index: 5;
-    padding-top: clamp(92px, 13vh, 142px);
+    padding-top: clamp(56px, 8vh, 82px);
   }
 
   body.about-home-page .about-text-block {
@@ -41,20 +41,30 @@
   }
 
   body.about-home-page .about-text-block p {
-    font-size: clamp(22px, 2vw, 30px);
-    line-height: 1.55;
+    font-size: clamp(18px, 1.55vw, 22px);
+    line-height: 1.42;
     max-width: 100%;
     overflow-wrap: anywhere;
     word-break: break-word;
   }
 
+  body.about-home-page .about-contacts-block {
+    margin-top: clamp(32px, 5vh, 48px);
+  }
+
   body.about-home-page .about-contacts-block h2 {
-    font-size: clamp(32px, 2.5vw, 40px);
+    font-size: clamp(25px, 2vw, 32px);
+    margin-bottom: 18px;
+  }
+
+  body.about-home-page .about-contacts-block p {
+    font-size: clamp(15px, 1.2vw, 17px);
+    margin-bottom: 6px;
   }
 
   @media (max-width: 1000px) {
     body.about-home-page .about-page {
-      padding-top: clamp(74px, 10vh, 104px) !important;
+      padding-top: clamp(46px, 6vh, 64px) !important;
     }
 
     body.about-home-page .about-text-block {
@@ -69,11 +79,31 @@
     body.about-home-page .about-text-block--mobile {
       display: block;
     }
+
+    body.about-home-page .about-text-block p {
+      font-size: clamp(16px, 3.8vw, 18px) !important;
+      line-height: 1.38 !important;
+    }
+
+    body.about-home-page .about-contacts-block {
+      margin-top: 28px !important;
+    }
+
+    body.about-home-page .about-contacts-block h2 {
+      font-size: clamp(24px, 6vw, 28px) !important;
+      margin-bottom: 14px !important;
+    }
+
+    body.about-home-page .about-contacts-block p {
+      font-size: 15px !important;
+      line-height: 1.35 !important;
+      margin-bottom: 6px !important;
+    }
   }
 
   @media (max-width: 600px) {
     body.about-home-page .about-page {
-      padding-top: 78px !important;
+      padding-top: 46px !important;
     }
 
     body.about-home-page .about-text-block {
@@ -83,8 +113,8 @@
     }
 
     body.about-home-page .about-text-block p {
-      font-size: clamp(18px, 4.7vw, 20px) !important;
-      line-height: 1.5 !important;
+      font-size: clamp(15px, 4vw, 16px) !important;
+      line-height: 1.35 !important;
       max-width: 100%;
       white-space: normal !important;
       overflow-wrap: anywhere !important;
@@ -92,7 +122,7 @@
     }
 
     body.about-home-page .about-contacts-block h2 {
-      font-size: clamp(27px, 7.4vw, 32px) !important;
+      font-size: clamp(22px, 6.8vw, 26px) !important;
     }
   }
 </style>
