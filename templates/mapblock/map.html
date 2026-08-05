@@ -669,8 +669,29 @@ footer#site-footer { display: none !important; }
     return Math.max(MIN_ZOOM, map.getBoundsZoom(bounds, true));
   }
 
+  let territoryTargetBounds = null;
+
+  function hasTerritoryTargetBounds() {
+    return territoryTargetBounds && territoryTargetBounds.isValid && territoryTargetBounds.isValid();
+  }
+
   function getAdminMapZoom() {
+    if (hasTerritoryTargetBounds()) {
+      return Math.min(MAX_ZOOM, Math.max(map.getMinZoom(), map.getBoundsZoom(territoryTargetBounds, false)));
+    }
     return Math.min(MAX_ZOOM, Math.max(map.getMinZoom(), DEFAULT_ZOOM));
+  }
+
+  function flyToAdminTarget(options) {
+    if (hasTerritoryTargetBounds()) {
+      map.flyToBounds(territoryTargetBounds, {
+        ...options,
+        padding: [24, 24]
+      });
+      return;
+    }
+
+    map.flyTo(getOverviewCenter(), getAdminMapZoom(), options);
   }
 
   // Auto-calculate minZoom so the map covers the viewport without black edges.
@@ -741,6 +762,7 @@ footer#site-footer { display: none !important; }
       fillOpacity: 0.1,
       interactive: true
     });
+    territoryTargetBounds = territoryPoly.getBounds();
 
     territoryPoly.on('click', function(e) {
       L.DomEvent.stopPropagation(e);
@@ -752,7 +774,7 @@ footer#site-footer { display: none !important; }
       territoryDrilledIn = true;
       showBuildingLayer();
 
-      map.flyTo(getOverviewCenter(), getAdminMapZoom(), {
+      flyToAdminTarget({
         duration: 1.5,
         easeLinearity: 0.25
       });
