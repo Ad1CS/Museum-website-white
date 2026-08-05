@@ -933,9 +933,11 @@ footer#site-footer { display: none !important; }
     const currentZoom = map.getZoom();
     const threshold = DEFAULT_ZOOM - 0.05;
 
-    if (territoryDrilledIn || currentZoom >= threshold) {
+    if (currentZoom >= threshold) {
+      territoryDrilledIn = true;
       showBuildingLayer();
     } else {
+      territoryDrilledIn = false;
       showTerritoryLayer();
     }
   }
