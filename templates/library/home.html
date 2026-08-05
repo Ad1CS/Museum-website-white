@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% block body_class %}class="library-home-page"{% endblock %}
 {% block section_name %}библиотека >>>{% endblock %}
 {% block title %}Библиотека{% endblock %}
 {% block meta_description %}Library of the digital museum of the Leningrad Meat Processing Plant named after S.M. Kirov: publications, documents, periodicals, and collection materials.{% endblock %}
@@ -30,10 +31,34 @@
     border: none !important;
   }
 
-  .lib-page {
+  body.library-home-page .lib-page {
     position: relative;
     z-index: 5;
-    padding-top: 0px;
+    padding-top: clamp(86px, 12vh, 130px);
+  }
+
+  @media (max-width: 1000px) {
+    body.library-home-page .lib-page {
+      padding-top: clamp(68px, 9vh, 92px) !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    body.library-home-page .lib-page {
+      padding-top: 76px !important;
+    }
+
+    body.library-home-page .lib-quadrant h2 {
+      width: 100%;
+      max-width: 100%;
+      font-size: clamp(22px, 6.2vw, 26px) !important;
+      line-height: 1.08;
+    }
+
+    body.library-home-page .lib-quadrant h2 a {
+      white-space: normal;
+      overflow-wrap: break-word;
+    }
   }
   
   .lib-quadrant h2 a, 
