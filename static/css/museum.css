@@ -402,7 +402,7 @@ body.page-gallery-list .archive-index-page {
 }
 
 body.page-gallery-list .gallery-mode-title {
-  margin: 0 0 18px;
+  margin: 0 0 34px;
   font-size: 32px;
   font-weight: 800;
   line-height: 1;
@@ -2263,8 +2263,8 @@ body.page-fond-index {
 }
 
 body.page-gallery-list {
-  --card-section-top: clamp(18px, 4.4vh, 34px);
-  --card-title-block: 46px;
+  --card-section-top: clamp(14px, 2.6vh, 20px);
+  --card-title-block: 66px;
   --card-scroll-bottom: calc(var(--card-footer-line-bottom) + 10px);
 }
 
@@ -2275,7 +2275,7 @@ body.page-gallery-list {
   }
 
   body.page-gallery-list {
-    --card-section-top: clamp(18px, 4.4svh, 34px);
+    --card-section-top: clamp(14px, 2.6svh, 20px);
   }
 }
 
