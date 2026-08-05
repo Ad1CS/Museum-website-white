@@ -669,6 +669,10 @@ footer#site-footer { display: none !important; }
     return Math.max(MIN_ZOOM, map.getBoundsZoom(bounds, true));
   }
 
+  function getAdminMapZoom() {
+    return Math.min(MAX_ZOOM, Math.max(map.getMinZoom(), DEFAULT_ZOOM));
+  }
+
   // Auto-calculate minZoom so the map covers the viewport without black edges.
   function adjustMinZoom() {
     const finalMinZoom = getOverviewZoom();
@@ -692,6 +696,7 @@ footer#site-footer { display: none !important; }
 
   // Territory Overlay
   const territoryLayer = L.layerGroup();
+  let territoryDrilledIn = false;
   {% if map_settings.show_territory %}
   (function() {
     const tx = {{ map_settings.territory_x }};
@@ -741,9 +746,13 @@ footer#site-footer { display: none !important; }
       L.DomEvent.stopPropagation(e);
       // Immediate smooth fade
       territoryPoly.setStyle({ opacity: 0, fillOpacity: 0 });
-      if (labelMarker) labelMarker.getElement().style.opacity = '0';
+      const labelElement = labelMarker ? labelMarker.getElement() : null;
+      if (labelElement) labelElement.style.opacity = '0';
       
-      map.flyTo(getOverviewCenter(), getOverviewZoom(), {
+      territoryDrilledIn = true;
+      showBuildingLayer();
+
+      map.flyTo(getOverviewCenter(), getAdminMapZoom(), {
         duration: 1.5,
         easeLinearity: 0.25
       });
@@ -891,31 +900,43 @@ footer#site-footer { display: none !important; }
   refreshLabels();
 
   // Show/hide buildings based on zoom
+  function showBuildingLayer() {
+    if (!map.hasLayer(markerLayer)) markerLayer.addTo(map);
+    if (map.hasLayer(territoryLayer)) map.removeLayer(territoryLayer);
+
+    markerLayer.eachLayer(layer => {
+      if (layer.setStyle && !layer.getIcon) {
+        layer.setStyle({ opacity: 1, fillOpacity: 0.15 });
+      }
+    });
+    refreshLabels();
+  }
+
+  function showTerritoryLayer() {
+    if (map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
+    if (!map.hasLayer(territoryLayer)) {
+      territoryLayer.addTo(map);
+    }
+
+    territoryLayer.eachLayer(layer => {
+      if (layer.setStyle && !layer.getIcon) {
+        layer.setStyle({ opacity: 1, fillOpacity: 0.1 });
+      }
+      if (layer.getElement) {
+        const element = layer.getElement();
+        if (element) element.style.opacity = '1';
+      }
+    });
+  }
+
   function updateVisibility() {
     const currentZoom = map.getZoom();
     const threshold = DEFAULT_ZOOM - 0.05;
 
-    if (currentZoom >= threshold) {
-      if (!map.hasLayer(markerLayer)) markerLayer.addTo(map);
-      if (map.hasLayer(territoryLayer)) map.removeLayer(territoryLayer);
-      
-      // Fade in buildings
-      markerLayer.eachLayer(layer => {
-        if (layer.setStyle && !layer.getIcon) layer.setStyle({ opacity: 1, fillOpacity: 0.15 });
-      });
-      refreshLabels();
+    if (territoryDrilledIn || currentZoom >= threshold) {
+      showBuildingLayer();
     } else {
-      if (map.hasLayer(markerLayer)) map.removeLayer(markerLayer);
-      if (!map.hasLayer(territoryLayer)) {
-        territoryLayer.addTo(map);
-      }
-      
-      // Ensure visibility when in overview range
-      territoryLayer.eachLayer(layer => {
-        if (layer.setStyle && !layer.getIcon) {
-          layer.setStyle({ opacity: 1, fillOpacity: 0.1 });
-        }
-      });
+      showTerritoryLayer();
     }
   }
 
