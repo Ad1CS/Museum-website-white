@@ -30,6 +30,11 @@ class MapSettings(models.Model):
         'Zoom показа зданий', default=1,
         help_text='Здания появляются на карте начиная с этого уровня масштабирования.'
     )
+    territory_zoom_adjust = models.FloatField(
+        'Доп. zoom после клика по территории',
+        default=0,
+        help_text='Тонкая настройка приближения после клика по территории. Отрицательное значение = меньше приближение, положительное = сильнее. Например -0.10 или 0.10.'
+    )
 
     # Territory Overlay
     show_territory = models.BooleanField('Показывать рамку территории', default=True)

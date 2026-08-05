@@ -586,6 +586,7 @@ footer#site-footer { display: none !important; }
   const MIN_ZOOM = {{ map_settings.min_zoom }};
   const MAX_ZOOM = {{ map_settings.max_zoom }};
   const BUILDING_ZOOM = {{ map_settings.building_zoom }};
+  const TERRITORY_ZOOM_ADJUST = {{ map_settings.territory_zoom_adjust|default:0 }};
 
   // Image bounds: [[0, 0], [IMG_H, IMG_W]]
   const bounds = [[0, 0], [IMG_H, IMG_W]];
@@ -673,13 +674,18 @@ footer#site-footer { display: none !important; }
     const minimumBuildingZoom = DEFAULT_ZOOM - 0.05 + DRILL_IN_ZOOM_OFFSET;
 
     if (hasTerritoryTargetBounds()) {
+      const adjustedTerritoryZoom = map.getBoundsZoom(territoryTargetBounds, false) + TERRITORY_ZOOM_ADJUST;
       return Math.min(MAX_ZOOM, Math.max(
         map.getMinZoom(),
         minimumBuildingZoom,
-        map.getBoundsZoom(territoryTargetBounds, false)
+        adjustedTerritoryZoom
       ));
     }
-    return Math.min(MAX_ZOOM, Math.max(map.getMinZoom(), DEFAULT_ZOOM + DRILL_IN_ZOOM_OFFSET));
+    return Math.min(MAX_ZOOM, Math.max(
+      map.getMinZoom(),
+      minimumBuildingZoom,
+      DEFAULT_ZOOM + TERRITORY_ZOOM_ADJUST
+    ));
   }
 
   function flyToAdminTarget(options) {

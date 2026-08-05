@@ -22,6 +22,16 @@ class MapView(TemplateView):
                 min_zoom = -2
                 max_zoom = 3
                 building_zoom = 1
+                territory_zoom_adjust = 0
+                show_territory = True
+                territory_x = 3684
+                territory_y = 2072
+                territory_w = 2000
+                territory_h = 1500
+                territory_rotation = 0
+                territory_mirror_x = False
+                territory_mirror_y = False
+                territory_clip_path = ''
 
             ctx['map_settings'] = _FallbackSettings()
         return ctx

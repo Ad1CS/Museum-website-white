@@ -461,7 +461,7 @@ class BuildingAdmin(admin.ModelAdmin):
 class MapSettingsAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Начальная позиция карты', {'fields': (('center_x', 'center_y'), 'zoom')}),
-        ('Масштабирование', {'fields': (('min_zoom', 'max_zoom'), 'building_zoom')}),
+        ('Масштабирование', {'fields': (('min_zoom', 'max_zoom'), 'building_zoom', 'territory_zoom_adjust')}),
         ('Территория музея (на отдалении)', {
             'fields': (
                 'show_territory',
