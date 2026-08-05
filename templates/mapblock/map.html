@@ -663,24 +663,28 @@ footer#site-footer { display: none !important; }
   }
 
   let territoryTargetBounds = null;
+  const DRILL_IN_ZOOM_OFFSET = 0.01;
 
   function hasTerritoryTargetBounds() {
     return territoryTargetBounds && territoryTargetBounds.isValid && territoryTargetBounds.isValid();
   }
 
   function getAdminMapZoom() {
+    const minimumBuildingZoom = DEFAULT_ZOOM - 0.05 + DRILL_IN_ZOOM_OFFSET;
+
     if (hasTerritoryTargetBounds()) {
-      return Math.min(MAX_ZOOM, Math.max(map.getMinZoom(), map.getBoundsZoom(territoryTargetBounds, false)));
+      return Math.min(MAX_ZOOM, Math.max(
+        map.getMinZoom(),
+        minimumBuildingZoom,
+        map.getBoundsZoom(territoryTargetBounds, false)
+      ));
     }
-    return Math.min(MAX_ZOOM, Math.max(map.getMinZoom(), DEFAULT_ZOOM));
+    return Math.min(MAX_ZOOM, Math.max(map.getMinZoom(), DEFAULT_ZOOM + DRILL_IN_ZOOM_OFFSET));
   }
 
   function flyToAdminTarget(options) {
     if (hasTerritoryTargetBounds()) {
-      map.flyToBounds(territoryTargetBounds, {
-        ...options,
-        padding: [24, 24]
-      });
+      map.flyTo(territoryTargetBounds.getCenter(), getAdminMapZoom(), options);
       return;
     }
 
