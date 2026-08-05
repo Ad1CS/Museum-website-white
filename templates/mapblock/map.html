@@ -289,13 +289,6 @@ footer#site-footer { display: none !important; }
 }
 .leaflet-control-zoom a:hover { color: #fff !important; background: #E69291 !important; border-color: #E69291 !important; }
 
-/* Territory Overlay adjustment */
-.territory-label {
-  background: rgba(0,0,0,0.6) !important;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,0.1) !important;
-}
-
 @media(max-width:1000px) {
   #header {
     min-height: 198px;
@@ -728,8 +721,6 @@ footer#site-footer { display: none !important; }
     const tMirrorX = {% if map_settings.territory_mirror_x %}true{% else %}false{% endif %};
     const tMirrorY = {% if map_settings.territory_mirror_y %}true{% else %}false{% endif %};
     const tShape = "{{ map_settings.territory_clip_path|escapejs }}";
-    const tLabel = "{{ map_settings.territory_label|escapejs }}";
-    const showLabel = {% if map_settings.show_territory_label %}true{% else %}false{% endif %};
 
     // Use a Polygon instead of a Rectangle to support custom shapes and rotation
     const rad = (trot * Math.PI) / 180;
@@ -768,8 +759,6 @@ footer#site-footer { display: none !important; }
       L.DomEvent.stopPropagation(e);
       // Immediate smooth fade
       territoryPoly.setStyle({ opacity: 0, fillOpacity: 0 });
-      const labelElement = labelMarker ? labelMarker.getElement() : null;
-      if (labelElement) labelElement.style.opacity = '0';
       
       territoryDrilledIn = true;
       showBuildingLayer();
@@ -781,20 +770,6 @@ footer#site-footer { display: none !important; }
     });
 
     territoryLayer.addLayer(territoryPoly);
-
-    // Label stays constant screen size
-    let labelMarker = null;
-    if (showLabel) {
-      labelMarker = L.marker([IMG_H - ty, tx], {
-        icon: L.divIcon({
-          className: 'territory-label-marker',
-          html: `<div class="territory-label">${tLabel}</div>`,
-          iconSize: [240, 50],
-          iconAnchor: [120, 25],
-        })
-      });
-      territoryLayer.addLayer(labelMarker);
-    }
   })();
   {% endif %}
 

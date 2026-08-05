@@ -464,8 +464,7 @@ class MapSettingsAdmin(admin.ModelAdmin):
         ('Масштабирование', {'fields': (('min_zoom', 'max_zoom'), 'building_zoom')}),
         ('Территория музея (на отдалении)', {
             'fields': (
-                ('show_territory', 'show_territory_label'),
-                'territory_label',
+                'show_territory',
                 ('territory_x', 'territory_y'),
                 ('territory_w', 'territory_h'),
                 'territory_rotation',
