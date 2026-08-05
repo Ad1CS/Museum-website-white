@@ -238,6 +238,7 @@ footer#site-footer { display: none !important; }
   justify-content: space-between;
   box-sizing: border-box;
 }
+.map-year-group { display: contents; }
 .map-nav-item {
   color: #fff; font-size: 24px; font-weight: 800; text-transform: lowercase;
   cursor: pointer; transition: color 0.2s; opacity: 0.85;
@@ -245,9 +246,19 @@ footer#site-footer { display: none !important; }
   white-space: nowrap;
   position: relative;
   box-sizing: border-box;
+  font-family: var(--font);
+  border: 0;
+  background: transparent;
+  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
   text-decoration: none;
 }
 .map-nav-item:hover, .map-nav-item.active { color: #E69291; opacity: 1; }
+.map-nav-item:focus-visible {
+  outline: 1px solid rgba(230,146,145,0.9);
+  outline-offset: 3px;
+}
 .map-nav-item::after {
   content: "";
   position: absolute;
@@ -312,70 +323,88 @@ footer#site-footer { display: none !important; }
   .map-bottom-nav {
     left: 50%;
     right: auto;
-    bottom: max(18px, env(safe-area-inset-bottom));
-    width: min(420px, calc(100% - 24px));
+    bottom: max(14px, env(safe-area-inset-bottom));
+    width: min(370px, calc(100% - 24px));
     transform: translateX(-50%);
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: 36px 32px;
-    gap: 0;
+    grid-template-columns: 1fr;
+    gap: 7px;
     justify-content: stretch;
     align-items: stretch;
-    padding: 0;
-    border-top: 1px solid rgba(255,255,255,0.46);
-    border-bottom: 1px solid rgba(255,255,255,0.46);
-    background: linear-gradient(to bottom, rgba(0,0,0,0.64), rgba(0,0,0,0.46));
+    padding: 8px;
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 8px;
+    background: rgba(12,12,12,0.62);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
-    box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+    box-shadow: 0 18px 42px rgba(0,0,0,0.34);
     overflow: visible;
+  }
+  .map-year-group {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+    min-height: 38px;
+    padding: 3px;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.06);
+    box-sizing: border-box;
   }
   .map-nav-item {
     min-width: 0;
-    min-height: 0;
+    min-height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0 10px;
-    border: 0;
-    border-radius: 0;
+    border-radius: 4px;
     background: transparent;
-    font-size: 13px;
+    color: rgba(255,255,255,0.88);
+    font-size: 12px;
+    font-weight: 800;
     line-height: 1;
     letter-spacing: 0;
     white-space: normal;
-  }
-  .map-bottom-nav .map-nav-item:nth-child(2),
-  .map-bottom-nav .map-nav-item:nth-child(3) {
-    border-left: 1px solid rgba(255,255,255,0.22);
+    opacity: 1;
   }
   .map-nav-item:hover,
   .map-nav-item.active {
-    color: #E69291;
-    background: transparent;
-  }
-  .map-nav-item::after {
-    left: 32%;
-    right: 32%;
-    bottom: 7px;
-    height: 1px;
-    background: transparent;
-    display: block;
-  }
-  .map-nav-item.active::after {
+    color: #151515;
     background: #E69291;
   }
-  .map-bottom-nav .map-nav-item[href] {
-    grid-column: 1 / -1;
-    min-height: 0;
-    border-top: 1px solid rgba(255,255,255,0.22);
-    font-size: 11px;
+  .map-nav-item::after {
+    display: none;
+  }
+  .map-plans-link {
+    min-height: 30px;
+    justify-content: space-between;
+    padding: 0 10px 0 12px;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.82);
+    font-size: 10.5px;
     font-weight: 700;
     line-height: 1.1;
-    opacity: 0.78;
+    opacity: 1;
   }
-  .map-bottom-nav .map-nav-item[href]::after {
-    display: none;
+  .map-plans-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.11);
+  }
+  .map-plans-link::after {
+    content: ">>>";
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    margin-left: 12px;
+    background: transparent;
+    color: inherit;
+    font-size: 9px;
+    line-height: 1;
+    opacity: 0.62;
   }
 }
 
@@ -425,14 +454,20 @@ footer#site-footer { display: none !important; }
   /* Bottom nav adjustments */
   .map-bottom-nav {
     bottom: max(14px, env(safe-area-inset-bottom));
-    width: calc(100% - 20px);
-    grid-template-rows: 34px 30px;
+    width: min(340px, calc(100% - 20px));
+    gap: 6px;
+    padding: 7px;
+  }
+  .map-year-group {
+    min-height: 36px;
   }
   .map-nav-item {
     padding: 0 8px;
-    font-size: 12px;
+    min-height: 30px;
+    font-size: 11.5px;
   }
-  .map-bottom-nav .map-nav-item[href] {
+  .map-plans-link {
+    min-height: 28px;
     font-size: 10px;
   }
   .map-area::before {
@@ -444,11 +479,16 @@ footer#site-footer { display: none !important; }
 }
 
 @media(max-width:380px) {
+  .map-bottom-nav {
+    width: calc(100% - 16px);
+    padding: 6px;
+  }
   .map-nav-item {
     font-size: 11px;
   }
-  .map-bottom-nav .map-nav-item[href] {
-    font-size: 9.5px;
+  .map-plans-link {
+    padding: 0 9px;
+    font-size: 9px;
   }
 }
 </style>
@@ -469,11 +509,14 @@ footer#site-footer { display: none !important; }
 
 
 
-    <!-- Bottom Map Navigation -->    <div class="map-bottom-nav">
-      <div class="map-nav-item active" data-year="2002">2002</div>
-      <div class="map-nav-item" data-year="1966">1966</div>
-      <div class="map-nav-item" data-year="1943">1943</div>
-      <a href="{% url 'mapblock:plans' %}" class="map-nav-item">карты и планы предприятия</a>
+    <!-- Bottom Map Navigation -->
+    <div class="map-bottom-nav">
+      <div class="map-year-group">
+        <button type="button" class="map-nav-item active" data-year="2002">2002</button>
+        <button type="button" class="map-nav-item" data-year="1966">1966</button>
+        <button type="button" class="map-nav-item" data-year="1943">1943</button>
+      </div>
+      <a href="{% url 'mapblock:plans' %}" class="map-nav-item map-plans-link">карты и планы предприятия</a>
     </div>
   </div>
 
