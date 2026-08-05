@@ -1939,10 +1939,10 @@ body.page-staff-list .staff-alpha {
   display: flex;
   position: relative;
   align-items: center;
-  justify-content: center;
-  gap: clamp(16px, 1.65vw, 34px);
+  justify-content: space-between;
+  gap: clamp(8px, 0.7vw, 18px);
   min-height: 48px;
-  padding: 0 84px;
+  padding: 0;
   border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
@@ -1953,7 +1953,7 @@ body.page-staff-list .alpha-btn {
   min-width: 14px;
   color: rgba(255,255,255,0.95);
   font-size: 22px;
-  font-weight: 900;
+  font-weight: 300;
   line-height: 1;
   text-transform: lowercase;
   opacity: 0.94;

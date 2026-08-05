@@ -22,6 +22,11 @@ class HistoryTimelineView(TemplateView):
     template_name = 'history/timeline.html'
 
 
+def _display_path(path):
+    """Label for the header breadcrumb — without the slashes wrapping the path."""
+    return path.strip('/') or 'главная'
+
+
 def _not_found_context(request, current_path=None, include_referrer=True):
     referrer = request.META.get('HTTP_REFERER', '')
     previous_path = ''
@@ -31,9 +36,12 @@ def _not_found_context(request, current_path=None, include_referrer=True):
         if parsed.query:
             previous_path = f'{previous_path}?{parsed.query}'
 
+    current = current_path or request.get_full_path()
     return {
         'previous_path': previous_path,
-        'current_path': current_path or request.get_full_path(),
+        'previous_label': _display_path(previous_path) if previous_path else '',
+        'current_path': current,
+        'current_label': _display_path(current),
     }
 
 

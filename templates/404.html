@@ -6,7 +6,7 @@
 {% block body_class %}class="page-404"{% endblock %}
 
 {% block section_name %}
-{% if previous_path %}<a href="{{ previous_path }}">{{ previous_path }}</a> &gt;&gt;&gt; {% endif %}<span>{{ current_path }}</span>
+{% if previous_path %}<a href="{{ previous_path }}">{{ previous_label }}</a> &gt;&gt;&gt; {% endif %}<span>{{ current_label }}</span>
 {% endblock %}
 
 {% block extra_head %}

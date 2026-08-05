@@ -7,7 +7,7 @@
 {% block meta_description %}{{ building.page_description|default:building.description|striptags|truncatechars:155 }}{% endblock %}
 
 {% block extra_head %}
-<link rel="preload" href="{% static 'img/buildingBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+<link rel="preload" href="{% static 'img/buildingsPage.webp' %}?v=1" as="image" type="image/webp" fetchpriority="high">
 <style>
 body {
   background: #1f1f1d !important;
@@ -451,7 +451,7 @@ body.page-building-detail .building-bottom-rule {
 {% endblock %}
 
 {% block hero_area_start %}
-<div class="page-dark-bg building-bg" style="background-image:url('{% static 'img/buildingBG.webp' %}?v=2')">
+<div class="page-dark-bg building-bg" style="background-image:url('{% static 'img/buildingsPage.webp' %}?v=1')">
   <div class="page-dark-bg__overlay"></div>
 </div>
 {% endblock %}

@@ -8,7 +8,7 @@
 <link rel="canonical" href="{{ SEO_CANONICAL_URL }}{{ request.path }}">
 <link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
 <link rel="icon" type="image/png" href="{% static "img/favicon.png" %}">
-<link rel="stylesheet" href="{% static "css/museum.css" %}?v=2.07">
+<link rel="stylesheet" href="{% static "css/museum.css" %}?v=2.08">
 <link rel="preload" href="{% static "fonts/TTHoves-Regular.woff2" %}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{% static "fonts/TTHoves-Bold.woff2" %}" as="font" type="font/woff2" crossorigin>
 <meta name="theme-color" content="#C8C4BB">
@@ -34,6 +34,7 @@
       {% url "about:page" as about_url %}<a href="{{ about_url }}" {% if "about" in request.resolver_match.namespace %}class="active"{% endif %}>о проекте</a>
     </div>
   </nav>
+  <div class="optic-line"></div>
   <div class="header-search-row">
     <span class="header-section-name">{% block section_name %}{% endblock %}</span>
     {% block header_search %}
@@ -41,7 +42,7 @@
       <input type="text" name="q" placeholder="поиск &gt;&gt;&gt;" value="{{ request.GET.q|default:"" }}">
     </form>
     {% endblock %}
-  </div><div class="optic-line"></div></header>
+  </div></header>
 
 {% block hero_area_end %}{% endblock %}
 
