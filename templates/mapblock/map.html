@@ -655,23 +655,86 @@ footer#site-footer { display: none !important; }
   // Safety timeout: hide loader after 5s regardless
   setTimeout(hideLoader, 5000);
 
-  function getOverviewCenter() {
-    return [IMG_H - CENTER_Y, CENTER_X];
-  }
-
-  function getOverviewZoom() {
-    return Math.max(MIN_ZOOM, map.getBoundsZoom(bounds, true));
-  }
-
   let territoryTargetBounds = null;
+  let territoryDrilledIn = false;
+  let initialOverviewSet = false;
   const DRILL_IN_ZOOM_OFFSET = 0.01;
+  const COMPACT_MAP_QUERY = '(max-width: 1000px), (max-height: 620px)';
 
   function hasTerritoryTargetBounds() {
     return territoryTargetBounds && territoryTargetBounds.isValid && territoryTargetBounds.isValid();
   }
 
+  function isCompactMapViewport() {
+    return window.matchMedia(COMPACT_MAP_QUERY).matches;
+  }
+
   function clampMapZoom(zoom) {
     return Math.min(MAX_ZOOM, Math.max(map.getMinZoom(), zoom));
+  }
+
+  function getCompactOverviewPadding() {
+    if (!isCompactMapViewport()) return { x: 0, top: 0, bottom: 0 };
+
+    const size = map.getSize();
+    const header = document.getElementById('header');
+    const bottomNav = document.querySelector('.map-bottom-nav');
+    const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+    const navTop = bottomNav ? bottomNav.getBoundingClientRect().top : window.innerHeight;
+    const navHeight = Math.max(0, window.innerHeight - navTop);
+
+    return {
+      x: Math.min(40, Math.max(16, size.x * 0.06)),
+      top: Math.min(size.y * 0.48, Math.max(24, headerBottom + 18)),
+      bottom: Math.min(size.y * 0.36, Math.max(24, navHeight + 18)),
+    };
+  }
+
+  function getBoundsFitZoom(targetBounds, padding) {
+    const size = map.getSize();
+    const availableWidth = Math.max(1, size.x - padding.x * 2);
+    const availableHeight = Math.max(1, size.y - padding.top - padding.bottom);
+    const boundsWidth = Math.max(1, targetBounds.getEast() - targetBounds.getWest());
+    const boundsHeight = Math.max(1, targetBounds.getNorth() - targetBounds.getSouth());
+    const scale = Math.min(availableWidth / boundsWidth, availableHeight / boundsHeight);
+
+    return Math.log(scale) / Math.LN2;
+  }
+
+  function getOverviewZoom() {
+    const coverZoom = map.getBoundsZoom(bounds, true);
+
+    if (isCompactMapViewport() && hasTerritoryTargetBounds()) {
+      const territoryFitZoom = getBoundsFitZoom(territoryTargetBounds, getCompactOverviewPadding());
+      const responsiveZoom = Math.min(MIN_ZOOM, territoryFitZoom);
+      return Math.min(MAX_ZOOM, Math.max(coverZoom, responsiveZoom));
+    }
+
+    return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, coverZoom));
+  }
+
+  function getOverviewCenter(zoom = getOverviewZoom()) {
+    const defaultCenter = L.latLng(IMG_H - CENTER_Y, CENTER_X);
+
+    if (!isCompactMapViewport() || !hasTerritoryTargetBounds()) {
+      return defaultCenter;
+    }
+
+    const padding = getCompactOverviewPadding();
+    const territoryCenter = territoryTargetBounds.getCenter();
+    const verticalOffset = (padding.top - padding.bottom) / 2;
+
+    if (!verticalOffset) return territoryCenter;
+
+    const projectedCenter = map.project(territoryCenter, zoom).subtract([0, verticalOffset]);
+    return map.unproject(projectedCenter, zoom);
+  }
+
+  function setOverviewView() {
+    const overviewZoom = getOverviewZoom();
+    map.setMinZoom(overviewZoom);
+    map.setView(getOverviewCenter(overviewZoom), overviewZoom, { animate: false });
+    initialOverviewSet = true;
   }
 
   function getBuildingVisibilityThreshold() {
@@ -699,7 +762,8 @@ footer#site-footer { display: none !important; }
       return;
     }
 
-    map.flyTo(getOverviewCenter(), getAdminMapZoom(), options);
+    const zoom = getAdminMapZoom();
+    map.flyTo(getOverviewCenter(zoom), zoom, options);
   }
 
   // Auto-calculate minZoom so the map covers the viewport without black edges.
@@ -708,24 +772,33 @@ footer#site-footer { display: none !important; }
     
     if (map.getMinZoom() !== finalMinZoom) {
       map.setMinZoom(finalMinZoom);
-      if (map.getZoom() < finalMinZoom) {
-        map.setView(getOverviewCenter(), finalMinZoom, { animate: false });
-      }
+    }
+
+    if (map.getZoom() < finalMinZoom) {
+      map.setView(getOverviewCenter(finalMinZoom), finalMinZoom, { animate: false });
+    } else if (initialOverviewSet && !territoryDrilledIn) {
+      map.setView(getOverviewCenter(map.getZoom()), map.getZoom(), { animate: false });
     }
   }
 
   map.on('load resize', adjustMinZoom);
 
-
-
-  // Trigger initial check
-  const startMinZoom = getOverviewZoom();
-  map.setMinZoom(startMinZoom);
-  map.setView(getOverviewCenter(), startMinZoom, { animate: false });
-
   // Territory Overlay
   const territoryLayer = L.layerGroup();
-  let territoryDrilledIn = false;
+
+  function getTerritoryStyle() {
+    const compact = isCompactMapViewport();
+
+    return {
+      color: '#FFFFFF',
+      weight: compact ? 1.8 : 0.6,
+      fillColor: '#FFFFFF',
+      fillOpacity: compact ? 0.22 : 0.1,
+      opacity: 1,
+      interactive: true
+    };
+  }
+
   {% if map_settings.show_territory %}
   (function() {
     const tx = {{ map_settings.territory_x }};
@@ -761,13 +834,7 @@ footer#site-footer { display: none !important; }
       return [IMG_H - (ty + ry), tx + rx]; // [lat, lng]
     });
 
-    const territoryPoly = L.polygon(polyPoints, {
-      color: '#FFFFFF',
-      weight: 0.6,
-      fillColor: '#FFFFFF',
-      fillOpacity: 0.1,
-      interactive: true
-    });
+    const territoryPoly = L.polygon(polyPoints, getTerritoryStyle());
     territoryTargetBounds = territoryPoly.getBounds();
 
     territoryPoly.on('click', function(e) {
@@ -787,6 +854,8 @@ footer#site-footer { display: none !important; }
     territoryLayer.addLayer(territoryPoly);
   })();
   {% endif %}
+
+  setOverviewView();
 
   // Buildings
   const buildings = {
@@ -835,7 +904,7 @@ footer#site-footer { display: none !important; }
 
     const polygon = L.polygon(polyPoints, {
       color: '#FFFFFF',
-      weight: 0.4,
+      weight: isCompactMapViewport() ? 0.9 : 0.4,
       fillColor: '#FFFFFF',
       fillOpacity: 0,
       opacity: 0,
@@ -854,12 +923,15 @@ footer#site-footer { display: none !important; }
 
     polygon.on('mouseover', function() {
       if (!document.getElementById(`sidebar-${slug}`).classList.contains('active')) {
-        this.setStyle({ fillOpacity: 0.4, weight: 1.0 });
+        this.setStyle({ fillOpacity: 0.4, weight: isCompactMapViewport() ? 1.4 : 1.0 });
       }
     });
     polygon.on('mouseout', function() {
       if (!document.getElementById(`sidebar-${slug}`).classList.contains('active')) {
-        this.setStyle({ fillOpacity: 0.15, weight: 0.4 });
+        this.setStyle({
+          fillOpacity: isCompactMapViewport() ? 0.24 : 0.15,
+          weight: isCompactMapViewport() ? 0.9 : 0.4
+        });
       }
     });
 
@@ -918,7 +990,11 @@ footer#site-footer { display: none !important; }
 
     markerLayer.eachLayer(layer => {
       if (layer.setStyle && !layer.getIcon) {
-        layer.setStyle({ opacity: 1, fillOpacity: 0.15 });
+        layer.setStyle({
+          opacity: 1,
+          fillOpacity: isCompactMapViewport() ? 0.24 : 0.15,
+          weight: isCompactMapViewport() ? 0.9 : 0.4
+        });
       }
     });
     refreshLabels();
@@ -932,7 +1008,7 @@ footer#site-footer { display: none !important; }
 
     territoryLayer.eachLayer(layer => {
       if (layer.setStyle && !layer.getIcon) {
-        layer.setStyle({ opacity: 1, fillOpacity: 0.1 });
+        layer.setStyle(getTerritoryStyle());
       }
       if (layer.getElement) {
         const element = layer.getElement();
