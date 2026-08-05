@@ -231,11 +231,15 @@ footer#site-footer { display: none !important; }
 
 /* Bottom Map Navigation */
 .map-bottom-nav {
-  position: absolute; bottom: 40px; left: 0; right: 0;
+  position: absolute; bottom: 40px; left: 50%; right: auto;
+  width: min(1120px, calc(100% - 160px));
+  transform: translateX(-50%);
   z-index: 4500; display: flex;
-  padding: 0 80px 20px;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(42px, 6vw, 108px);
+  padding: 0 0 20px;
   border-bottom: 1px solid #fff;
-  justify-content: space-between;
   box-sizing: border-box;
 }
 .map-year-group { display: contents; }
@@ -311,8 +315,9 @@ footer#site-footer { display: none !important; }
   }
   .map-bottom-nav {
     bottom: 32px;
-    padding: 0 30px 16px;
-    gap: 24px;
+    width: min(840px, calc(100% - 60px));
+    padding: 0 0 16px;
+    gap: clamp(24px, 4vw, 56px);
   }
   .map-nav-item {
     font-size: 17px;
@@ -321,14 +326,14 @@ footer#site-footer { display: none !important; }
 
 @media(max-width:760px) {
   .map-bottom-nav {
-    left: 0;
-    right: 0;
+    left: 50%;
+    right: auto;
     bottom: max(22px, env(safe-area-inset-bottom));
-    width: auto;
-    transform: none;
+    width: min(560px, calc(100% - 28px));
+    transform: translateX(-50%);
     display: flex;
     align-items: flex-end;
-    justify-content: space-between;
+    justify-content: center;
     gap: clamp(8px, 2.4vw, 18px);
     padding: 0 18px 12px;
     border: 0;
@@ -433,6 +438,7 @@ footer#site-footer { display: none !important; }
   .map-bottom-nav {
     bottom: max(18px, env(safe-area-inset-bottom));
     gap: 8px;
+    width: calc(100% - 24px);
     padding: 0 12px 10px;
   }
   .map-nav-item {
@@ -459,6 +465,7 @@ footer#site-footer { display: none !important; }
   .map-bottom-nav {
     bottom: max(16px, env(safe-area-inset-bottom));
     gap: 6px;
+    width: calc(100% - 18px);
     padding: 0 9px 9px;
   }
   .map-nav-item {
