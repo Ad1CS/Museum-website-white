@@ -28,6 +28,13 @@
     max-width: 100%;
   }
 
+  body.page-map .leaflet-container img,
+  body.page-map .leaflet-container canvas,
+  body.page-map .leaflet-container svg {
+    max-width: none !important;
+    max-height: none !important;
+  }
+
   #header,
   html body #header {
     width: 100% !important;

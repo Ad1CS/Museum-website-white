@@ -670,22 +670,27 @@ footer#site-footer { display: none !important; }
     return territoryTargetBounds && territoryTargetBounds.isValid && territoryTargetBounds.isValid();
   }
 
+  function clampMapZoom(zoom) {
+    return Math.min(MAX_ZOOM, Math.max(map.getMinZoom(), zoom));
+  }
+
+  function getBuildingVisibilityThreshold() {
+    return clampMapZoom(BUILDING_ZOOM - 0.05);
+  }
+
+  function getTerritoryResetThreshold() {
+    return map.getMinZoom() + DRILL_IN_ZOOM_OFFSET;
+  }
+
   function getAdminMapZoom() {
-    const minimumBuildingZoom = DEFAULT_ZOOM - 0.05 + DRILL_IN_ZOOM_OFFSET;
+    const minimumBuildingZoom = getBuildingVisibilityThreshold() + DRILL_IN_ZOOM_OFFSET;
 
     if (hasTerritoryTargetBounds()) {
-      const adjustedTerritoryZoom = map.getBoundsZoom(territoryTargetBounds, false) + TERRITORY_ZOOM_ADJUST;
-      return Math.min(MAX_ZOOM, Math.max(
-        map.getMinZoom(),
-        minimumBuildingZoom,
-        adjustedTerritoryZoom
-      ));
+      const fittedTerritoryZoom = map.getBoundsZoom(territoryTargetBounds, false);
+      const defaultTerritoryZoom = Math.max(minimumBuildingZoom, fittedTerritoryZoom);
+      return clampMapZoom(defaultTerritoryZoom + TERRITORY_ZOOM_ADJUST);
     }
-    return Math.min(MAX_ZOOM, Math.max(
-      map.getMinZoom(),
-      minimumBuildingZoom,
-      DEFAULT_ZOOM + TERRITORY_ZOOM_ADJUST
-    ));
+    return clampMapZoom(minimumBuildingZoom + TERRITORY_ZOOM_ADJUST);
   }
 
   function flyToAdminTarget(options) {
@@ -938,7 +943,18 @@ footer#site-footer { display: none !important; }
 
   function updateVisibility() {
     const currentZoom = map.getZoom();
-    const threshold = DEFAULT_ZOOM - 0.05;
+    const threshold = getBuildingVisibilityThreshold();
+
+    if (territoryDrilledIn) {
+      if (currentZoom <= getTerritoryResetThreshold()) {
+        territoryDrilledIn = false;
+        showTerritoryLayer();
+        return;
+      }
+
+      showBuildingLayer();
+      return;
+    }
 
     if (currentZoom >= threshold) {
       territoryDrilledIn = true;
