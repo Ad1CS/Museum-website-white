@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% block body_class %}class="about-home-page"{% endblock %}
 {% block section_name %}<span>о проекте >>></span>{% endblock %}
 {% block title %}О проекте{% endblock %}
 {% block meta_description %}About the digital museum project for the Leningrad Meat Processing Plant named after S.M. Kirov, including project information and contacts.{% endblock %}
@@ -22,10 +23,77 @@
     background-position: center;
     }
 
-    .about-page {
+  body.about-home-page .about-page {
     position: relative;
     z-index: 5;
-    padding-top: 0px;
+    padding-top: clamp(92px, 13vh, 142px);
+  }
+
+  body.about-home-page .about-text-block {
+    width: min(1180px, calc(100vw - 80px));
+    max-width: 1180px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  body.about-home-page .about-text-block--mobile {
+    display: none;
+  }
+
+  body.about-home-page .about-text-block p {
+    font-size: clamp(22px, 2vw, 30px);
+    line-height: 1.55;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  body.about-home-page .about-contacts-block h2 {
+    font-size: clamp(32px, 2.5vw, 40px);
+  }
+
+  @media (max-width: 1000px) {
+    body.about-home-page .about-page {
+      padding-top: clamp(74px, 10vh, 104px) !important;
+    }
+
+    body.about-home-page .about-text-block {
+      width: min(100%, calc(100vw - 40px));
+      max-width: calc(100vw - 40px);
+    }
+
+    body.about-home-page .about-text-block--desktop {
+      display: none;
+    }
+
+    body.about-home-page .about-text-block--mobile {
+      display: block;
+    }
+  }
+
+  @media (max-width: 600px) {
+    body.about-home-page .about-page {
+      padding-top: 78px !important;
+    }
+
+    body.about-home-page .about-text-block {
+      width: min(100%, calc(100vw - 40px));
+      max-width: calc(100vw - 40px);
+      box-sizing: border-box;
+    }
+
+    body.about-home-page .about-text-block p {
+      font-size: clamp(18px, 4.7vw, 20px) !important;
+      line-height: 1.5 !important;
+      max-width: 100%;
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
+    }
+
+    body.about-home-page .about-contacts-block h2 {
+      font-size: clamp(27px, 7.4vw, 32px) !important;
+    }
   }
 </style>
 {% endblock %}
@@ -38,8 +106,11 @@
 
 {% block hero_area_end %}
   <div class="about-page">
-    <div class="about-text-block">
+    <div class="about-text-block about-text-block--desktop">
       <p>{{ page.body|linebreaksbr }}</p>
+    </div>
+    <div class="about-text-block about-text-block--mobile">
+      <p>{{ page.body }}</p>
     </div>
 
     <div class="about-contacts-block">
