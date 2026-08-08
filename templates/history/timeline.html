@@ -28,7 +28,7 @@
 <link rel="preload" href="{% static 'img/historyPageBG.webp' %}?v=1" as="image" type="image/webp" fetchpriority="high">
 <style>
 .history-page-shell { position:relative; overflow:hidden; background:#777775; }
-.history-page-bg { position:fixed; inset:0; z-index:0; background:url('{% static 'img/historyPageBG.webp' %}?v=1') center center / contain no-repeat; pointer-events:none; }
+.history-page-bg { position:fixed; inset:0; z-index:0; background:url('{% static 'img/historyPageBG.webp' %}?v=1') center center / cover no-repeat; pointer-events:none; }
 .history-page-shell #header,
 .history-page-shell #main-content,
 .history-page-shell .tl-first-section { position:relative; z-index:2; }
