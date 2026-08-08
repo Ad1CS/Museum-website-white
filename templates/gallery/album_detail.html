@@ -6,10 +6,14 @@
 {% block meta_description %}{{ album.description|striptags|truncatechars:155|default:album.title }}{% endblock %}
 
 {% block extra_head %}
+{% if page_background_url %}
+<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
+{% else %}
 <link rel="preload" href="{% static 'gallery/galleryBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endif %}
 <style>
   body {
-    background: #1a1a1a url('{% static "gallery/galleryBG.webp" %}?v=2') no-repeat center top;
+    background: #1a1a1a url('{% if page_background_url %}{{ page_background_url }}{% else %}{% static "gallery/galleryBG.webp" %}?v=2{% endif %}') no-repeat center top;
     background-size: cover;
     background-attachment: scroll;
     color: #fff;

@@ -1,11 +1,11 @@
 {% extends "base/base.html" %}
 {% load static %}
 {% block extra_head %}
-{% if home_background and home_background.image %}
-<link rel="preload" href="{{ home_background.image.url }}" as="image" fetchpriority="high">
+{% if page_background_url %}
+<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
 <style>
   .hero-area {
-    background-image: url('{{ home_background.image.url }}') !important;
+    background-image: url('{{ page_background_url }}') !important;
   }
 </style>
 {% else %}

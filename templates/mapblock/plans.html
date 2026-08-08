@@ -13,7 +13,11 @@
 {% block meta_description %}Buildings and territory plans of the Leningrad Meat Processing Plant named after S.M. Kirov in the digital museum.{% endblock %}
 
 {% block extra_head %}
+{% if page_background_url %}
+<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
+{% else %}
 <link rel="preload" href="{% static 'img/buildingsPage.webp' %}?v=1" as="image" type="image/webp" fetchpriority="high">
+{% endif %}
 <style>
 body.buildings-index-body {
   background: #20201f !important;
@@ -435,7 +439,7 @@ body.page-buildings-list .buildings-index-empty {
 {% endblock %}
 
 {% block hero_area_start %}
-<div class="page-dark-bg buildings-index-bg" style="background-image:url('{% static 'img/buildingsPage.webp' %}?v=1')">
+<div class="page-dark-bg buildings-index-bg" style="background-image:url('{% if page_background_url %}{{ page_background_url }}{% else %}{% static 'img/buildingsPage.webp' %}?v=1{% endif %}')">
   <div class="page-dark-bg__overlay"></div>
 </div>
 {% endblock %}

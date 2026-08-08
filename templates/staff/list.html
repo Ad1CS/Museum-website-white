@@ -6,7 +6,12 @@
 {% block meta_description %}Staff archive of the digital museum of the Leningrad Meat Processing Plant named after S.M. Kirov: employees, biographies, positions, and related fonds.{% endblock %}
 {% block body_class %}class="page-staff-list page-card-scroll-page"{% endblock %}
 {% block extra_head %}
+{% if page_background_url %}
+<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
+<style>body.page-staff-list { --page-background-image: url('{{ page_background_url }}'); }</style>
+{% else %}
 <link rel="preload" href="{% static 'img/staffBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endif %}
 {% endblock %}
 
 {% block header_search %}

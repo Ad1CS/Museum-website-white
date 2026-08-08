@@ -6,7 +6,11 @@
 {% block meta_description %}Library of the digital museum of the Leningrad Meat Processing Plant named after S.M. Kirov: publications, documents, periodicals, and collection materials.{% endblock %}
 
 {% block extra_head %}
+{% if page_background_url %}
+<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
+{% else %}
 <link rel="preload" href="{% static 'img/library_bg.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endif %}
 <style>
   /* Fix for the gap: ensure the dark background starts from the very top */
   body {
@@ -75,7 +79,7 @@
 {% endblock %}
 
 {% block hero_area_start %}
-<div class="page-dark-bg" style="background-image:url('{% static "img/library_bg.webp" %}?v=2')">
+<div class="page-dark-bg" style="background-image:url('{% if page_background_url %}{{ page_background_url }}{% else %}{% static "img/library_bg.webp" %}?v=2{% endif %}')">
 <div class="page-dark-bg__overlay"></div>
 </div>
 {% endblock %}

@@ -1,17 +1,17 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import HomeBackground
+from .models import PageBackground
 
 
-@admin.register(HomeBackground)
-class HomeBackgroundAdmin(admin.ModelAdmin):
-    list_display = ('preview', 'title', 'active', 'order', 'created_at')
-    list_editable = ('active', 'order')
-    list_filter = ('active',)
+@admin.register(PageBackground)
+class PageBackgroundAdmin(admin.ModelAdmin):
+    list_display = ('preview', 'page', 'title', 'active', 'order', 'created_at')
+    list_editable = ('page', 'active', 'order')
+    list_filter = ('page', 'active')
     search_fields = ('title', 'image')
     readonly_fields = ('preview_large', 'created_at')
-    fields = ('title', 'image', 'active', 'order', 'preview_large', 'created_at')
+    fields = ('page', 'title', 'image', 'active', 'order', 'preview_large', 'created_at')
 
     @admin.display(description='Превью')
     def preview(self, obj):

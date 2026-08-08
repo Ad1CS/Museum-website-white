@@ -7,10 +7,14 @@
 {% block meta_description %}Gallery of the digital museum of the Leningrad Meat Processing Plant named after S.M. Kirov: photos, videos, newsreels, and archive albums.{% endblock %}
 
 {% block extra_head %}
+{% if page_background_url %}
+<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
+{% else %}
 <link rel="preload" href="{% static 'gallery/galleryBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endif %}
 <style>
   body {
-    background: #1a1a1a url('{% static "gallery/galleryBG.webp" %}?v=2') no-repeat center top;
+    background: #1a1a1a url('{% if page_background_url %}{{ page_background_url }}{% else %}{% static "gallery/galleryBG.webp" %}?v=2{% endif %}') no-repeat center top;
     background-size: cover;
     background-attachment: scroll;
     color: #fff;

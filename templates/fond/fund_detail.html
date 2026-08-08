@@ -13,7 +13,12 @@
 {% block meta_description %}{{ fund.description|striptags|truncatechars:155|default:fund.name }}{% endblock %}
 
 {% block extra_head %}
+{% if page_background_url %}
+<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
+<style>body.page-fond-dark { --page-background-image: url('{{ page_background_url }}'); }</style>
+{% else %}
 <link rel="preload" href="{% static 'fond/fondBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endif %}
 {% endblock %}
 
 {% block header_search %}

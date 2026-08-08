@@ -8,14 +8,19 @@
 {% block meta_description %}Gallery materials from the museum fonds of the Leningrad Meat Processing Plant named after S.M. Kirov.{% endblock %}
 
 {% block extra_head %}
+{% if page_background_url %}
+<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
+<style>body.page-fond-dark { --page-background-image: url('{{ page_background_url }}'); }</style>
+{% else %}
 <link rel="preload" href="{% static 'fond/fondBG.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endif %}
 {% endblock %}
 
 {% block content %}
 <style>
   /* EMERGENCY INLINE CSS */
   body.page-fond-dark {
-    background: #000 url('{% static "fond/fondBG.webp" %}?v=2') no-repeat center top !important;
+    background: #000 var(--page-background-image, url('{% static "fond/fondBG.webp" %}?v=2')) no-repeat center top !important;
     background-size: cover !important;
     background-attachment: scroll !important;
     color: #ffffff !important;
