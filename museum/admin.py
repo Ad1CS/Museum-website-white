@@ -8,12 +8,12 @@ from .models import HomeBackground, HomeBackgroundSettings
 
 @admin.register(HomeBackground)
 class HomeBackgroundAdmin(admin.ModelAdmin):
-    list_display = ('preview', 'title', 'active', 'order', 'created_at')
-    list_editable = ('active', 'order')
+    list_display = ('preview', 'title', 'active', 'created_at')
+    list_editable = ('active',)
     list_filter = ('active',)
     search_fields = ('title', 'image')
     readonly_fields = ('preview_large', 'created_at')
-    fields = ('title', 'image', 'active', 'order', 'preview_large', 'created_at')
+    fields = ('title', 'image', 'active', 'preview_large', 'created_at')
     actions = ('activate_selected', 'deactivate_selected')
 
     def changelist_view(self, request, extra_context=None):
@@ -102,10 +102,13 @@ class HomeBackgroundSettingsAdmin(admin.ModelAdmin):
             text = 'Смена фона работает.'
             detail = f'Главная страница будет случайно менять {active_count} активных фонов каждые {obj.interval_seconds} сек.'
         return format_html(
-            '<div style="padding:12px 14px;border-left:4px solid {color};background:#f7f7f7;">'
-            '<strong>{text}</strong><br>'
-            '<span>{detail}</span><br>'
-            '<span>Всего загружено: {total}. Активных: {active}.</span>'
+            '<div style="max-width:760px;margin:4px 0 8px;">'
+            '<p style="margin:0 0 8px;font-size:14px;font-weight:700;color:#222;">'
+            '<span style="display:inline-block;width:9px;height:9px;margin-right:8px;border-radius:50%;background:{color};vertical-align:middle;"></span>'
+            '{text}'
+            '</p>'
+            '<p style="margin:0 0 6px;color:#444;">{detail}</p>'
+            '<p style="margin:0;color:#666;">Всего загружено: {total}. Активных: {active}. Порядок новых изображений назначается автоматически.</p>'
             '</div>',
             color=color,
             text=text,

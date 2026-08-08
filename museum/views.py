@@ -22,11 +22,15 @@ class HomeView(TemplateView):
             backgrounds = []
 
         urls = []
+        seen_urls = set()
         for background in backgrounds:
             try:
-                urls.append(background.image.url)
+                url = background.image.url
             except ValueError:
                 continue
+            if url not in seen_urls:
+                seen_urls.add(url)
+                urls.append(url)
 
         try:
             settings = HomeBackgroundSettings.objects.first()

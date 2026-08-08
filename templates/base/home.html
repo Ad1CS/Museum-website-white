@@ -5,7 +5,26 @@
 <link rel="preload" href="{{ home_background_urls.0 }}" as="image" fetchpriority="high">
 <style>
   .hero-area {
-    background-image: url('{{ home_background_urls.0 }}');
+    background-image: none !important;
+    overflow: hidden;
+  }
+
+  .home-bg-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transform: scale(1.01);
+    transition: opacity 1600ms ease-in-out;
+    pointer-events: none;
+    will-change: opacity;
+  }
+
+  .home-bg-layer.is-active {
+    opacity: 1;
   }
 </style>
 {% else %}
@@ -22,24 +41,57 @@ document.addEventListener('DOMContentLoaded', function () {
   const urls = JSON.parse(data.textContent);
   if (!Array.isArray(urls) || urls.length < 2) return;
 
+  const layers = Array.from(hero.querySelectorAll('.home-bg-layer'));
+  if (layers.length < 2) return;
+
   urls.slice(1).forEach(function (url) {
     const image = new Image();
     image.src = url;
   });
 
   let currentIndex = 0;
+  let activeLayerIndex = 0;
   const interval = Math.max(2000, Number('{{ home_background_interval_ms|default:8000 }}') || 8000);
 
-  window.setInterval(function () {
-    let nextIndex = currentIndex;
-    for (let attempt = 0; attempt < 6 && nextIndex === currentIndex; attempt += 1) {
-      nextIndex = Math.floor(Math.random() * urls.length);
+  function shuffle(values) {
+    const copy = values.slice();
+    for (let index = copy.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      const value = copy[index];
+      copy[index] = copy[swapIndex];
+      copy[swapIndex] = value;
     }
-    if (nextIndex === currentIndex) {
-      nextIndex = (currentIndex + 1) % urls.length;
-    }
+    return copy;
+  }
+
+  function buildDeck(previousIndex) {
+    const indexes = urls.map(function (_, index) { return index; }).filter(function (index) {
+      return index !== previousIndex;
+    });
+    return shuffle(indexes);
+  }
+
+  let deck = buildDeck(currentIndex);
+
+  function showBackground(nextIndex) {
+    const nextLayerIndex = activeLayerIndex === 0 ? 1 : 0;
+    const currentLayer = layers[activeLayerIndex];
+    const nextLayer = layers[nextLayerIndex];
+
+    nextLayer.style.backgroundImage = 'url(' + JSON.stringify(urls[nextIndex]) + ')';
+    nextLayer.offsetHeight;
+    nextLayer.classList.add('is-active');
+    currentLayer.classList.remove('is-active');
+
     currentIndex = nextIndex;
-    hero.style.setProperty('background-image', 'url(' + JSON.stringify(urls[currentIndex]) + ')', 'important');
+    activeLayerIndex = nextLayerIndex;
+  }
+
+  window.setInterval(function () {
+    if (!deck.length) {
+      deck = buildDeck(currentIndex);
+    }
+    showBackground(deck.shift());
   }, interval);
 });
 </script>
@@ -48,7 +100,14 @@ document.addEventListener('DOMContentLoaded', function () {
 {% block title %}Главная{% endblock %}
 {% block meta_description %}Official digital museum of labor and military glory of the Leningrad Meat Processing Plant named after S.M. Kirov: collection, gallery, history, staff, and news.{% endblock %}
 
-{% block hero_area_start %}<div class="hero-area"><div class="hero-area__overlay"></div>{% endblock %}
+{% block hero_area_start %}
+<div class="hero-area">
+{% if home_background_urls %}
+<div class="home-bg-layer is-active" style="background-image:url('{{ home_background_urls.0 }}')"></div>
+<div class="home-bg-layer" aria-hidden="true"></div>
+{% endif %}
+<div class="hero-area__overlay"></div>
+{% endblock %}
 
 {% block hero_area_end %}
 <div class="home-hero-inner">

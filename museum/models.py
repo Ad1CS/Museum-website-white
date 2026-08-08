@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import Max
 
 
 def page_background_upload_to(instance, filename):
@@ -21,6 +22,12 @@ class HomeBackground(models.Model):
 
     def __str__(self):
         return self.title or self.image.name
+
+    def save(self, *args, **kwargs):
+        if self._state.adding and not self.order:
+            max_order = HomeBackground.objects.aggregate(max_order=Max('order'))['max_order'] or 0
+            self.order = max_order + 1
+        super().save(*args, **kwargs)
 
 
 class HomeBackgroundSettings(models.Model):
