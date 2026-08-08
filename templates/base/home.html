@@ -1,7 +1,16 @@
 {% extends "base/base.html" %}
 {% load static %}
 {% block extra_head %}
+{% if home_background and home_background.image %}
+<link rel="preload" href="{{ home_background.image.url }}" as="image" fetchpriority="high">
+<style>
+  .hero-area {
+    background-image: url('{{ home_background.image.url }}') !important;
+  }
+</style>
+{% else %}
 <link rel="preload" href="{% static 'img/hero_bg.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endif %}
 {% endblock %}
 {% block title %}Главная{% endblock %}
 {% block meta_description %}Official digital museum of labor and military glory of the Leningrad Meat Processing Plant named after S.M. Kirov: collection, gallery, history, staff, and news.{% endblock %}

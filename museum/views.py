@@ -1,3 +1,4 @@
+import random
 from urllib.parse import urlparse
 
 from django.shortcuts import redirect, render
@@ -5,6 +6,7 @@ from django.views.generic import TemplateView
 from apps.news.models import NewsPost
 from apps.fond.models import FondItem
 from apps.gallery.models import Photo
+from .models import HomeBackground
 
 
 class HomeView(TemplateView):
@@ -15,6 +17,11 @@ class HomeView(TemplateView):
         ctx['latest_news'] = list(NewsPost.objects.filter(published=True).order_by('-date')[:3])
         ctx['recent_items'] = list(FondItem.objects.filter(published=True).select_related('fund').order_by('-created_at')[:6])
         ctx['random_photos'] = list(Photo.objects.filter(published=True).order_by('-created_at')[:8])
+        try:
+            backgrounds = list(HomeBackground.objects.filter(active=True).only('image', 'title'))
+        except Exception:
+            backgrounds = []
+        ctx['home_background'] = random.choice(backgrounds) if backgrounds else None
         return ctx
 
 
