@@ -3,7 +3,7 @@
 {% block title %}История предприятия{% endblock %}
 {% block meta_description %}Timeline of the Leningrad Meat Processing Plant named after S.M. Kirov with key years, events, and stages of enterprise history.{% endblock %}
 
-{% block hero_area_start %}<div class="tl-first-section"><div class="tl-bg" style="background-image:url('{% static 'img/timeline_1.webp' %}?v=2')"></div><div class="tl-bg-overlay"></div>{% endblock %}
+{% block hero_area_start %}<div class="tl-first-section"><div class="tl-bg tl-bg--history-page" style="--tl-bg-y: 0%;"></div><div class="tl-bg-overlay"></div>{% endblock %}
 
 {% block hero_area_end %}
 <div class="timeline-header">
@@ -21,11 +21,12 @@
 {% endblock %}
 
 {% block extra_head %}
-<link rel="preload" href="{% static 'img/timeline_1.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+<link rel="preload" href="{% static 'img/historyPageBG.webp' %}?v=1" as="image" type="image/webp" fetchpriority="high">
 <style>
 .tl-first-section { position:relative; min-height:100vh; }
 .tl-first-section > .tl-bg { position:absolute; inset:0; background-size:cover; background-position:center; }
 .tl-first-section > .tl-bg-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.3); pointer-events:none; }
+.tl-bg--history-page { background-image:url('{% static 'img/historyPageBG.webp' %}?v=1'); }
 
 .timeline-header { position:relative; z-index:2; display:flex; justify-content:center; gap:600px; padding:18px 48px; border-bottom:1px solid rgba(255,255,255,0.2); }
 .timeline-header span:first-child { font-size:24px; font-weight:800; color:#000; text-transform:uppercase; letter-spacing:0.02em; }
@@ -51,6 +52,8 @@
 
 .tl-section { position:relative; width:100%; min-height:100vh; display:flex; overflow:hidden; }
 .tl-section .tl-bg { position:absolute; inset:0; background-size:cover; background-position:center; }
+.tl-first-section > .tl-bg.tl-bg--history-page,
+.tl-section .tl-bg.tl-bg--history-page { background-position:center var(--tl-bg-y, 50%); }
 .tl-section .tl-bg-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.3); pointer-events:none; }
 .tl-section .tl-content { position:relative; z-index:2; padding:80px 64px; width:100%; min-height:100vh; display:flex; flex-direction:column; align-items:center; }
 .tl-content--bottom { justify-content: flex-end; align-items: flex-start !important; padding-bottom: 140px !important; padding-left: 64px !important; }
@@ -109,7 +112,7 @@
 
 {% block content %}
 <div class="tl-section">
-  <div class="tl-bg" style="background-image:url('{% static 'img/timeline_2.webp' %}?v=2')"></div>
+  <div class="tl-bg tl-bg--history-page" style="--tl-bg-y: 22%;"></div>
   <div class="tl-bg-overlay"></div>
   <div class="tl-content">
     <div class="tl-period-label" style="margin-top:0 !important; margin-bottom:0 !important;">строительство<br>комбината</div>
@@ -121,7 +124,7 @@
 </div>
 
 <div class="tl-section">
-  <div class="tl-bg" style="background-image:url('{% static 'img/timeline_3.webp' %}?v=2')"></div>
+  <div class="tl-bg tl-bg--history-page" style="--tl-bg-y: 44%;"></div>
   <div class="tl-bg-overlay"></div>
   <div class="tl-content"><div class="tl-year tl-year--left">1933</div></div>
 </div>
@@ -132,13 +135,13 @@
 </div>
 
 <div class="tl-section">
-  <div class="tl-bg" style="background-image:url('{% static 'img/timeline_4.webp' %}?v=2')"></div>
+  <div class="tl-bg tl-bg--history-page" style="--tl-bg-y: 66%;"></div>
   <div class="tl-bg-overlay"></div>
   <div class="tl-content tl-content--bottom"><div class="tl-year">1937</div></div>
 </div>
 
 <div class="tl-section">
-  <div class="tl-bg" style="background-image:url('{% static 'img/timeline_5.webp' %}?v=2')"></div>
+  <div class="tl-bg tl-bg--history-page" style="--tl-bg-y: 88%;"></div>
   <div class="tl-bg-overlay"></div>
   <div class="tl-content"><div class="tl-period-label">война</div></div>
 </div>
