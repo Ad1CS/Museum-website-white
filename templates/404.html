@@ -10,12 +10,7 @@
 {% endblock %}
 
 {% block extra_head %}
-{% if page_background_url %}
-<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
-<style>html body.page-404 { --page-background-image: url('{{ page_background_url }}'); }</style>
-{% else %}
 <link rel="preload" href="{% static 'img/404BG.webp' %}?v=1" as="image" type="image/webp" fetchpriority="high">
-{% endif %}
 {% endblock %}
 
 {% block content %}

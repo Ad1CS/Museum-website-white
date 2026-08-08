@@ -1,15 +1,48 @@
 {% extends "base/base.html" %}
 {% load static %}
 {% block extra_head %}
-{% if page_background_url %}
-<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
+{% if home_background_urls %}
+<link rel="preload" href="{{ home_background_urls.0 }}" as="image" fetchpriority="high">
 <style>
   .hero-area {
-    background-image: url('{{ page_background_url }}') !important;
+    background-image: url('{{ home_background_urls.0 }}') !important;
   }
 </style>
 {% else %}
 <link rel="preload" href="{% static 'img/hero_bg.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
+{% endif %}
+{% if home_background_slideshow_enabled %}
+{{ home_background_urls|json_script:"home-background-urls" }}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const data = document.getElementById('home-background-urls');
+  const hero = document.querySelector('.hero-area');
+  if (!data || !hero) return;
+
+  const urls = JSON.parse(data.textContent);
+  if (!Array.isArray(urls) || urls.length < 2) return;
+
+  urls.slice(1).forEach(function (url) {
+    const image = new Image();
+    image.src = url;
+  });
+
+  let currentIndex = 0;
+  const interval = Math.max(2000, Number('{{ home_background_interval_ms|default:8000 }}') || 8000);
+
+  window.setInterval(function () {
+    let nextIndex = currentIndex;
+    for (let attempt = 0; attempt < 6 && nextIndex === currentIndex; attempt += 1) {
+      nextIndex = Math.floor(Math.random() * urls.length);
+    }
+    if (nextIndex === currentIndex) {
+      nextIndex = (currentIndex + 1) % urls.length;
+    }
+    currentIndex = nextIndex;
+    hero.style.backgroundImage = 'url("' + urls[currentIndex].replace(/"/g, '\\"') + '")';
+  }, interval);
+});
+</script>
 {% endif %}
 {% endblock %}
 {% block title %}Главная{% endblock %}

@@ -151,7 +151,7 @@ html body.page-404 {
   overflow: hidden;
   background:
     linear-gradient(180deg, rgba(68,68,63,.44) 0%, rgba(86,86,82,.22) 25%, rgba(28,29,29,.18) 100%),
-    var(--page-background-image, url('../img/404BG.webp?v=1')) center center / cover no-repeat !important;
+    url('../img/404BG.webp?v=1') center center / cover no-repeat !important;
   color: #fff;
 }
 
@@ -303,7 +303,7 @@ html body.page-404 #main-content {
 
 /* ── DARK THEME ────────────────────────────────────────────────── */
 body.page-fond-dark {
-    background: #000 var(--page-background-image, url('../fond/fondBG.webp?v=2')) no-repeat center top !important;
+    background: #000 url('../fond/fondBG.webp?v=2') no-repeat center top !important;
     background-size: cover !important;
     background-attachment: scroll !important;
     color: #ffffff !important;
@@ -1910,7 +1910,7 @@ body.page-staff-list {
   --staff-card-height: 108px;
   --staff-row-gap: 10px;
   min-height: 100vh;
-  background: #171717 var(--page-background-image, url('../img/staffBG.webp?v=2')) center top / cover no-repeat !important;
+  background: #171717 url('../img/staffBG.webp?v=2') center top / cover no-repeat !important;
   color: #fff;
 }
 

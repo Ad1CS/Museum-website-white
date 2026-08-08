@@ -1,17 +1,17 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import PageBackground
+from .models import HomeBackground, HomeBackgroundSettings
 
 
-@admin.register(PageBackground)
-class PageBackgroundAdmin(admin.ModelAdmin):
-    list_display = ('preview', 'page', 'title', 'active', 'order', 'created_at')
-    list_editable = ('page', 'active', 'order')
-    list_filter = ('page', 'active')
+@admin.register(HomeBackground)
+class HomeBackgroundAdmin(admin.ModelAdmin):
+    list_display = ('preview', 'title', 'active', 'order', 'created_at')
+    list_editable = ('active', 'order')
+    list_filter = ('active',)
     search_fields = ('title', 'image')
     readonly_fields = ('preview_large', 'created_at')
-    fields = ('page', 'title', 'image', 'active', 'order', 'preview_large', 'created_at')
+    fields = ('title', 'image', 'active', 'order', 'preview_large', 'created_at')
 
     @admin.display(description='Превью')
     def preview(self, obj):
@@ -30,3 +30,15 @@ class PageBackgroundAdmin(admin.ModelAdmin):
             '<img src="{}" style="max-width:520px;width:100%;height:auto;object-fit:cover;border-radius:2px;">',
             obj.image.url,
         )
+
+
+@admin.register(HomeBackgroundSettings)
+class HomeBackgroundSettingsAdmin(admin.ModelAdmin):
+    list_display = ('enabled', 'interval_seconds')
+    fields = ('enabled', 'interval_seconds')
+
+    def has_add_permission(self, request):
+        return not HomeBackgroundSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False

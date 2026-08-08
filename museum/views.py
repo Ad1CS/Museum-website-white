@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 from apps.news.models import NewsPost
 from apps.fond.models import FondItem
 from apps.gallery.models import Photo
+from .models import HomeBackground, HomeBackgroundSettings
 
 
 class HomeView(TemplateView):
@@ -15,6 +16,28 @@ class HomeView(TemplateView):
         ctx['latest_news'] = list(NewsPost.objects.filter(published=True).order_by('-date')[:3])
         ctx['recent_items'] = list(FondItem.objects.filter(published=True).select_related('fund').order_by('-created_at')[:6])
         ctx['random_photos'] = list(Photo.objects.filter(published=True).order_by('-created_at')[:8])
+        try:
+            backgrounds = list(HomeBackground.objects.filter(active=True).only('image', 'title').order_by('order', '-created_at'))
+        except Exception:
+            backgrounds = []
+
+        urls = []
+        for background in backgrounds:
+            try:
+                urls.append(background.image.url)
+            except ValueError:
+                continue
+
+        try:
+            settings = HomeBackgroundSettings.objects.first()
+        except Exception:
+            settings = None
+
+        interval_seconds = settings.interval_seconds if settings else 8
+        slideshow_enabled = bool(settings and settings.enabled and len(urls) > 1)
+        ctx['home_background_urls'] = urls
+        ctx['home_background_slideshow_enabled'] = slideshow_enabled
+        ctx['home_background_interval_ms'] = max(2, interval_seconds) * 1000
         return ctx
 
 

@@ -3,7 +3,7 @@
 {% block title %}История предприятия{% endblock %}
 {% block meta_description %}Timeline of the Leningrad Meat Processing Plant named after S.M. Kirov with key years, events, and stages of enterprise history.{% endblock %}
 
-{% block hero_area_start %}<div class="tl-first-section"><div class="tl-bg" style="background-image:url('{% if page_background_url %}{{ page_background_url }}{% else %}{% static 'img/timeline_1.webp' %}?v=2{% endif %}')"></div><div class="tl-bg-overlay"></div>{% endblock %}
+{% block hero_area_start %}<div class="tl-first-section"><div class="tl-bg" style="background-image:url('{% static 'img/timeline_1.webp' %}?v=2')"></div><div class="tl-bg-overlay"></div>{% endblock %}
 
 {% block hero_area_end %}
 <div class="timeline-header">
@@ -21,11 +21,7 @@
 {% endblock %}
 
 {% block extra_head %}
-{% if page_background_url %}
-<link rel="preload" href="{{ page_background_url }}" as="image" fetchpriority="high">
-{% else %}
 <link rel="preload" href="{% static 'img/timeline_1.webp' %}?v=2" as="image" type="image/webp" fetchpriority="high">
-{% endif %}
 <style>
 .tl-first-section { position:relative; min-height:100vh; }
 .tl-first-section > .tl-bg { position:absolute; inset:0; background-size:cover; background-position:center; }
