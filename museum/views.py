@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 from apps.news.models import NewsPost
 from apps.fond.models import FondItem
 from apps.gallery.models import Photo
+from apps.history.models import HistoryTextBlock
 from .models import HomeBackground, HomeBackgroundSettings
 
 
@@ -47,6 +48,13 @@ class HomeView(TemplateView):
 
 class HistoryTimelineView(TemplateView):
     template_name = 'history/timeline.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['history_text_blocks'] = list(
+            HistoryTextBlock.objects.filter(published=True).order_by('order', 'id')
+        )
+        return ctx
 
 
 def _display_path(path):

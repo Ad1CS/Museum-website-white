@@ -6,10 +6,21 @@
 {% block hero_area_start %}
 <div class="history-page-shell">
 <div class="history-page-bg" aria-hidden="true"></div>
+{% if history_text_blocks %}
+<div class="history-text-layer" aria-label="Тексты ленты времени">
+  {% for block in history_text_blocks %}
+  <div class="history-text-block"
+       style="left:{{ block.left_percent|stringformat:'g' }}%;top:{{ block.top_percent|stringformat:'g' }}%;width:{{ block.width_percent|stringformat:'g' }}%;--history-font-size:{{ block.font_size_px }};font-family:{{ block.font_family }};font-weight:{{ block.font_weight }};font-style:{{ block.font_style }};color:{{ block.color }};text-align:{{ block.text_align }};line-height:{{ block.line_height|stringformat:'g' }};letter-spacing:{{ block.letter_spacing_px|stringformat:'g' }}px;text-transform:{% if block.uppercase %}uppercase{% else %}none{% endif %};{% if block.text_shadow %}text-shadow:0 2px 10px rgba(0,0,0,0.45);{% else %}text-shadow:none;{% endif %}">
+    {{ block.text|linebreaksbr }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
 <div class="tl-first-section"><div class="tl-bg-overlay"></div>
 {% endblock %}
 
 {% block hero_area_end %}
+{% if not history_text_blocks %}
 <div class="timeline-header">
   <span>лента времени</span>
   <span>история предприятия</span>
@@ -21,6 +32,7 @@
     <div><div class="tl-event-date">7 ноября</div><div class="tl-event-text">начало закладки<br>фундамента под<br>будущий завод</div></div>
   </div>
 </div>
+{% endif %}
 </div>
 {% endblock %}
 
@@ -29,9 +41,11 @@
 <style>
 .history-page-shell { position:relative; overflow:hidden; min-height:calc(100vw * 6.296); background:#777775; }
 .history-page-bg { position:absolute; top:0; left:0; right:0; height:calc(100vw * 6.296); z-index:0; background:url('{% static 'img/historyPageBG.webp' %}?v=1') center top / 100% auto no-repeat; pointer-events:none; }
-.history-page-shell #header,
 .history-page-shell #main-content,
 .history-page-shell .tl-first-section { position:relative; z-index:2; }
+.history-page-shell #header { position:relative; z-index:4; }
+.history-text-layer { position:absolute; inset:0; z-index:3; pointer-events:none; }
+.history-text-block { position:absolute; box-sizing:border-box; white-space:pre-wrap; overflow-wrap:anywhere; font-size:calc(var(--history-font-size) * 1px); }
 .tl-first-section { position:relative; min-height:calc(100vw * 1.2592); overflow:hidden; }
 .tl-first-section > .tl-bg-overlay { position:absolute; inset:0; z-index:1; background:rgba(255,255,255,0.3); pointer-events:none; }
 
@@ -75,6 +89,7 @@
 .tl-sep-text { font-size:38px; font-weight:800; color:#fff; line-height:1.1; text-align:center; text-shadow:0 2px 10px rgba(0,0,0,0.3); }
 
 @media(max-width:768px) {
+  .history-text-block { font-size:calc(var(--history-font-size) * 0.62px); }
   .tl-year { font-size:64px; }
   .tl-year--left, .tl-first-section .tl-year {
     position: relative;
@@ -104,6 +119,7 @@
   .tl-sep-line { height: 150px; }
 }
 @media(max-width:480px) {
+  .history-text-block { font-size:calc(var(--history-font-size) * 0.52px); }
   .tl-year { font-size:48px; }
   .tl-period-label { font-size:24px; }
   .tl-section-top-label { font-size:32px !important; }
@@ -116,6 +132,12 @@
 {% endblock %}
 
 {% block content %}
+{% if history_text_blocks %}
+<div class="tl-section"><div class="tl-bg-overlay"></div></div>
+<div class="tl-section"><div class="tl-bg-overlay"></div></div>
+<div class="tl-section"><div class="tl-bg-overlay"></div></div>
+<div class="tl-section"><div class="tl-bg-overlay"></div></div>
+{% else %}
 <div class="tl-section">
   <div class="tl-bg-overlay"></div>
   <div class="tl-content">
@@ -146,6 +168,7 @@
   <div class="tl-bg-overlay"></div>
   <div class="tl-content"><div class="tl-period-label">война</div></div>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block footer %}</div>{% endblock %}
