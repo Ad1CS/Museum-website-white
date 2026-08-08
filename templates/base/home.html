@@ -5,7 +5,7 @@
 <link rel="preload" href="{{ home_background_urls.0 }}" as="image" fetchpriority="high">
 <style>
   .hero-area {
-    background-image: url('{{ home_background_urls.0 }}') !important;
+    background-image: url('{{ home_background_urls.0 }}');
   }
 </style>
 {% else %}
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
       nextIndex = (currentIndex + 1) % urls.length;
     }
     currentIndex = nextIndex;
-    hero.style.backgroundImage = 'url("' + urls[currentIndex].replace(/"/g, '\\"') + '")';
+    hero.style.setProperty('background-image', 'url(' + JSON.stringify(urls[currentIndex]) + ')', 'important');
   }, interval);
 });
 </script>
