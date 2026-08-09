@@ -13,15 +13,20 @@
     background: #1a1a18 !important;
   }
   
-  .page-dark-bg {
+  body.library-home-page .page-dark-bg {
     position: fixed !important;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: -1;
+    z-index: 0;
     background-size: cover;
     background-position: center;
+    pointer-events: none;
+  }
+
+  body.library-home-page .page-dark-bg__overlay {
+    background: rgba(0,0,0,0.46);
   }
   
   #header {
