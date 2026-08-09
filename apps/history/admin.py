@@ -186,7 +186,6 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
   const letterInput = document.getElementById('id_letter_spacing_px');
   const uppercaseInput = document.getElementById('id_uppercase');
   const shadowInput = document.getElementById('id_text_shadow');
-  const HISTORY_REFERENCE_WIDTH = 1365;
   if (!canvas || !block || !textNode || !resizeHandle || !leftInput || !topInput || !widthInput) return;
 
   function numberValue(input, fallback) {{
@@ -203,15 +202,14 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     const top = numberValue(topInput, 10);
     const width = numberValue(widthInput, 24);
     const zoom = clamp(numberValue(zoomInput, 100), 100, 240) / 100;
-    const liveWidth = Math.max(320, window.innerWidth || HISTORY_REFERENCE_WIDTH);
-    const liveFontSize = numberValue(sizeInput, 32) * liveWidth / HISTORY_REFERENCE_WIDTH;
-    const previewFontValue = (numberValue(sizeInput, 32) * zoom).toFixed(4).replace(/[.]?0+$/, '');
+    const liveFontSize = numberValue(sizeInput, 32);
+    const previewFontSize = liveFontSize * zoom;
     canvas.style.width = (100 * zoom) + 'vw';
     block.style.left = left + '%';
     block.style.top = top + '%';
     block.style.width = width + '%';
     block.style.fontFamily = fontInput ? fontInput.value : 'Arial, sans-serif';
-    block.style.fontSize = 'calc(' + previewFontValue + ' * 0.0732600733vw)';
+    block.style.fontSize = previewFontSize + 'px';
     block.style.fontWeight = weightInput ? weightInput.value : '700';
     block.style.fontStyle = styleInput ? styleInput.value : 'normal';
     block.style.color = colorInput ? colorInput.value : '#ffffff';
