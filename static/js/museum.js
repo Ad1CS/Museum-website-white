@@ -1,6 +1,50 @@
 /* museum.js — Ленинградский мясокомбинат им. С.М. Кирова */
 
 // ============================================================
+// PAGE TRANSITIONS
+// ============================================================
+document.addEventListener('DOMContentLoaded', function () {
+  const root = document.documentElement;
+  root.classList.add('page-loaded');
+  root.classList.remove('page-leaving');
+});
+
+window.addEventListener('pageshow', function () {
+  const root = document.documentElement;
+  root.classList.add('page-loaded');
+  root.classList.remove('page-leaving');
+});
+
+document.addEventListener('click', function (event) {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+  const link = event.target.closest('a[href]');
+  if (!link || (link.target && link.target !== '_self') || link.hasAttribute('download') || link.dataset.noPageTransition === 'true') return;
+
+  const href = link.getAttribute('href') || '';
+  if (!href || href.charAt(0) === '#') return;
+
+  const currentUrl = new URL(window.location.href);
+  let nextUrl;
+  try {
+    nextUrl = new URL(link.href, window.location.href);
+  } catch (error) {
+    return;
+  }
+
+  if (nextUrl.origin !== currentUrl.origin) return;
+  if (!['http:', 'https:'].includes(nextUrl.protocol)) return;
+  if (nextUrl.pathname === currentUrl.pathname && nextUrl.search === currentUrl.search && nextUrl.hash) return;
+
+  event.preventDefault();
+  document.documentElement.classList.add('page-leaving');
+  document.documentElement.classList.remove('page-loaded');
+  window.setTimeout(function () {
+    window.location.href = nextUrl.href;
+  }, 180);
+});
+
+// ============================================================
 // MOBILE DRAWER
 // ============================================================
 function toggleDrawer() {

@@ -43,6 +43,15 @@
 /* ── RESET ─────────────────────────────────────────────────────── */
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
+html.page-transition body {
+  opacity:0;
+  transition:opacity .22s ease;
+}
+html.page-transition.page-loaded body { opacity:1; }
+html.page-transition.page-leaving body { opacity:0; }
+@media (prefers-reduced-motion: reduce) {
+  html.page-transition body { transition:none; }
+}
 body {
   background:var(--bg); color:var(--text);
   font-family:var(--font); font-weight:400; font-size:15px; line-height:1.6;
