@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
@@ -5,8 +6,24 @@ from django.utils.html import format_html, format_html_join
 from .models import HistoryTextBlock
 
 
+class HistoryTextBlockAdminForm(forms.ModelForm):
+    color = forms.CharField(
+        label='Цвет текста',
+        help_text='Выберите цвет текста на странице истории.',
+        widget=forms.TextInput(attrs={
+            'type': 'color',
+            'style': 'width:72px;height:38px;padding:2px;vertical-align:middle;',
+        }),
+    )
+
+    class Meta:
+        model = HistoryTextBlock
+        fields = '__all__'
+
+
 @admin.register(HistoryTextBlock)
 class HistoryTextBlockAdmin(admin.ModelAdmin):
+    form = HistoryTextBlockAdminForm
     list_display = ('title', 'text_preview', 'position_preview', 'font_size_px', 'font_weight', 'published', 'order')
     list_editable = ('published', 'order')
     list_filter = ('published', 'font_family', 'font_weight', 'text_align')
@@ -93,6 +110,15 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
 #history-preview-zoom {{
   min-width:92px;
 }}
+#history-preview-color-picker {{
+  width:44px;
+  height:30px;
+  padding:1px;
+  border:1px solid #bbb;
+  border-radius:4px;
+  background:#fff;
+  vertical-align:middle;
+}}
 .history-preview-readout {{
   color:#555;
 }}
@@ -151,6 +177,8 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
       <option value="150">150%</option>
       <option value="200">200%</option>
     </select>
+    <label for="history-preview-color-picker">Цвет текста</label>
+    <input type="color" id="history-preview-color-picker" value="#ffffff">
     <span class="history-preview-readout">Preview: <strong id="history-preview-computed-font-value"></strong></span>
     <span class="history-preview-readout">Размер текста: <strong id="history-preview-font-value"></strong></span>
     <span class="history-preview-readout">Ширина блока: <strong id="history-preview-width-value"></strong></span>
@@ -172,6 +200,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
   const textNode = document.getElementById('history-preview-text');
   const resizeHandle = document.getElementById('history-preview-resize');
   const zoomInput = document.getElementById('history-preview-zoom');
+  const colorPicker = document.getElementById('history-preview-color-picker');
   const widthValue = document.getElementById('history-preview-width-value');
   const fontValue = document.getElementById('history-preview-font-value');
   const computedFontValue = document.getElementById('history-preview-computed-font-value');
@@ -200,6 +229,11 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     return Math.max(min, Math.min(max, value));
   }}
 
+  function colorValue(input, fallback) {{
+    const value = input && input.value ? input.value : '';
+    return /^#[0-9A-Fa-f]{{6}}$/.test(value) ? value : fallback;
+  }}
+
   function renderBlock() {{
     const left = numberValue(leftInput, 50);
     const top = numberValue(topInput, 10);
@@ -215,7 +249,9 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     block.style.setProperty('font-size', previewFontSize + 'px', 'important');
     block.style.fontWeight = weightInput ? weightInput.value : '700';
     block.style.fontStyle = styleInput ? styleInput.value : 'normal';
-    block.style.color = colorInput ? colorInput.value : '#ffffff';
+    const textColor = colorValue(colorInput, '#ffffff');
+    block.style.color = textColor;
+    if (colorPicker && colorPicker.value !== textColor) colorPicker.value = textColor;
     block.style.textAlign = alignInput ? alignInput.value : 'left';
     block.style.lineHeight = numberValue(lineHeightInput, 1.1);
     block.style.letterSpacing = numberValue(letterInput, 0) + 'px';
@@ -270,6 +306,17 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
   window.addEventListener('pointerup', function() {{
     mode = null;
   }});
+
+  if (colorPicker) {{
+    colorPicker.addEventListener('input', function() {{
+      if (colorInput) colorInput.value = colorPicker.value;
+      renderBlock();
+    }});
+    colorPicker.addEventListener('change', function() {{
+      if (colorInput) colorInput.value = colorPicker.value;
+      renderBlock();
+    }});
+  }}
 
   [leftInput, topInput, widthInput, textInput, fontInput, sizeInput, weightInput, styleInput, colorInput, alignInput, lineHeightInput, letterInput, uppercaseInput, shadowInput, zoomInput].forEach(function(input) {{
     if (input) input.addEventListener('input', renderBlock);
