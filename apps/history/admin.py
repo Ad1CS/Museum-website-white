@@ -103,8 +103,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
 }}
 #history-preview-canvas {{
   position:relative;
-  width:150%;
-  min-width:100%;
+  width:100vw;
   aspect-ratio:1400/8815;
   background:url('{bg_url}') center top / 100% auto no-repeat;
 }}
@@ -146,11 +145,12 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
   <div class="history-preview-toolbar">
     <label for="history-preview-zoom">Масштаб предпросмотра</label>
     <select id="history-preview-zoom">
-      <option value="100">100%</option>
+      <option value="100" selected>100%</option>
       <option value="125">125%</option>
-      <option value="150" selected>150%</option>
+      <option value="150">150%</option>
       <option value="200">200%</option>
     </select>
+    <span class="history-preview-readout">Размер текста: <strong id="history-preview-font-value"></strong></span>
     <span class="history-preview-readout">Ширина блока: <strong id="history-preview-width-value"></strong></span>
   </div>
   <div id="history-preview-scroll">
@@ -170,6 +170,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
   const resizeHandle = document.getElementById('history-preview-resize');
   const zoomInput = document.getElementById('history-preview-zoom');
   const widthValue = document.getElementById('history-preview-width-value');
+  const fontValue = document.getElementById('history-preview-font-value');
   const leftInput = document.getElementById('id_left_percent');
   const topInput = document.getElementById('id_top_percent');
   const widthInput = document.getElementById('id_width_percent');
@@ -200,14 +201,15 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     const left = numberValue(leftInput, 50);
     const top = numberValue(topInput, 10);
     const width = numberValue(widthInput, 24);
-    const zoom = numberValue(zoomInput, 150);
-    canvas.style.width = clamp(zoom, 100, 240) + '%';
+    const zoom = clamp(numberValue(zoomInput, 100), 100, 240) / 100;
+    const liveWidth = Math.max(320, window.innerWidth || HISTORY_REFERENCE_WIDTH);
+    const liveFontSize = numberValue(sizeInput, 32) * liveWidth / HISTORY_REFERENCE_WIDTH;
+    canvas.style.width = (liveWidth * zoom) + 'px';
     block.style.left = left + '%';
     block.style.top = top + '%';
     block.style.width = width + '%';
     block.style.fontFamily = fontInput ? fontInput.value : 'Arial, sans-serif';
-    const previewScale = canvas.getBoundingClientRect().width / HISTORY_REFERENCE_WIDTH;
-    block.style.fontSize = (numberValue(sizeInput, 32) * previewScale) + 'px';
+    block.style.fontSize = (liveFontSize * zoom) + 'px';
     block.style.fontWeight = weightInput ? weightInput.value : '700';
     block.style.fontStyle = styleInput ? styleInput.value : 'normal';
     block.style.color = colorInput ? colorInput.value : '#ffffff';
@@ -218,6 +220,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     block.style.textShadow = shadowInput && shadowInput.checked ? '0 2px 10px rgba(0,0,0,.45)' : 'none';
     textNode.textContent = textInput && textInput.value ? textInput.value : 'Текст';
     if (widthValue) widthValue.textContent = width.toFixed(2).replace(/[.]00$/, '') + '%';
+    if (fontValue) fontValue.textContent = liveFontSize.toFixed(1).replace(/[.]0$/, '') + 'px';
   }}
 
   let mode = null;
