@@ -3,7 +3,8 @@
 // ============================================================
 // PAGE TRANSITIONS
 // ============================================================
-const PAGE_TRANSITION_DELAY = 340;
+const PAGE_TRANSITION_DELAY = 280;
+const PAGE_TRANSITION_DOWNLOAD_RE = /\.(?:pdf|docx?|xlsx?|pptx?|zip|rar|7z|jpe?g|png|gif|webp|mp4|mov|avi|mp3|wav)$/i;
 let pageTransitionActive = false;
 
 function setPageLoaded() {
@@ -11,6 +12,35 @@ function setPageLoaded() {
   const root = document.documentElement;
   root.classList.add('page-loaded');
   root.classList.remove('page-leaving');
+}
+
+function prefersReducedPageMotion() {
+  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function shouldUsePageTransition(link, currentUrl) {
+  if (!link || (link.target && link.target !== '_self')) return false;
+  if (link.hasAttribute('download') || link.closest('[data-no-page-transition="true"]')) return false;
+  if (link.dataset.noPageTransition === 'true') return false;
+
+  const href = link.getAttribute('href') || '';
+  if (!href || href.charAt(0) === '#') return false;
+
+  let nextUrl;
+  try {
+    nextUrl = new URL(link.href, window.location.href);
+  } catch (error) {
+    return false;
+  }
+
+  if (nextUrl.origin !== currentUrl.origin) return false;
+  if (!['http:', 'https:'].includes(nextUrl.protocol)) return false;
+  if (nextUrl.pathname === '/admin' || nextUrl.pathname.startsWith('/admin/')) return false;
+  if (PAGE_TRANSITION_DOWNLOAD_RE.test(nextUrl.pathname)) return false;
+  if (nextUrl.href === currentUrl.href) return false;
+  if (nextUrl.pathname === currentUrl.pathname && nextUrl.search === currentUrl.search && nextUrl.hash) return false;
+
+  return nextUrl;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -23,25 +53,15 @@ window.addEventListener('pageshow', function () {
 
 document.addEventListener('click', function (event) {
   if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  if (prefersReducedPageMotion()) return;
 
-  const link = event.target.closest('a[href]');
-  if (!link || (link.target && link.target !== '_self') || link.hasAttribute('download') || link.dataset.noPageTransition === 'true') return;
+  const clickTarget = event.target instanceof Element ? event.target : event.target.parentElement;
+  if (!clickTarget) return;
 
-  const href = link.getAttribute('href') || '';
-  if (!href || href.charAt(0) === '#') return;
-
+  const link = clickTarget.closest('a[href]');
   const currentUrl = new URL(window.location.href);
-  let nextUrl;
-  try {
-    nextUrl = new URL(link.href, window.location.href);
-  } catch (error) {
-    return;
-  }
-
-  if (nextUrl.origin !== currentUrl.origin) return;
-  if (!['http:', 'https:'].includes(nextUrl.protocol)) return;
-  if (nextUrl.href === currentUrl.href) return;
-  if (nextUrl.pathname === currentUrl.pathname && nextUrl.search === currentUrl.search && nextUrl.hash) return;
+  const nextUrl = shouldUsePageTransition(link, currentUrl);
+  if (!nextUrl) return;
 
   event.preventDefault();
   if (pageTransitionActive) return;

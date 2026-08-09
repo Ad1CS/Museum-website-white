@@ -42,40 +42,21 @@
 
 /* ── RESET ─────────────────────────────────────────────────────── */
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-html.page-transition {
-  background:#fff;
-}
-html.page-transition::before {
-  content:'';
-  position:fixed;
-  inset:0;
-  z-index:2147483647;
-  background:#fff;
-  opacity:1;
-  visibility:visible;
-  pointer-events:none;
-  transition:
-    opacity .56s cubic-bezier(.16,1,.3,1),
-    visibility 0s linear 0s;
-}
-html.page-transition.page-loaded::before {
+html { scroll-behavior:smooth; background:var(--bg); }
+html.page-transition body > :not(script):not(style):not(noscript):not(.page-dark-bg) {
   opacity:0;
-  visibility:hidden;
-  transition:
-    opacity .56s cubic-bezier(.16,1,.3,1),
-    visibility 0s linear .56s;
+  transition:opacity .28s ease-in-out;
 }
-html.page-transition.page-leaving::before {
+html.page-transition.page-loaded body > :not(script):not(style):not(noscript):not(.page-dark-bg) {
   opacity:1;
-  visibility:visible;
-  transition:
-    opacity .34s cubic-bezier(.22,.61,.36,1),
-    visibility 0s linear 0s;
+}
+html.page-transition.page-leaving body > :not(script):not(style):not(noscript):not(.page-dark-bg) {
+  opacity:0;
+  pointer-events:none;
 }
 @media (prefers-reduced-motion: reduce) {
-  html.page-transition::before {
-    display:none;
+  html.page-transition body > :not(script):not(style):not(noscript):not(.page-dark-bg) {
+    opacity:1;
     transition:none;
   }
 }
