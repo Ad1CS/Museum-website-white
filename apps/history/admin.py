@@ -78,7 +78,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     Перетащите текст по фону. Поля X и Y обновятся автоматически, затем нажмите "Сохранить".
   </div>
   <div id="history-preview-scroll" style="max-height:680px;overflow:auto;border:1px solid #bbb;background:#777;">
-    <div id="history-preview-canvas" style="position:relative;width:100%;aspect-ratio:2125/13379;background:url('{bg_url}') center top / 100% auto no-repeat;">
+    <div id="history-preview-canvas" style="position:relative;width:100%;aspect-ratio:1400/8815;background:url('{bg_url}') center top / 100% auto no-repeat;">
       <div id="history-preview-block" style="position:absolute;box-sizing:border-box;padding:4px 6px;border:1px dashed rgba(255,255,255,.8);cursor:move;white-space:pre-wrap;overflow-wrap:anywhere;"></div>
     </div>
   </div>
@@ -101,6 +101,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
   const letterInput = document.getElementById('id_letter_spacing_px');
   const uppercaseInput = document.getElementById('id_uppercase');
   const shadowInput = document.getElementById('id_text_shadow');
+  const HISTORY_REFERENCE_WIDTH = 1365;
   if (!canvas || !block || !leftInput || !topInput) return;
 
   function numberValue(input, fallback) {{
@@ -116,7 +117,8 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     block.style.top = top + '%';
     block.style.width = width + '%';
     block.style.fontFamily = fontInput ? fontInput.value : 'Arial, sans-serif';
-    block.style.fontSize = numberValue(sizeInput, 32) + 'px';
+    const previewScale = canvas.getBoundingClientRect().width / HISTORY_REFERENCE_WIDTH;
+    block.style.fontSize = (numberValue(sizeInput, 32) * previewScale) + 'px';
     block.style.fontWeight = weightInput ? weightInput.value : '700';
     block.style.fontStyle = styleInput ? styleInput.value : 'normal';
     block.style.color = colorInput ? colorInput.value : '#ffffff';
@@ -161,6 +163,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     if (input) input.addEventListener('input', renderBlock);
     if (input) input.addEventListener('change', renderBlock);
   }});
+  window.addEventListener('resize', renderBlock);
 
   renderBlock();
 }})();
