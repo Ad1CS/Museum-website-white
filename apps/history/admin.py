@@ -73,6 +73,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
 <style>
 {font_faces}
 .history-admin-editor {{
+  --font:'TT Hoves', sans-serif;
   max-width:980px;
 }}
 .history-admin-editor .history-preview-help {{
@@ -204,12 +205,13 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     const zoom = clamp(numberValue(zoomInput, 100), 100, 240) / 100;
     const liveWidth = Math.max(320, window.innerWidth || HISTORY_REFERENCE_WIDTH);
     const liveFontSize = numberValue(sizeInput, 32) * liveWidth / HISTORY_REFERENCE_WIDTH;
-    canvas.style.width = (liveWidth * zoom) + 'px';
+    const previewFontValue = (numberValue(sizeInput, 32) * zoom).toFixed(4).replace(/[.]?0+$/, '');
+    canvas.style.width = (100 * zoom) + 'vw';
     block.style.left = left + '%';
     block.style.top = top + '%';
     block.style.width = width + '%';
     block.style.fontFamily = fontInput ? fontInput.value : 'Arial, sans-serif';
-    block.style.fontSize = (liveFontSize * zoom) + 'px';
+    block.style.fontSize = 'calc(' + previewFontValue + ' * 0.0732600733vw)';
     block.style.fontWeight = weightInput ? weightInput.value : '700';
     block.style.fontStyle = styleInput ? styleInput.value : 'normal';
     block.style.color = colorInput ? colorInput.value : '#ffffff';
