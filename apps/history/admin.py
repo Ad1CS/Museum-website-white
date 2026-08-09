@@ -166,6 +166,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
 </div>
 <script>
 (function() {{
+  function initHistoryPreview() {{
   const canvas = document.getElementById('history-preview-canvas');
   const block = document.getElementById('history-preview-block');
   const textNode = document.getElementById('history-preview-text');
@@ -188,7 +189,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
   const letterInput = document.getElementById('id_letter_spacing_px');
   const uppercaseInput = document.getElementById('id_uppercase');
   const shadowInput = document.getElementById('id_text_shadow');
-  if (!canvas || !block || !textNode || !resizeHandle || !leftInput || !topInput || !widthInput) return;
+  if (!canvas || !block || !textNode || !resizeHandle || !leftInput || !topInput || !widthInput || !sizeInput) return;
 
   function numberValue(input, fallback) {{
     const value = parseFloat(input && input.value);
@@ -277,6 +278,13 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
   window.addEventListener('resize', renderBlock);
 
   renderBlock();
+  }}
+
+  if (document.readyState === 'loading') {{
+    document.addEventListener('DOMContentLoaded', initHistoryPreview);
+  }} else {{
+    window.setTimeout(initHistoryPreview, 0);
+  }}
 }})();
 </script>
             ''',
