@@ -3,7 +3,7 @@
 // ============================================================
 // PAGE TRANSITIONS
 // ============================================================
-const PAGE_TRANSITION_DELAY = 220;
+const PAGE_TRANSITION_DELAY = 340;
 let pageTransitionActive = false;
 
 function setPageLoaded() {

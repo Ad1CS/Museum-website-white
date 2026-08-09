@@ -44,33 +44,33 @@
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 html.page-transition {
-  background:#000;
+  background:#fff;
 }
 html.page-transition::before {
   content:'';
   position:fixed;
   inset:0;
   z-index:2147483647;
-  background:#000;
+  background:#fff;
   opacity:1;
   visibility:visible;
   pointer-events:none;
   transition:
-    opacity .34s cubic-bezier(.22,.61,.36,1),
+    opacity .56s cubic-bezier(.16,1,.3,1),
     visibility 0s linear 0s;
 }
 html.page-transition.page-loaded::before {
   opacity:0;
   visibility:hidden;
   transition:
-    opacity .34s cubic-bezier(.22,.61,.36,1),
-    visibility 0s linear .34s;
+    opacity .56s cubic-bezier(.16,1,.3,1),
+    visibility 0s linear .56s;
 }
 html.page-transition.page-leaving::before {
   opacity:1;
   visibility:visible;
   transition:
-    opacity .24s cubic-bezier(.4,0,.2,1),
+    opacity .34s cubic-bezier(.22,.61,.36,1),
     visibility 0s linear 0s;
 }
 @media (prefers-reduced-motion: reduce) {
