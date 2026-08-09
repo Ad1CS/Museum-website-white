@@ -5,6 +5,7 @@
 // ============================================================
 const PAGE_TRANSITION_DELAY = 460;
 const PAGE_TRANSITION_DOWNLOAD_RE = /\.(?:pdf|docx?|xlsx?|pptx?|zip|rar|7z|jpe?g|png|gif|webp|mp4|mov|avi|mp3|wav)$/i;
+const PAGE_TRANSITION_SKIP_SECTIONS = ['/staff/', '/fond/', '/gallery/', '/library/'];
 let pageTransitionActive = false;
 
 function setPageLoaded() {
@@ -16,6 +17,12 @@ function setPageLoaded() {
 
 function prefersReducedPageMotion() {
   return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function getTransitionSection(pathname) {
+  return PAGE_TRANSITION_SKIP_SECTIONS.find(function (section) {
+    return pathname === section || pathname.startsWith(section);
+  });
 }
 
 function shouldUsePageTransition(link, currentUrl) {
@@ -39,6 +46,9 @@ function shouldUsePageTransition(link, currentUrl) {
   if (PAGE_TRANSITION_DOWNLOAD_RE.test(nextUrl.pathname)) return false;
   if (nextUrl.href === currentUrl.href) return false;
   if (nextUrl.pathname === currentUrl.pathname && nextUrl.search === currentUrl.search && nextUrl.hash) return false;
+
+  const currentSection = getTransitionSection(currentUrl.pathname);
+  if (currentSection && currentSection === getTransitionSection(nextUrl.pathname)) return false;
 
   return nextUrl;
 }
