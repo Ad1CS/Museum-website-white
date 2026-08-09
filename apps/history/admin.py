@@ -151,6 +151,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
       <option value="150">150%</option>
       <option value="200">200%</option>
     </select>
+    <span class="history-preview-readout">Preview: <strong id="history-preview-computed-font-value"></strong></span>
     <span class="history-preview-readout">Размер текста: <strong id="history-preview-font-value"></strong></span>
     <span class="history-preview-readout">Ширина блока: <strong id="history-preview-width-value"></strong></span>
   </div>
@@ -172,6 +173,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
   const zoomInput = document.getElementById('history-preview-zoom');
   const widthValue = document.getElementById('history-preview-width-value');
   const fontValue = document.getElementById('history-preview-font-value');
+  const computedFontValue = document.getElementById('history-preview-computed-font-value');
   const leftInput = document.getElementById('id_left_percent');
   const topInput = document.getElementById('id_top_percent');
   const widthInput = document.getElementById('id_width_percent');
@@ -209,7 +211,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     block.style.top = top + '%';
     block.style.width = width + '%';
     block.style.fontFamily = fontInput ? fontInput.value : 'Arial, sans-serif';
-    block.style.fontSize = previewFontSize + 'px';
+    block.style.setProperty('font-size', previewFontSize + 'px', 'important');
     block.style.fontWeight = weightInput ? weightInput.value : '700';
     block.style.fontStyle = styleInput ? styleInput.value : 'normal';
     block.style.color = colorInput ? colorInput.value : '#ffffff';
@@ -221,6 +223,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     textNode.textContent = textInput && textInput.value ? textInput.value : 'Текст';
     if (widthValue) widthValue.textContent = width.toFixed(2).replace(/[.]00$/, '') + '%';
     if (fontValue) fontValue.textContent = liveFontSize.toFixed(1).replace(/[.]0$/, '') + 'px';
+    if (computedFontValue) computedFontValue.textContent = window.getComputedStyle(block).fontSize;
   }}
 
   let mode = null;
