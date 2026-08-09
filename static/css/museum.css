@@ -44,14 +44,14 @@
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 html.page-transition {
-  background:var(--bg);
+  background:#000;
 }
 html.page-transition::before {
   content:'';
   position:fixed;
   inset:0;
   z-index:2147483647;
-  background:var(--bg, #C8C4BB);
+  background:#000;
   opacity:1;
   visibility:visible;
   pointer-events:none;
