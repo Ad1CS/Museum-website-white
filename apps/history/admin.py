@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.templatetags.static import static
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 
 from .models import HistoryTextBlock
 
@@ -44,8 +44,35 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
     @admin.display(description='Предпросмотр позиции')
     def position_editor(self, obj):
         bg_url = static('img/historyPageBG.webp')
+        font_faces = format_html_join(
+            '\n',
+            "@font-face {{ font-family:'TT Hoves'; src:url('{}') format('woff2'); font-weight:{}; font-style:{}; font-display:swap; }}",
+            (
+                (static('fonts/TTHoves-Thin.woff2'), 100, 'normal'),
+                (static('fonts/TTHoves-ThinItalic.woff2'), 100, 'italic'),
+                (static('fonts/TTHoves-ExtraLight.woff2'), 200, 'normal'),
+                (static('fonts/TTHoves-ExtraLightItalic.woff2'), 200, 'italic'),
+                (static('fonts/TTHoves-Light.woff2'), 300, 'normal'),
+                (static('fonts/TTHoves-LightItalic.woff2'), 300, 'italic'),
+                (static('fonts/TTHoves-Regular.woff2'), 400, 'normal'),
+                (static('fonts/TTHoves-Italic.woff2'), 400, 'italic'),
+                (static('fonts/TTHoves-Medium.woff2'), 500, 'normal'),
+                (static('fonts/TTHoves-MediumItalic.woff2'), 500, 'italic'),
+                (static('fonts/TTHoves-DemiBold.woff2'), 600, 'normal'),
+                (static('fonts/TTHoves-DemiBoldItalic.woff2'), 600, 'italic'),
+                (static('fonts/TTHoves-Bold.woff2'), 700, 'normal'),
+                (static('fonts/TTHoves-BoldItalic.woff2'), 700, 'italic'),
+                (static('fonts/TTHoves-ExtraBold.woff2'), 800, 'normal'),
+                (static('fonts/TTHoves-ExtraBoldItalic.woff2'), 800, 'italic'),
+                (static('fonts/TTHoves-Black.woff2'), 900, 'normal'),
+                (static('fonts/TTHoves-BlackItalic.woff2'), 900, 'italic'),
+            ),
+        )
         return format_html(
             '''
+<style>
+{font_faces}
+</style>
 <div class="history-admin-editor" style="max-width:820px;">
   <div style="margin:0 0 10px;color:#444;">
     Перетащите текст по фону. Поля X и Y обновятся автоматически, затем нажмите "Сохранить".
@@ -140,4 +167,5 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
 </script>
             ''',
             bg_url=bg_url,
+            font_faces=font_faces,
         )

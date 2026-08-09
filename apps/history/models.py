@@ -4,11 +4,26 @@ from django.db import models
 
 class HistoryTextBlock(models.Model):
     FONT_CHOICES = (
-        ('var(--font), Arial, sans-serif', 'TT Hoves'),
-        ('Arial, sans-serif', 'Arial'),
-        ('Georgia, serif', 'Georgia'),
-        ('Times New Roman, serif', 'Times New Roman'),
-        ('Courier New, monospace', 'Courier New'),
+        ('var(--font), Arial, sans-serif', 'TT Hoves (site default)'),
+        ("'TT Hoves', sans-serif", 'TT Hoves (bundled website font)'),
+        ("Arial, sans-serif", 'Arial'),
+        ("'Arial Black', Gadget, sans-serif", 'Arial Black'),
+        ("'Helvetica Neue', Helvetica, Arial, sans-serif", 'Helvetica'),
+        ("'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", 'Segoe UI'),
+        ("Verdana, Geneva, sans-serif", 'Verdana'),
+        ("Tahoma, Geneva, sans-serif", 'Tahoma'),
+        ("'Trebuchet MS', Helvetica, sans-serif", 'Trebuchet MS'),
+        ("Impact, Charcoal, sans-serif", 'Impact'),
+        ("'Comic Sans MS', cursive, sans-serif", 'Comic Sans MS'),
+        ("Georgia, serif", 'Georgia'),
+        ("'Times New Roman', Times, serif", 'Times New Roman'),
+        ("Garamond, serif", 'Garamond'),
+        ("'Palatino Linotype', 'Book Antiqua', Palatino, serif", 'Palatino'),
+        ("Cambria, Georgia, serif", 'Cambria'),
+        ("Constantia, Georgia, serif", 'Constantia'),
+        ("'Courier New', Courier, monospace", 'Courier New'),
+        ("Consolas, 'Courier New', monospace", 'Consolas'),
+        ("'Lucida Console', Monaco, monospace", 'Lucida Console'),
     )
     ALIGN_CHOICES = (
         ('left', 'Слева'),
@@ -58,7 +73,7 @@ class HistoryTextBlock(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(100)],
         help_text='Ширина текстовой области относительно ширины страницы.',
     )
-    font_family = models.CharField('Шрифт', max_length=80, choices=FONT_CHOICES, default='var(--font), Arial, sans-serif')
+    font_family = models.CharField('Шрифт', max_length=160, choices=FONT_CHOICES, default='var(--font), Arial, sans-serif')
     font_size_px = models.PositiveIntegerField(
         'Размер шрифта (px)',
         default=32,
