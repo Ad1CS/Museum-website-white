@@ -79,7 +79,7 @@ class HistoryTextBlockAdmin(admin.ModelAdmin):
   </div>
   <div id="history-preview-scroll" style="max-height:680px;overflow:auto;border:1px solid #bbb;background:#777;">
     <div id="history-preview-canvas" style="position:relative;width:100%;aspect-ratio:1400/8815;background:url('{bg_url}') center top / 100% auto no-repeat;">
-      <div id="history-preview-block" style="position:absolute;box-sizing:border-box;padding:4px 6px;border:1px dashed rgba(255,255,255,.8);cursor:move;white-space:pre-wrap;overflow-wrap:anywhere;"></div>
+      <div id="history-preview-block" style="position:absolute;box-sizing:border-box;padding:0;outline:1px dashed rgba(255,255,255,.8);cursor:move;white-space:pre-wrap;overflow-wrap:anywhere;"></div>
     </div>
   </div>
 </div>
