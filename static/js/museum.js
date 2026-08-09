@@ -3,16 +3,22 @@
 // ============================================================
 // PAGE TRANSITIONS
 // ============================================================
-document.addEventListener('DOMContentLoaded', function () {
+const PAGE_TRANSITION_DELAY = 220;
+let pageTransitionActive = false;
+
+function setPageLoaded() {
+  pageTransitionActive = false;
   const root = document.documentElement;
   root.classList.add('page-loaded');
   root.classList.remove('page-leaving');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  setPageLoaded();
 });
 
 window.addEventListener('pageshow', function () {
-  const root = document.documentElement;
-  root.classList.add('page-loaded');
-  root.classList.remove('page-leaving');
+  setPageLoaded();
 });
 
 document.addEventListener('click', function (event) {
@@ -34,14 +40,21 @@ document.addEventListener('click', function (event) {
 
   if (nextUrl.origin !== currentUrl.origin) return;
   if (!['http:', 'https:'].includes(nextUrl.protocol)) return;
+  if (nextUrl.href === currentUrl.href) return;
   if (nextUrl.pathname === currentUrl.pathname && nextUrl.search === currentUrl.search && nextUrl.hash) return;
 
   event.preventDefault();
-  document.documentElement.classList.add('page-leaving');
-  document.documentElement.classList.remove('page-loaded');
-  window.setTimeout(function () {
-    window.location.href = nextUrl.href;
-  }, 180);
+  if (pageTransitionActive) return;
+  pageTransitionActive = true;
+
+  const root = document.documentElement;
+  root.classList.remove('page-loaded');
+  window.requestAnimationFrame(function () {
+    root.classList.add('page-leaving');
+    window.setTimeout(function () {
+      window.location.assign(nextUrl.href);
+    }, PAGE_TRANSITION_DELAY);
+  });
 });
 
 // ============================================================

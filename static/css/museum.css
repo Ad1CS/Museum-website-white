@@ -43,14 +43,41 @@
 /* ── RESET ─────────────────────────────────────────────────────── */
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-html.page-transition body {
-  opacity:0;
-  transition:opacity .22s ease;
+html.page-transition {
+  background:var(--bg);
 }
-html.page-transition.page-loaded body { opacity:1; }
-html.page-transition.page-leaving body { opacity:0; }
+html.page-transition::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:2147483647;
+  background:var(--bg, #C8C4BB);
+  opacity:1;
+  visibility:visible;
+  pointer-events:none;
+  transition:
+    opacity .34s cubic-bezier(.22,.61,.36,1),
+    visibility 0s linear 0s;
+}
+html.page-transition.page-loaded::before {
+  opacity:0;
+  visibility:hidden;
+  transition:
+    opacity .34s cubic-bezier(.22,.61,.36,1),
+    visibility 0s linear .34s;
+}
+html.page-transition.page-leaving::before {
+  opacity:1;
+  visibility:visible;
+  transition:
+    opacity .24s cubic-bezier(.4,0,.2,1),
+    visibility 0s linear 0s;
+}
 @media (prefers-reduced-motion: reduce) {
-  html.page-transition body { transition:none; }
+  html.page-transition::before {
+    display:none;
+    transition:none;
+  }
 }
 body {
   background:var(--bg); color:var(--text);

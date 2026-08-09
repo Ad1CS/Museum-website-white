@@ -13,10 +13,10 @@
     document.documentElement.classList.remove('page-leaving');
   });
 </script>
-<noscript><style>html.page-transition body{opacity:1!important;}</style></noscript>
+<noscript><style>html.page-transition::before{display:none!important;}</style></noscript>
 <link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
 <link rel="icon" type="image/png" href="{% static "img/favicon.png" %}">
-<link rel="stylesheet" href="{% static "css/museum.css" %}?v=2.10">
+<link rel="stylesheet" href="{% static "css/museum.css" %}?v=2.11">
 <link rel="preload" href="{% static "fonts/TTHoves-Regular.woff2" %}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{% static "fonts/TTHoves-Bold.woff2" %}" as="font" type="font/woff2" crossorigin>
 <meta name="theme-color" content="#C8C4BB">
@@ -59,7 +59,7 @@
 
 {% block footer %}{% endblock %}
 
-<script src="{% static "js/museum.js" %}?v=2.1" defer></script>
+<script src="{% static "js/museum.js" %}?v=2.2" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body>
 </html>
