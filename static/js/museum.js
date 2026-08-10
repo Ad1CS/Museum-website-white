@@ -3,7 +3,7 @@
 // ============================================================
 // PAGE TRANSITIONS
 // ============================================================
-const PAGE_TRANSITION_DELAY = 460;
+const PAGE_TRANSITION_DELAY = 340;
 const PAGE_TRANSITION_DOWNLOAD_RE = /\.(?:pdf|docx?|xlsx?|pptx?|zip|rar|7z|jpe?g|png|gif|webp|mp4|mov|avi|mp3|wav)$/i;
 const PAGE_TRANSITION_SKIP_SECTIONS = ['/staff/', '/fond/', '/gallery/', '/library/'];
 let pageTransitionActive = false;
