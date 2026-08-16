@@ -3,9 +3,8 @@
 // ============================================================
 // PAGE TRANSITIONS
 // ============================================================
-const PAGE_TRANSITION_DELAY = 340;
+const PAGE_TRANSITION_DURATION = 320;
 const PAGE_TRANSITION_DOWNLOAD_RE = /\.(?:pdf|docx?|xlsx?|pptx?|zip|rar|7z|jpe?g|png|gif|webp|mp4|mov|avi|mp3|wav)$/i;
-const PAGE_TRANSITION_SKIP_SECTIONS = ['/staff/', '/fond/', '/gallery/', '/library/'];
 let pageTransitionActive = false;
 
 function setPageLoaded() {
@@ -17,12 +16,6 @@ function setPageLoaded() {
 
 function prefersReducedPageMotion() {
   return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
-function getTransitionSection(pathname) {
-  return PAGE_TRANSITION_SKIP_SECTIONS.find(function (section) {
-    return pathname === section || pathname.startsWith(section);
-  });
 }
 
 function shouldUsePageTransition(link, currentUrl) {
@@ -47,11 +40,35 @@ function shouldUsePageTransition(link, currentUrl) {
   if (nextUrl.href === currentUrl.href) return false;
   if (nextUrl.pathname === currentUrl.pathname && nextUrl.search === currentUrl.search && nextUrl.hash) return false;
 
-  const currentSection = getTransitionSection(currentUrl.pathname);
-  if (currentSection && currentSection === getTransitionSection(nextUrl.pathname)) return false;
-
   return nextUrl;
 }
+
+function startPageTransitionTo(href) {
+  if (!href) return;
+
+  if (prefersReducedPageMotion()) {
+    window.location.assign(href);
+    return;
+  }
+
+  if (pageTransitionActive) return;
+  pageTransitionActive = true;
+
+  const root = document.documentElement;
+  root.classList.add('page-transition');
+  root.classList.add('page-loaded');
+  root.classList.remove('page-leaving');
+  void root.offsetWidth;
+
+  window.requestAnimationFrame(function () {
+    root.classList.add('page-leaving');
+    window.setTimeout(function () {
+      window.location.assign(href);
+    }, PAGE_TRANSITION_DURATION);
+  });
+}
+
+window.startPageTransitionTo = startPageTransitionTo;
 
 document.addEventListener('DOMContentLoaded', function () {
   setPageLoaded();
@@ -74,17 +91,7 @@ document.addEventListener('click', function (event) {
   if (!nextUrl) return;
 
   event.preventDefault();
-  if (pageTransitionActive) return;
-  pageTransitionActive = true;
-
-  const root = document.documentElement;
-  root.classList.remove('page-loaded');
-  window.requestAnimationFrame(function () {
-    root.classList.add('page-leaving');
-    window.setTimeout(function () {
-      window.location.assign(nextUrl.href);
-    }, PAGE_TRANSITION_DELAY);
-  });
+  startPageTransitionTo(nextUrl.href);
 });
 
 // ============================================================

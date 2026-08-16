@@ -42,38 +42,31 @@
 
 /* ── RESET ─────────────────────────────────────────────────────── */
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; background:#000; }
-html.page-transition::before {
-  content:'';
+html { scroll-behavior:smooth; background:#1a1815; }
+.page-transition-loader {
   position:fixed;
   inset:0;
   z-index:2147483647;
-  background:#000;
+  background:#1a1815;
   opacity:1;
-  visibility:visible;
   pointer-events:none;
-  transition:
-    opacity .40s ease-in-out,
-    visibility 0s linear 0s;
+  transition:opacity .65s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change:opacity;
 }
-html.page-transition.page-loaded::before {
+html.page-transition.page-loaded .page-transition-loader {
   opacity:0;
-  visibility:hidden;
-  transition:
-    opacity .40s ease-in-out,
-    visibility 0s linear .40s;
 }
-html.page-transition.page-leaving::before {
+html.page-transition.page-leaving .page-transition-loader {
   opacity:1;
-  visibility:visible;
-  transition:
-    opacity .34s ease-in-out,
-    visibility 0s linear 0s;
+  pointer-events:auto;
+  transition-duration:.32s;
+  transition-timing-function:ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
-  html.page-transition::before {
+  .page-transition-loader {
     display:none;
     transition:none;
+    will-change:auto;
   }
 }
 body {
