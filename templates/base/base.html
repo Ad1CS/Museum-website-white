@@ -9,14 +9,20 @@
 <script>
   document.documentElement.classList.add('page-transition');
   window.addEventListener('DOMContentLoaded', function () {
-    document.documentElement.classList.add('page-loaded');
-    document.documentElement.classList.remove('page-leaving');
+    // Matches PAGE_REVEAL_HOLD_MS in museum.js — this listener is only a
+    // fallback in case museum.js fails to load, so it needs the same delay.
+    // Without it, DOMContentLoaded can fire before the overlay's first
+    // paint on a fast page, and the reveal fade has nothing to fade from.
+    window.setTimeout(function () {
+      document.documentElement.classList.add('page-loaded');
+      document.documentElement.classList.remove('page-leaving');
+    }, 120);
   });
 </script>
 <noscript><style>.page-transition-loader{display:none!important;}</style></noscript>
 <link rel="icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
 <link rel="icon" type="image/png" href="{% static "img/favicon.png" %}">
-<link rel="stylesheet" href="{% static "css/museum.css" %}?v=2.23">
+<link rel="stylesheet" href="{% static "css/museum.css" %}?v=2.26">
 <link rel="preload" href="{% static "fonts/TTHoves-Regular.woff2" %}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{% static "fonts/TTHoves-Bold.woff2" %}" as="font" type="font/woff2" crossorigin>
 <meta name="theme-color" content="#C8C4BB">
@@ -60,7 +66,7 @@
 
 {% block footer %}{% endblock %}
 
-<script src="{% static "js/museum.js" %}?v=3.3" defer></script>
+<script src="{% static "js/museum.js" %}?v=3.6" defer></script>
 {% block extra_scripts %}{% endblock %}
 </body>
 </html>

@@ -4,6 +4,16 @@
 // PAGE TRANSITIONS
 // ============================================================
 const PAGE_TRANSITION_DURATION = 320;
+// DOMContentLoaded can fire in the same task as the page's first paint, or
+// even before it, on a page that loads fast enough (a local server, a warm
+// cache, a simple page). Reveal the page the instant that event fires and
+// there's nothing for the fade to visibly fade FROM — the overlay was never
+// actually painted as opaque, so the "cover, then reveal" effect collapses
+// into the page just appearing outright. This is a floor, not a fixed
+// delay: it guarantees at least one real frame paints with the overlay
+// fully opaque before the reveal starts, so the fade always has something
+// to animate from, regardless of how fast the page loaded.
+const PAGE_REVEAL_HOLD_MS = 120;
 const PAGE_TRANSITION_DOWNLOAD_RE = /\.(?:pdf|docx?|xlsx?|pptx?|zip|rar|7z|jpe?g|png|gif|webp|mp4|mov|avi|mp3|wav)$/i;
 let pageTransitionActive = false;
 
@@ -58,24 +68,32 @@ function startPageTransitionTo(href) {
   root.classList.add('page-transition');
   root.classList.add('page-loaded');
   root.classList.remove('page-leaving');
+  // Forces the browser to commit the "not leaving" state above before the
+  // class change below, so the opacity transition still animates from 0
+  // instead of jumping straight to 1. This used to happen inside a
+  // requestAnimationFrame callback, but rAF is suspended entirely while the
+  // tab is backgrounded — if focus moved away between the click and the
+  // next frame (switching tabs, alt-tabbing, anything), that callback would
+  // simply never run, and the click would silently do nothing forever: no
+  // error, no navigation, the page just sits there. The forced reflow above
+  // already provides the same guarantee synchronously, so the class change
+  // below doesn't need to wait for a frame at all.
   void root.offsetWidth;
+  root.classList.add('page-leaving');
 
-  window.requestAnimationFrame(function () {
-    root.classList.add('page-leaving');
-    window.setTimeout(function () {
-      window.location.assign(href);
-    }, PAGE_TRANSITION_DURATION);
-  });
+  window.setTimeout(function () {
+    window.location.assign(href);
+  }, PAGE_TRANSITION_DURATION);
 }
 
 window.startPageTransitionTo = startPageTransitionTo;
 
 document.addEventListener('DOMContentLoaded', function () {
-  setPageLoaded();
+  window.setTimeout(setPageLoaded, PAGE_REVEAL_HOLD_MS);
 });
 
 window.addEventListener('pageshow', function () {
-  setPageLoaded();
+  window.setTimeout(setPageLoaded, PAGE_REVEAL_HOLD_MS);
 });
 
 document.addEventListener('click', function (event) {
